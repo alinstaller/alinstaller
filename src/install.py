@@ -140,9 +140,8 @@ class Install(Step):
 
         cmd += ' && grub-install --target=i386-pc \"' + grub_i386_target + '\"'
 
-        if partition_lib.boot_target != '':
-            cmd += ' && grub-install --target=x86_64-efi --efi-directory=\"' + \
-            partition_lib.boot_target + '\" --bootloader-id=grub'
+        cmd += ' && grub-install --target=x86_64-efi --efi-directory=/boot' + \
+            ' --bootloader-id=grub'
 
         cmd += ' && grub-mkconfig -o /boot/grub/grub.cfg'
 

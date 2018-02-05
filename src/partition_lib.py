@@ -49,26 +49,17 @@ class PartitionLib(object):
     def _action_autosetup(self, name, size, parttable, crypt = False,
         passphrase = ''):
         boot_start = self.part_granularity
-        if parttable == 'gpt':
-            boot_end = boot_start + self.boot_part_size - 1
-        else:
-            boot_end = boot_start - 1
+        boot_end = boot_start + self.boot_part_size - 1
         root_start = boot_end + 1
         root_end = size - psutil.virtual_memory().total - \
             self.part_granularity
         root_end = self._to_gran_end(root_end) * self.part_granularity - 1
         swap_start = root_end + 1
 
-        boot_target = ''; crypt_passphrase = ''; crypt_target = ''
-        install_target = ''; swap_target = ''
-        if parttable == 'gpt':
-            boot_target = name + '1'
-            install_target = name + '2'
-            swap_target = name + '3'
-        else:
-            boot_target = ''
-            install_target = name + '1'
-            swap_target = name + '2'
+        boot_target = name + '1'
+        crypt_passphrase = ''; crypt_target = ''
+        install_target = name + '2'
+        swap_target = name + '3'
         if crypt:
             crypt_passphrase = passphrase
             crypt_target = install_target
@@ -83,33 +74,24 @@ class PartitionLib(object):
         if parttable == 'gpt':
             cmd += ' mkpart ESP fat32 ' + str(boot_start) + 'B ' + \
                 str(boot_end) + 'B'
+        else:
+            cmd += ' mkpart primary fat32 ' + str(boot_start) + 'B ' + \
+                str(boot_end) + 'B'
         cmd += ' mkpart primary ' + self.default_filesystem + ' ' + \
             str(root_start) + 'B ' + str(root_end) + 'B'
         cmd += ' set 1 boot on'
         cmd += ' mkpart primary linux-swap ' + str(swap_start) + 'B 100%'
-        if parttable == 'gpt':
-            cmd += ' && mkfs.fat -F32 \"' + name + '1\"'
-            if not crypt:
-                cmd += ' && mkfs.ext4 \"' + name + '2\"'
-            else:
-                cmd += ' && cryptsetup -v -q --key-file keyfile luksFormat ' + \
-                    '--type \"' + self.default_luks_type + '\" \"' + name + \
-                    '2\"'
-                cmd += ' && cryptsetup -q --key-file keyfile open \"' + name + \
-                    '2\" cryptroot'
-                cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
-            cmd += ' && mkswap \"' + name + '3\"'
+        cmd += ' && mkfs.fat -F32 \"' + name + '1\"'
+        if not crypt:
+            cmd += ' && mkfs.ext4 \"' + name + '2\"'
         else:
-            if not crypt:
-                cmd += ' && mkfs.ext4 \"' + name + '1\"'
-            else:
-                cmd += ' && cryptsetup -v -q --key-file keyfile luksFormat ' + \
-                    '--type \"' + self.default_luks_type + '\" \"' + name + \
-                    '1\"'
-                cmd += ' && cryptsetup -q --key-file keyfile open \"' + name + \
-                    '1\" cryptroot'
-                cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
-            cmd += ' && mkswap \"' + name + '2\"'
+            cmd += ' && cryptsetup -v -q --key-file keyfile luksFormat ' + \
+                '--type \"' + self.default_luks_type + '\" \"' + name + \
+                '2\"'
+            cmd += ' && cryptsetup -q --key-file keyfile open \"' + name + \
+                '2\" cryptroot'
+            cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
+        cmd += ' && mkswap \"' + name + '3\"'
 
         cmd += ' && echo Completed.'
 
