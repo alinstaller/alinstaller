@@ -1,0 +1,32 @@
+matrix:
+  include:
+  - os: linux
+    sudo: required
+    env:
+    - ARCH_TRAVIS_CLEAN_CHROOT=1
+    - ARCH_TRAVIS_CONFIRM_YES=1
+    - RELEASE="alinstaller-$(date +%Y.%m.%d)-$TRAVIS_TAG-x86_64.iso"
+    script:
+    - while true; do echo [PING]; sleep 100; done &
+    - bash ./.arch-travis.sh
+
+arch:
+  repos:
+  - archlinuxfr=http://repo.archlinux.fr/$arch
+  packages:
+  - archiso
+  script:
+  - sudo pacman-key --init
+  - sudo pacman-key --populate archlinux
+  - sudo ./build.sh
+  - sudo mv build/out/alinstaller.iso $RELEASE
+  - sudo chmod 777 $RELEASE
+
+deploy:
+  provider: releases
+  api_key:
+    secure: m573QidEcEtzqbjH0qXkSWHc2zAD+UGx8ZU+EYBruT9czVljEkB10b7naTDdvymiFXqKlhKV3ujh6gaQKM/e2tXlGg+3bAe/KyoFtIK5tPchyQpaa6ijIUak99NW0pn5pP8JIckRNH+TEn7yfFvHpFOZY9Kgb9cTIBWeuCx8DYcZa+GvLivqElsBMmYejwybAFwQw/A7lT8/tUt092HXuftKSPXUjKrin9aFDTRKZfw6WEjfegaQEmWSokHORpVUONkqwn9Hh3DEP7y2kqVYCrk+SauMPyUGTotCO5FsdlTFKUftUniBNvAf3sORHT0lYiZjN1lmfHHm0vp7/ejR/ApTEYe2cgkmemCiWOImaDW2tARjTSZakKLB9FeT8g0N48e34E42lw5ze7pkN1AQfYQFrj3GYghXsb46BWpdrcJnH1Wm+CLXrzbreJHMpka6IT6gBs2H74OBL+v2wq7hKaJ814XKfTH6MEDGuoiHbWl8ivNPOfqYEwhdg9V+ku7Db4sVm9xBfVa2ibp0cEDfroZihoiz8ZN7762FON0myAXVAEdI6QuCMV6zyWVmMl7Ni1/L6UibOValDP/73Zgh9DC6lMcf5Q5JLyKlOFBGDcy3IrJvWBmrEYZzxzOpJJefZzNLYuh5jlcP9RbZbK/F/R9VBqjlo5j/vLfctbE/K0w=
+  file: $RELEASE
+  skip_cleanup: true
+  on:
+    tags: true
