@@ -1,6 +1,7 @@
 #!/bin/env python3
 
 import os
+import subprocess
 
 from ai_exec import ai_call, ai_exec
 from dlg import dialog
@@ -9,15 +10,32 @@ from step import Step
 
 class Install(Step):
     def run_once(self):
+        res = dialog.yesno('We are ready to install Arch Linux.\n' +
+            'Begin installing now?',
+            width = 50, height = 6)
+        if res != dialog.OK: return False
+
+        res = _do_install()
+
+        if res == 0:
+            dialog.msgbox('Installation completed.\n' +
+                'Your system is going to be restarted.',
+                width = 50, height = 6)
+        else:
+            dialog.msgbox('Installation failed.\n' +
+                'Your system is going to be restarted.',
+                width = 50, height = 6)
+
+        ai_exec('reboot', msg = 'Restarting...')
+        os.exit(res)
+
+    def _do_install(self):
         from env_set_font import env_set_font
         from env_set_keymap import env_set_keymap
         from hostname import hostname
         from password import password
 
-        res = dialog.yesno('We are ready to install Arch Linux.\n' +
-            'Begin installing now?',
-            width = 50, height = 6)
-        if res != dialog.OK: return False
+        # initialize directories
 
         cmd = 'true'
 
@@ -28,12 +46,34 @@ class Install(Step):
         if partition_lib.boot_target != '':
             cmd += ' && mount \"' + partition_lib.boot_target + '\" /mnt/boot'
 
-        cmd += ' && echo Copying files...'
-        cmd += ' && rsync --info=progress2 -ax / /mnt'
+        res = ai_exec(cmd, msg = 'Initializing directories...', showcmd = False)
+        if res != 0: return res
+
+        # copy files
+
+        cmd = 'rsync --info=progress2 -ax / /mnt'
         cmd += ' && rm -rf /mnt/root/*'
-        cmd += ' && cp -vaT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
-        cmd += ' && cp -vaT /root/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
-        cmd += ' && genfstab -U /mnt > /mnt/etc/fstab'
+        cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
+        cmd += ' && cp -aT /root/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
+
+        dialog.gauge_start('Copying files...')
+
+        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            universal_newlines=True)
+        for x in p.stdout:
+            x = x.split()
+            if len(x) >= 2 and x[1].endswith('%'):
+                percent = int(x[1][:-1])
+                dialog.gauge_update(percent)
+
+        p.communicate()
+        dialog.gauge_stop()
+        if p.returncode != 0: return p.returncode
+
+        # configure
+
+        cmd = 'genfstab -U /mnt > /mnt/etc/fstab'
         cmd += ' && sed -i \'s/Storage=volatile/#Storage=auto/\' /mnt/etc/systemd/journald.conf'
         cmd += ' && sed -i \'s/^\(PermitRootLogin \).\+/#\\1prohibit-password/\' /mnt/etc/ssh/sshd_config'
         cmd += ' && sed -i \'s/\(HandleSuspendKey=\)ignore/#\\1suspend/\' /etc/systemd/logind.conf'
@@ -136,7 +176,7 @@ class Install(Step):
         with open('password', 'w') as f:
             f.write('root:' + password.password)
 
-        res = ai_exec(cmd, linger = True, msg = 'Installing. Please wait...',
+        res = ai_exec(cmd, linger = True, msg = 'Configuring...',
             width = 75, height = 20, showcmd = False)
 
         try:
@@ -144,16 +184,6 @@ class Install(Step):
             os.remove('password')
         except: pass
 
-        if res == 0:
-            dialog.msgbox('Installation completed.\n' +
-                'Your system is going to be restarted.',
-                width = 50, height = 6)
-        else:
-            dialog.msgbox('Installation failed.\n' +
-                'Your system is going to be restarted.',
-                width = 50, height = 6)
-
-        ai_exec('reboot', msg = 'Restarting...')
-        os.exit(0)
+        return res
 
 install = Install()
