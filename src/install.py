@@ -15,7 +15,7 @@ class Install(Step):
             width = 50, height = 6)
         if res != dialog.OK: return False
 
-        res = _do_install()
+        res = self._do_install()
 
         if res == 0:
             dialog.msgbox('Installation completed.\n' +
@@ -51,21 +51,38 @@ class Install(Step):
 
         # copy files
 
-        cmd = 'rsync --info=progress2 -ax / /mnt'
+        cmd = 'rsync --info=progress2 --no-inc-recursive -ax / /mnt'
         cmd += ' && rm -rf /mnt/root/*'
         cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
         cmd += ' && cp -aT /root/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
 
-        dialog.gauge_start('Copying files...')
+        gauge_text_base = 'Copying files...'
+        gauge_text = gauge_text_base
+        gauge_text_prev = gauge_text
+        percent = 0
+        percent_prev = 0
+        dialog.gauge_start(gauge_text, width=40, height=9)
 
         p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             universal_newlines=True)
         for x in p.stdout:
             x = x.split()
-            if len(x) >= 2 and x[1].endswith('%'):
+            if len(x) >= 4 and x[1].endswith('%'):
                 percent = int(x[1][:-1])
-                dialog.gauge_update(percent)
+                speed = x[2]
+                eta = x[3]
+                gauge_text = gauge_text_base + \
+                    '\nSpeed:  ' + speed + \
+                    '\n  ETA:  ' + eta
+            else:
+                gauge_text = gauge_text_base
+
+            if percent != percent_prev or gauge_text != gauge_text_prev:
+                dialog.gauge_update(percent=percent, text=gauge_text,
+                    update_text=True)
+                gauge_text_prev = gauge_text
+                percent_prev = percent
 
         p.communicate()
         dialog.gauge_stop()
@@ -138,10 +155,11 @@ class Install(Step):
 
         grub_i386_target = partition_lib.get_disk_from_part(grub_i386_target)
 
-        cmd += ' && grub-install --target=i386-pc \"' + grub_i386_target + '\"'
+        cmd += ' && (grub-install --target=i386-pc \"' + grub_i386_target + \
+            '\" || true)'
 
-        cmd += ' && grub-install --target=x86_64-efi --efi-directory=/boot' + \
-            ' --bootloader-id=grub'
+        cmd += ' && (grub-install --target=x86_64-efi --efi-directory=/boot' + \
+            ' --bootloader-id=grub || true)'
 
         cmd += ' && grub-mkconfig -o /boot/grub/grub.cfg'
 
@@ -163,7 +181,7 @@ class Install(Step):
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl enable graphical.target'
         cmd += ' && systemctl enable NetworkManager bluetooth firewalld' + \
-            ' gdm org.cups.cupsd'
+            ' gdm org.cups.cupsd spice-vdagentd'
 
         cmd += '\''
 
