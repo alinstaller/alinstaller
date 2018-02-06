@@ -136,9 +136,14 @@ class Install(Step):
                 ':cryptroot root=\\/dev\\/mapper\\/cryptroot'
         cmd += '\\\"/\" /etc/default/grub'
 
-        cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base udev resume' + \
-            ' autodetect modconf keyboard keymap block encrypt filesystems' + \
-            ' keyboard fsck)/\" /etc/mkinitcpio.conf'
+        if partition_lib.crypt_target == '':
+            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base udev resume' + \
+                ' autodetect modconf keyboard keymap block filesystems' + \
+                ' keyboard fsck)/\" /etc/mkinitcpio.conf'
+        else:
+            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base udev resume' + \
+                ' autodetect modconf keyboard keymap block encrypt' + \
+                ' filesystems keyboard fsck)/\" /etc/mkinitcpio.conf'
 
         cmd += ' && mkinitcpio -p linux'
         cmd += ' && mkinitcpio -p linux-zen'
