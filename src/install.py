@@ -184,7 +184,7 @@ class Install(Step):
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl enable graphical.target'
         cmd += ' && systemctl enable NetworkManager bluetooth firewalld' + \
-            ' gdm org.cups.cupsd spice-vdagentd'
+            ' gdm lvm2-monitor org.cups.cupsd spice-vdagentd upower'
 
         cmd += '\''
 
