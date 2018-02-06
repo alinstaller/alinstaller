@@ -15,6 +15,12 @@ gnome-system-log
 grub
 gst-plugins-ugly
 gst-plugins-bad
+ibus
+ibus-chewing
+ibus-hangul
+ibus-kkc
+ibus-libpinyin
+ibus-m17n
 libreoffice-fresh
 linux-zen
 mesa
