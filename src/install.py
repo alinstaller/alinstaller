@@ -68,15 +68,13 @@ class Install(Step):
             universal_newlines=True)
         for x in p.stdout:
             x = x.split()
-            if len(x) >= 4 and x[1].endswith('%'):
+            if len(x) == 4 and x[1].endswith('%'):
                 percent = int(x[1][:-1])
                 speed = x[2]
                 eta = x[3]
                 gauge_text = gauge_text_base + \
                     '\nSpeed:  ' + speed + \
                     '\n  ETA:  ' + eta
-            else:
-                gauge_text = gauge_text_base
 
             if percent != percent_prev or gauge_text != gauge_text_prev:
                 dialog.gauge_update(percent=percent, text=gauge_text,
