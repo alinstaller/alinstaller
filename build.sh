@@ -17,6 +17,8 @@ cat misc/rc.sh >> build/airootfs/root/.zlogin
 # the following would enable all languages:
 # sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\/locale.gen; locale-gen/" build/airootfs/root/customize_airootfs.sh
 
+sed -i "s/\.archlinux\.org\/mirrorlist\/.*\'/\.archlinux\.org\/mirrorlist\/all\/\'/" build/build.sh
+
 cp -vaT /boot/vmlinuz-linux-zen build/airootfs/root/vmlinuz-linux-zen
 
 mkdir -p build/out

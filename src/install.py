@@ -9,6 +9,9 @@ from partition_lib import partition_lib
 from step import Step
 
 class Install(Step):
+    mirror_kw = ['https:', '.kernel.org']
+    mirror_multiply = 10
+
     def run_once(self):
         res = dialog.yesno('We are ready to install Arch Linux.\n' +
             'Begin installing now?',
@@ -85,6 +88,8 @@ class Install(Step):
         p.communicate()
         dialog.gauge_stop()
         if p.returncode != 0: return p.returncode
+
+        self._update_mirrorlist()
 
         # configure
 
@@ -205,5 +210,34 @@ class Install(Step):
         except: pass
 
         return res
+
+    def _update_mirrorlist(self):
+        l = []; fn = '/mnt/etc/pacman.d/mirrorlist'
+
+        with open(fn, 'r') as f:
+            for x in f:
+                x = x.strip('\n')
+
+                if x == '':
+                    l.append(''); continue
+                elif x.startswith('#Server'):
+                    x = x[1:]
+                elif x.startswith('#'):
+                    l.append(x); continue
+
+                is_mirror = True
+                for y in self.mirror_kw:
+                    if not y in x:
+                        is_mirror = False; break
+
+                if is_mirror:
+                    l = [x] * self.mirror_multiply + [''] + l
+                else:
+                    x = '#' + x
+                    l.append(x)
+
+        with open(fn, 'w') as f:
+            for x in l:
+                f.write(x + '\n')
 
 install = Install()
