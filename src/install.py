@@ -174,7 +174,7 @@ class Install(Step):
 
         cmd += ' && echo \"' + hostname.hostname + '\" > /etc/hostname'
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
-        cmd += ' && echo ::1 localhost > /etc/hosts'
+        cmd += ' && echo ::1 localhost >> /etc/hosts'
 
         cmd += ' && echo vm.swappiness=0 > /etc/sysctl.d/99-sysctl.conf'
 
