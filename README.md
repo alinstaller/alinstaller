@@ -16,8 +16,8 @@ Download the ISO image from [Releases](../../releases), and boot from it.
 
 Note: AL Installer needs to be built in Arch Linux.
 
-Install the [archiso](https://www.archlinux.org/packages/?name=archiso) package,
-and run:
+Install [archiso](https://www.archlinux.org/packages/?name=archiso), and run the
+following as root:
 
 ```sh
 ./build.sh
