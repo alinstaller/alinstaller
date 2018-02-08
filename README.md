@@ -23,4 +23,6 @@ following as root:
 ./build.sh
 ```
 
+Output will be written to `build/out/alinstaller.iso`.
+
 (Warning: `build.sh` may install packages on your host system.)
