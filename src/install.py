@@ -118,8 +118,6 @@ class Install(Step):
         cmd += ' && pacman-key --init'
         cmd += ' && pacman-key --populate archlinux'
 
-        cmd += ' && sed -i \"s/^#\\\\([A-Za-z].* UTF-8\\\\)/\\\\1/\" /etc/locale.gen'
-        cmd += ' && locale-gen'
         cmd += ' && echo LANG=en_US.UTF-8 > /etc/locale.conf'
 
         swap_uuid = ''
