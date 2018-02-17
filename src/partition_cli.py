@@ -4,12 +4,12 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -17,13 +17,12 @@ import json
 import os
 import traceback
 
-from ai_exec import ai_call, ai_exec
 from dlg import dialog
-from hostname import hostname
+from hostname_cli import hostname_cli
 from partition_lib import partition_lib
 from step import Step
 
-class Partition(Step):
+class PartitionCLI(Step):
     def __init__(self):
         self._switch_to_finish = False
 
@@ -42,7 +41,7 @@ class Partition(Step):
                 dialog.msgbox('An installation target must be selected.',
                     width = 50, height = 6)
                 return True
-            hostname.run()
+            hostname_cli.run()
 
         return True
 
@@ -189,6 +188,9 @@ class Partition(Step):
                 dialog.msgbox('Passphrases do not match.')
                 return False
 
+            res = dialog.yesno(text = 'Are you sure?')
+            if res != dialog.OK: return False
+
             partition_lib.action(op, name, passphrase = passphrase)
 
         elif op == 'cryptopen':
@@ -208,4 +210,4 @@ class Partition(Step):
         dialog.infobox('Loading partition information...', 3, 40)
         partition_lib.scan()
 
-partition = Partition()
+partition_cli = PartitionCLI()

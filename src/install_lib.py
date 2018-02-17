@@ -4,55 +4,27 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import subprocess
-
-from ai_exec import ai_call, ai_exec
-from dlg import dialog
+from ai_exec import ai_call
+from hostname_lib import hostname_lib
 from partition_lib import partition_lib
-from step import Step
+from password_lib import password_lib
+from set_font_lib import set_font_lib
+from set_keymap_lib import set_keymap_lib
 
-class Install(Step):
+class InstallLib(object):
     mirror_kw = ['https:', '.kernel.org']
     mirror_multiply = 10
 
-    def run_once(self):
-        res = dialog.yesno('We are ready to install Arch Linux.\n' +
-            'Begin installing now?',
-            width = 50, height = 6)
-        if res != dialog.OK: return False
-
-        res = self._do_install()
-
-        if res == 0:
-            dialog.msgbox('Installation completed.\n' +
-                'Your system is going to be restarted.',
-                width = 50, height = 6)
-        else:
-            dialog.msgbox('Installation failed.\n' +
-                'Your system is going to be restarted.',
-                width = 50, height = 6)
-
-        ai_exec('reboot', msg = 'Restarting...')
-        os.exit(res)
-
-    def _do_install(self):
-        from env_set_font import env_set_font
-        from env_set_keymap import env_set_keymap
-        from hostname import hostname
-        from password import password
-
-        # initialize directories
-
+    def get_init_dirs_cmd(self):
         cmd = 'true'
 
         if partition_lib.swap_target != '':
@@ -62,58 +34,59 @@ class Install(Step):
         if partition_lib.boot_target != '':
             cmd += ' && mount \"' + partition_lib.boot_target + '\" /mnt/boot'
 
-        res = ai_exec(cmd, msg = 'Initializing directories...', showcmd = False)
-        if res != 0: return res
+        return cmd
 
-        # copy files
-
-        cmd = 'rsync --info=progress2 --no-inc-recursive -ax / /mnt'
+    def get_copy_files_cmd(self):
+        cmd = 'rsync --info=progress2 --no-inc-recursive -ax /run/archiso/sfs/airootfs/* /mnt'
         cmd += ' && rm -rf /mnt/root/*'
+        cmd += ' && rm -rf /mnt/usr/local/{bin,lib}/*'
+        cmd += ' && rm -rf /mnt/usr/local/share/{applications,locale}'
+        cmd += ' && rm -rf /mnt/tmp/*'
         cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
-        cmd += ' && cp -aT /root/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
+        cmd += ' && cp -aT /usr/local/lib/alinstaller/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
 
-        gauge_text_base = 'Copying files...'
-        gauge_text = gauge_text_base
-        gauge_text_prev = gauge_text
-        percent = 0
-        percent_prev = 0
-        dialog.gauge_start(gauge_text, width=40, height=9)
+        return cmd
 
-        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-            universal_newlines=True)
-        for x in p.stdout:
-            x = x.split()
-            if len(x) == 4 and x[1].endswith('%'):
-                percent = int(x[1][:-1])
-                speed = x[2]
-                eta = x[3]
-                gauge_text = gauge_text_base + \
-                    '\nSpeed:  ' + speed + \
-                    '\n  ETA:  ' + eta
+    def update_mirrorlist(self):
+        l = []; fn = '/mnt/etc/pacman.d/mirrorlist'
 
-            if percent != percent_prev or gauge_text != gauge_text_prev:
-                dialog.gauge_update(percent=percent, text=gauge_text,
-                    update_text=True)
-                gauge_text_prev = gauge_text
-                percent_prev = percent
+        with open(fn, 'r') as f:
+            for x in f:
+                x = x.strip('\n')
 
-        p.communicate()
-        dialog.gauge_stop()
-        if p.returncode != 0: return p.returncode
+                if x == '':
+                    l.append(''); continue
+                elif x.startswith('#Server'):
+                    x = x[1:]
+                elif x.startswith('#'):
+                    l.append(x); continue
 
-        self._update_mirrorlist()
+                is_mirror = True
+                for y in self.mirror_kw:
+                    if not y in x:
+                        is_mirror = False; break
 
-        # configure
+                if is_mirror:
+                    l = [x] * self.mirror_multiply + [''] + l
 
+                x = '#' + x
+                l.append(x)
+
+        with open('/tmp/mirrorlist', 'w') as f:
+            for x in l:
+                f.write(x + '\n')
+
+        ai_call('mv /tmp/mirrorlist \"' + fn + '\"')
+
+    def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'
         cmd += ' && sed -i \'s/Storage=volatile/#Storage=auto/\' /mnt/etc/systemd/journald.conf'
         cmd += ' && sed -i \'s/^\(PermitRootLogin \).\+/#\\1prohibit-password/\' /mnt/etc/ssh/sshd_config'
-        cmd += ' && sed -i \'s/\(HandleSuspendKey=\)ignore/#\\1suspend/\' /etc/systemd/logind.conf'
-        cmd += ' && sed -i \'s/\(HandleHibernateKey=\)ignore/#\\1hibernate/\' /etc/systemd/logind.conf'
+        cmd += ' && sed -i \'s/\(HandleSuspendKey=\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
+        cmd += ' && sed -i \'s/\(HandleHibernateKey=\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && rm -f /mnt/etc/udev/rules.d/81-dhcpcd.rules'
 
-        cmd += ' && cp password /mnt/password'
+        cmd += ' && cp /tmp/password /mnt/password'
 
         cmd += ' && arch-chroot /mnt /bin/bash -c \''
 
@@ -183,12 +156,12 @@ class Install(Step):
         cmd += ' && grub-mkconfig -o /boot/grub/grub.cfg'
 
         cmd += ' && true > /etc/vconsole.conf'
-        if env_set_font.font != '':
-            cmd += ' && echo \"FONT=' + env_set_font.font + '\" >> /etc/vconsole.conf'
-        if env_set_keymap.keymap != '':
-            cmd += ' && echo \"KEYMAP=' + env_set_keymap.keymap + '\" >> /etc/vconsole.conf'
+        if set_font_lib.font != '':
+            cmd += ' && echo \"FONT=' + set_font_lib.font + '\" >> /etc/vconsole.conf'
+        if set_keymap_lib.keymap != '':
+            cmd += ' && echo \"KEYMAP=' + set_keymap_lib.keymap + '\" >> /etc/vconsole.conf'
 
-        cmd += ' && echo \"' + hostname.hostname + '\" > /etc/hostname'
+        cmd += ' && echo \"' + hostname_lib.hostname + '\" > /etc/hostname'
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
@@ -198,57 +171,27 @@ class Install(Step):
         cmd += ' && rm -f /password'
 
         cmd += ' && systemctl disable multi-user.target'
-        cmd += ' && systemctl enable graphical.target'
+        cmd += ' && systemctl set-default graphical.target'
         cmd += ' && systemctl enable NetworkManager bluetooth firewalld' + \
             ' gdm lvm2-monitor org.cups.cupsd spice-vdagentd upower'
 
         cmd += '\''
 
-        cmd += ' && rm -f password'
+        cmd += ' && rm -f /tmp/password'
         cmd += ' && umount -R /mnt'
 
         cmd += ' && echo && echo Completed.'
 
-        with open('password', 'w') as f:
-            f.write('root:' + password.password)
+        return cmd
 
-        res = ai_exec(cmd, linger = True, msg = 'Configuring...',
-            width = 75, height = 20, showcmd = False)
+    def prepare_configure(self):
+        with open('/tmp/password', 'w') as f:
+            f.write('root:' + password_lib.password)
 
+    def cleanup_configure(self):
+        ai_call('rm -f /mnt/password')
         try:
-            os.remove('/mnt/password')
-            os.remove('password')
+            os.remove('/tmp/password')
         except: pass
 
-        return res
-
-    def _update_mirrorlist(self):
-        l = []; fn = '/mnt/etc/pacman.d/mirrorlist'
-
-        with open(fn, 'r') as f:
-            for x in f:
-                x = x.strip('\n')
-
-                if x == '':
-                    l.append(''); continue
-                elif x.startswith('#Server'):
-                    x = x[1:]
-                elif x.startswith('#'):
-                    l.append(x); continue
-
-                is_mirror = True
-                for y in self.mirror_kw:
-                    if not y in x:
-                        is_mirror = False; break
-
-                if is_mirror:
-                    l = [x] * self.mirror_multiply + [''] + l
-                else:
-                    x = '#' + x
-                    l.append(x)
-
-        with open(fn, 'w') as f:
-            for x in l:
-                f.write(x + '\n')
-
-install = Install()
+install_lib = InstallLib()

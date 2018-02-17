@@ -4,25 +4,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dlg import dialog
-from env_set_font import env_set_font
+from set_font_cli import set_font_cli
 from step import Step
 
-class Welcome(Step):
+class WelcomeCLI(Step):
     def run_once(self):
         if (dialog.msgbox('Welcome to AL Installer!\n\n'
-            + 'This guide will help you install Arch Linux.'
-            ) == dialog.OK):
-            env_set_font.run()
+            + 'This guide will help you install Arch Linux.',
+            width = 50, height = 8) == dialog.OK):
+            set_font_cli.run()
         return True
 
-welcome = Welcome()
+welcome_cli = WelcomeCLI()

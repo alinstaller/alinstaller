@@ -1,0 +1,216 @@
+# English (United Kingdom) translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-02-17 15:46+0000\n"
+"PO-Revision-Date: 2018-02-17 15:46+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en_GB\n"
+"Language-Team: en_GB <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.3\n"
+
+#: src/gui.py:79 src/init.py:37
+msgid "AL Installer"
+msgstr ""
+
+#: src/gui.py:80
+msgid "_Back"
+msgstr ""
+
+#: src/gui.py:81
+msgid "_Next"
+msgstr ""
+
+#: src/hostname_gui.py:28
+msgid "Enter a new hostname:"
+msgstr ""
+
+#: src/install_gui.py:47
+msgid "We are ready to install Arch Linux."
+msgstr ""
+
+#: src/install_gui.py:49
+msgid "Install Now"
+msgstr ""
+
+#: src/install_gui.py:51
+msgid "Restart System"
+msgstr ""
+
+#: src/install_gui.py:108
+msgid "Installation failed."
+msgstr ""
+
+#: src/install_gui.py:118
+msgid "Installation completed. You can restart your system now."
+msgstr ""
+
+#: src/install_gui.py:137
+msgid "Initializing directories..."
+msgstr ""
+
+#: src/install_gui.py:148
+msgid "Copying files..."
+msgstr ""
+
+#: src/install_gui.py:196
+msgid "Configuring..."
+msgstr ""
+
+#: src/language_gui.py:29
+msgid "Please select your language:"
+msgstr ""
+
+#: src/partition_gui.py:93
+msgid "An operation is in progress."
+msgstr ""
+
+#: src/partition_gui.py:104
+msgid "An installation target must be selected."
+msgstr ""
+
+#: src/partition_gui.py:139
+msgid "Edit partitions and choose your installation target below."
+msgstr ""
+
+#: src/partition_gui.py:141
+msgid "Choose an action below:"
+msgstr ""
+
+#: src/partition_gui.py:143
+msgid "Log"
+msgstr ""
+
+#: src/partition_gui.py:145 src/partition_gui.py:155
+msgid "Partitioning type"
+msgstr ""
+
+#: src/partition_gui.py:147
+msgid "Encryption"
+msgstr ""
+
+#: src/partition_gui.py:149 src/partition_gui.py:171 src/partition_gui.py:177
+msgid "Passphrase"
+msgstr ""
+
+#: src/partition_gui.py:151 src/partition_gui.py:173
+msgid "Confirm passphrase"
+msgstr ""
+
+#: src/partition_gui.py:153
+msgid "Set Up This Disk"
+msgstr ""
+
+#: src/partition_gui.py:157
+msgid "Create/Rewrite Partition Table"
+msgstr ""
+
+#: src/partition_gui.py:159
+msgid "Start"
+msgstr ""
+
+#: src/partition_gui.py:161
+msgid "End"
+msgstr ""
+
+#: src/partition_gui.py:163 src/partition_gui.py:167
+msgid "Filesystem"
+msgstr ""
+
+#: src/partition_gui.py:165
+msgid "Create Partition"
+msgstr ""
+
+#: src/partition_gui.py:169 src/partition_gui.py:497
+msgid "Format"
+msgstr ""
+
+#: src/partition_gui.py:175
+msgid "Set Up Encryption"
+msgstr ""
+
+#: src/partition_gui.py:179
+msgid "Open"
+msgstr ""
+
+#: src/partition_gui.py:212
+msgid "Working"
+msgstr ""
+
+#: src/partition_gui.py:277
+msgid "Select an item to view its details."
+msgstr ""
+
+#: src/partition_gui.py:384 src/partition_gui.py:553
+msgid "Passphrases do not match."
+msgstr ""
+
+#: src/partition_gui.py:393 src/partition_gui.py:427
+msgid "Are you sure you want to wipe this disk?"
+msgstr ""
+
+#: src/partition_gui.py:393 src/partition_gui.py:427
+msgid "Wipe"
+msgstr ""
+
+#: src/partition_gui.py:496
+msgid "Are you sure you want to format this partition?"
+msgstr ""
+
+#: src/partition_gui.py:526
+msgid "Are you sure you want to remove this partition?"
+msgstr ""
+
+#: src/partition_gui.py:526
+msgid "Remove"
+msgstr ""
+
+#: src/partition_gui.py:561
+msgid "Are you sure you want to encrypt this disk? All data will be lost."
+msgstr ""
+
+#: src/partition_gui.py:562
+msgid "Encrypt"
+msgstr ""
+
+#: src/partition_gui.py:643 src/partition_gui.py:645
+msgid "Confirm"
+msgstr ""
+
+#: src/partition_gui.py:654
+msgid "Cancel"
+msgstr ""
+
+#: src/password_gui.py:36 src/password_gui.py:71
+msgid "A new password is required."
+msgstr ""
+
+#: src/password_gui.py:49
+msgid "Enter root password:"
+msgstr ""
+
+#: src/password_gui.py:51
+msgid "Confirm root password:"
+msgstr ""
+
+#: src/password_gui.py:73
+msgid "Passwords do not match."
+msgstr ""
+
+#: src/welcome_gui.py:22
+msgid "Welcome to AL Installer!"
+msgstr ""
+
+#: src/welcome_gui.py:24
+msgid "This guide will help you install Arch Linux."
+msgstr ""
+

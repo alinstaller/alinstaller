@@ -25,9 +25,12 @@ linux-zen
 mesa
 noto-fonts-cjk
 noto-fonts-emoji
+python-babel
+python-gobject
 python-psutil
 python-pythondialog
 spice-vdagent
+sudo
 ttf-dejavu
 xf86-video-amdgpu
 xf86-video-ati

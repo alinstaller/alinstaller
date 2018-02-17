@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env python3
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-rm -rf build
+class SetKeymapLib(object):
+    def __init__(self):
+        self.keymap = ''
+
+set_keymap_lib = SetKeymapLib()

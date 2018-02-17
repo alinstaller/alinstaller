@@ -4,32 +4,26 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
 import os
 import psutil
+import subprocess
 
-from ai_exec import ai_call, ai_exec
+from ai_exec import ai_call, ai_dialog_exec, ai_popen
 from dlg import dialog
+from gui import gui
 
 class PartitionMenuItem(object):
-    def __init__(self):
-        self.name = ''
-        self.size = 0
-        self.text = ''
-        self.size_text = ''
-        self.details_text = ''
-        self.ops = []
-
-    def __init__(self, name, size=0, text='', size_text='', details_text='',
+    def __init__(self, name='', size=0, text='', size_text='', details_text='',
         ops=[]):
         self.name = name
         self.size = size
@@ -79,7 +73,7 @@ class PartitionLib(object):
             install_target = '/dev/mapper/cryptroot'
 
         if crypt:
-            with open('keyfile', 'w') as f:
+            with open('/tmp/keyfile', 'w') as f:
                 f.write(passphrase)
 
         cmd = 'parted -m -s \"' + name + '\" unit B mklabel \"' + \
@@ -98,20 +92,20 @@ class PartitionLib(object):
         if not crypt:
             cmd += ' && mkfs.ext4 \"' + name + '2\"'
         else:
-            cmd += ' && cryptsetup -v -q --key-file keyfile luksFormat ' + \
+            cmd += ' && cryptsetup -v -q --key-file /tmp/keyfile luksFormat ' + \
                 '--type \"' + self.default_luks_type + '\" \"' + name + \
                 '2\"'
-            cmd += ' && cryptsetup -q --key-file keyfile open \"' + name + \
+            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \"' + name + \
                 '2\" cryptroot'
             cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
         cmd += ' && mkswap \"' + name + '3\"'
 
         cmd += ' && echo Completed.'
 
-        ai_exec(cmd, linger = True, msg = 'Automatically setting up disk...')
+        self._exec(cmd, linger = True, msg = 'Automatically setting up disk...')
 
         try:
-            os.remove('keyfile')
+            os.remove('/tmp/keyfile')
         except:
             pass
 
@@ -124,52 +118,52 @@ class PartitionLib(object):
     def _action_boot(self, name):
         disk = self.get_disk_from_part(name)
         num = self.get_num_from_part(name)
-        ai_exec('parted -m -s \"' + disk + '\" unit B toggle \"' + str(num) +
-            '\" boot && echo Completed.',
-            linger = True,
-            msg = 'Toggling boot flag...')
+        cmd = 'parted -m -s \"' + disk + '\" unit B toggle \"' + \
+            str(num) + '\" boot && echo Completed.'
+
+        self._exec(cmd, linger = True, msg = 'Toggling boot flag...')
 
     def _action_boot_target(self, name):
         self.boot_target = name
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_clear_boot_target(self, name):
         self.boot_target = ''
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_clear_crypt_target(self, name):
         self.crypt_passphrase = ''
         self.crypt_target = ''
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_clear_install_target(self, name):
         self.install_target = ''
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_clear_swap_target(self, name):
         self.swap_target = ''
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_cryptsetup(self, name, passphrase):
-        with open('keyfile', 'w') as f:
+        with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
-        ai_exec('cryptsetup -v -q --key-file keyfile luksFormat --type \"' +
+        self._exec('cryptsetup -v -q --key-file /tmp/keyfile luksFormat --type \"' +
             self.default_luks_type + '\" \"' + name + '\" && echo Completed.',
             linger = True, msg = 'Setting up encryption...')
-        os.remove('keyfile')
+        os.remove('/tmp/keyfile')
 
     def _action_cryptopen(self, name, passphrase):
-        with open('keyfile', 'w') as f:
+        with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
-        ai_exec('cryptsetup -q --key-file keyfile open \"' + name +
+        self._exec('cryptsetup -q --key-file /tmp/keyfile open \"' + name +
             '\" cryptroot && echo Completed.',
             linger = True, msg = 'Opening encrypted partition...')
         self.crypt_passphrase = passphrase
         self.crypt_target = name
-        os.remove('keyfile')
+        os.remove('/tmp/keyfile')
 
     def _action_cryptclose(self, name):
-        ai_exec('cryptsetup close cryptroot && echo Completed.',
+        self._exec('cryptsetup close cryptroot && echo Completed.',
             linger = True, msg = 'Closing encrypted block...')
         self.crypt_passphrase = ''
         self.crypt_target = ''
@@ -181,24 +175,22 @@ class PartitionLib(object):
         else:
             cmd = 'mkfs -t \"' + fstype + '\" \"' + name + '\"'
         cmd += ' && echo Completed.'
-        ai_exec(cmd, linger = True, msg = 'Formatting partition...')
+        self._exec(cmd, linger = True, msg = 'Formatting partition...')
 
     def _action_install_target(self, name):
         self.install_target = name
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _action_parttable(self, name, parttable):
-        ai_exec('parted -m -s \"' + name + '\" unit B mklabel \"' +
-            parttable + '\" && echo Completed.',
-            linger = True,
+        self._exec('parted -m -s \"' + name + '\" unit B mklabel \"' +
+            parttable + '\" && echo Completed.', linger = True,
             msg = 'Creating partition table...')
 
     def _action_part(self, name, start, end, fstype):
-        ai_exec('parted -m -s \"' + name.split('*')[1] +
+        self._exec('parted -m -s \"' + name.split('*')[1] +
             '\" unit \"' + self.part_granularity_unit + '\" mkpart primary \"' +
             fstype + '\" \"' + str(start) + '\" \"' + str(end) + '\" ' +
-            '&& echo Completed.',
-            linger = True,
+            '&& echo Completed.', linger = True,
             msg = 'Creating new partition...')
 
     def _action_refresh(self, name):
@@ -207,14 +199,13 @@ class PartitionLib(object):
     def _action_remove(self, name):
         disk = self.get_disk_from_part(name)
         num = self.get_num_from_part(name)
-        ai_exec('parted -m -s \"' + disk + '\" unit B rm \"' + str(num)
-            + '\" && echo Completed.',
-            linger = True,
+        self._exec('parted -m -s \"' + disk + '\" unit B rm \"' + str(num)
+            + '\" && echo Completed.', linger = True,
             msg = 'Removing partition...')
 
     def _action_swap_target(self, name):
         self.swap_target = name
-        dialog.msgbox('Successful.')
+        if not gui.started: dialog.msgbox('Successful.')
 
     def _add_disk_to_menu(self, menu, pref, name, item, size, *args, **kwargs):
         menu.append(PartitionMenuItem(
@@ -296,6 +287,23 @@ class PartitionLib(object):
             ops = ['boot', 'format', 'boot-target', 'install-target',
                 'swap-target', 'remove', 'cryptsetup', 'cryptopen']
         ))
+
+    def _exec(self, cmd, msg = '', **kwargs):
+        if not gui.started:
+            ai_dialog_exec(cmd, msg = msg, **kwargs)
+        else:
+            from partition_gui import partition_gui
+            p = ai_popen(
+                cmd,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines = True
+            )
+            partition_gui.add_log_lib(msg)
+            partition_gui.add_log_lib('- ' + cmd)
+            for x in p.stdout:
+                partition_gui.add_log_lib(x.rstrip('\n'))
 
     def _format_size(self, size):
         units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']

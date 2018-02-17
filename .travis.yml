@@ -15,6 +15,8 @@ arch:
   - archlinuxfr=http://repo.archlinux.fr/$arch
   packages:
   - archiso
+  - python-babel
+  - python-setuptools
   script:
   - sudo pacman-key --init
   - sudo pacman-key --populate archlinux

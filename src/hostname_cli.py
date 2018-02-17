@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env python3
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-rm -rf build
+from dlg import dialog
+from hostname_lib import hostname_lib
+from password_cli import password_cli
+from step import Step
+
+class HostnameCLI(Step):
+    def run_once(self):
+        res, text = dialog.inputbox(
+            text = 'Enter hostname:',
+            init = hostname_lib.hostname
+        )
+        if res != dialog.OK: return False
+        hostname_lib.hostname = text
+
+        password_cli.run()
+        return True
+
+hostname_cli = HostnameCLI()

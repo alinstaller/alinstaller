@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env python3
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-rm -rf build
+from step import Step
+
+class GUIStep(Step):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        pass
+
+    def update_text(self):
+        pass

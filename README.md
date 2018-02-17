@@ -25,4 +25,8 @@ following as root:
 
 Output will be written to `build/out/alinstaller.iso`.
 
-(Warning: `build.sh` may install packages on your host system.)
+## Translate
+
+You can edit the translation by editing the `.po` files inside `locale/`. New
+languages need to be added to `src/lang.txt` and `misc/*.desktop`. Run
+`make-locale.sh` to regenerate the locale files.

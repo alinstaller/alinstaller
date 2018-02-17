@@ -4,46 +4,44 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import glob
 import os
 
-from ai_exec import ai_exec
+from ai_exec import ai_dialog_exec
 from dlg import dialog
-from env_set_keymap import env_set_keymap
+from partition_cli import partition_cli
+from set_keymap_lib import set_keymap_lib
 from step import Step
 
-class EnvSetFont(Step):
-    def __init__(self):
-        self.font = ''
-
+class SetKeymapCLI(Step):
     def run_once(self):
-        fontsdir = '/usr/share/kbd/consolefonts'
-        l = sorted(os.listdir(fontsdir))
-        fonts = [('* No change', ''), ('* Default', '')]
-        for x in l:
-            if x.endswith('.gz'):
-                fonts.append((x, ''))
+        keymapsdir = '/usr/share/kbd/keymaps'
+        keymaps = glob.glob(keymapsdir + '/**/*.map.gz')
+        keymaps = [(x[len(keymapsdir)+1:], '') for x in keymaps]
+        keymaps = sorted(keymaps)
+        keymaps = [('* No change', ''), ('* Default', '')] + keymaps
         ret, sel = dialog.menu(
-            'Please choose a font:',
-            choices = fonts
+            'Please select your keyboard layout:',
+            choices = keymaps
         )
         if ret != dialog.OK: return False
         if sel == '* Default':
-            ai_exec('setfont')
-            self.font = ''
+            ai_dialog_exec('loadkeys -d')
+            set_keymap_lib.keymap = ''
         elif sel != '* No change':
-            ai_exec('setfont \"' + fontsdir + '/' + sel + '\"')
-            self.font = fontsdir + '/' + sel
+            ai_dialog_exec('loadkeys \"' + keymapsdir + '/' + sel + '\"')
+            set_keymap_lib.keymap = keymapsdir + '/' + sel
 
-        env_set_keymap.run()
+        partition_cli.run()
         return True
 
-env_set_font = EnvSetFont()
+set_keymap_cli = SetKeymapCLI()

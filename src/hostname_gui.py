@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env python3
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-rm -rf build
+from gui import gui
+from gui_step import GUIStep
+from hostname_lib import hostname_lib
+
+class HostnameGUI(GUIStep):
+    def __init__(self):
+        entry = gui.builder.get_object('entry_hostname')
+        entry.set_text(hostname_lib.hostname)
+        entry.connect('changed', self._changed)
+
+    def update_text(self):
+        gui.builder.get_object('label_hostname').set_label(
+            _('Enter a new hostname:'))
+
+    def _changed(self, entry):
+        hostname_lib.hostname = entry.get_text()
+
+hostname_gui = HostnameGUI()
