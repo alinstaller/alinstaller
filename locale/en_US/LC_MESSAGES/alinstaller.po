@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-02-17 15:46+0000\n"
+"POT-Creation-Date: 2018-02-18 11:33+0000\n"
 "PO-Revision-Date: 2018-02-17 15:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en_US\n"
@@ -110,7 +110,7 @@ msgstr ""
 msgid "Set Up This Disk"
 msgstr ""
 
-#: src/partition_gui.py:157
+#: src/partition_gui.py:157 src/partition_lib.py:495
 msgid "Create/Rewrite Partition Table"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: src/partition_gui.py:175
+#: src/partition_gui.py:175 src/partition_lib.py:503
 msgid "Set Up Encryption"
 msgstr ""
 
@@ -188,6 +188,124 @@ msgstr ""
 
 #: src/partition_gui.py:654
 msgid "Cancel"
+msgstr ""
+
+#: src/partition_lib.py:216 src/partition_lib.py:238 src/partition_lib.py:250
+#: src/partition_lib.py:278
+msgid "Size: "
+msgstr ""
+
+#: src/partition_lib.py:217
+msgid "Partitioning: "
+msgstr ""
+
+#: src/partition_lib.py:218 src/partition_lib.py:252 src/partition_lib.py:280
+#: src/partition_lib.py:284 src/partition_lib.py:286
+msgid "unknown"
+msgstr ""
+
+#: src/partition_lib.py:236
+msgid "Free Space"
+msgstr ""
+
+#: src/partition_lib.py:239 src/partition_lib.py:283
+msgid "Start: "
+msgstr ""
+
+#: src/partition_lib.py:240 src/partition_lib.py:285
+msgid "End: "
+msgstr ""
+
+#: src/partition_lib.py:251 src/partition_lib.py:279
+msgid "Filesystem: "
+msgstr ""
+
+#: src/partition_lib.py:259
+msgid "Show Configured Targets"
+msgstr ""
+
+#: src/partition_lib.py:260
+msgid "Boot target: "
+msgstr ""
+
+#: src/partition_lib.py:261
+msgid "Encryption target: "
+msgstr ""
+
+#: src/partition_lib.py:262
+msgid "Installation target: "
+msgstr ""
+
+#: src/partition_lib.py:263
+msgid "Swap target: "
+msgstr ""
+
+#: src/partition_lib.py:268
+msgid "Refresh"
+msgstr ""
+
+#: src/partition_lib.py:281
+msgid "Flags: "
+msgstr ""
+
+#: src/partition_lib.py:494
+msgid "Automatically Set Up This Disk"
+msgstr ""
+
+#: src/partition_lib.py:496
+msgid "Create New Partition"
+msgstr ""
+
+#: src/partition_lib.py:497
+msgid "Format Selected Partition"
+msgstr ""
+
+#: src/partition_lib.py:498
+msgid "Toggle Boot Flag"
+msgstr ""
+
+#: src/partition_lib.py:499
+msgid "Select as Boot Target"
+msgstr ""
+
+#: src/partition_lib.py:500
+msgid "Select as Installation Target"
+msgstr ""
+
+#: src/partition_lib.py:501
+msgid "Select as Swap Target"
+msgstr ""
+
+#: src/partition_lib.py:502
+msgid "Remove Selected Partition"
+msgstr ""
+
+#: src/partition_lib.py:504
+msgid "Open Encrypted Partition"
+msgstr ""
+
+#: src/partition_lib.py:505
+msgid "Close Encrypted Block"
+msgstr ""
+
+#: src/partition_lib.py:506
+msgid "Clear Boot Target"
+msgstr ""
+
+#: src/partition_lib.py:507
+msgid "Clear Encryption Target"
+msgstr ""
+
+#: src/partition_lib.py:508
+msgid "Clear Installation Target"
+msgstr ""
+
+#: src/partition_lib.py:509
+msgid "Clear Swap Target"
+msgstr ""
+
+#: src/partition_lib.py:510
+msgid "Refresh Partition List"
 msgstr ""
 
 #: src/password_gui.py:36 src/password_gui.py:71

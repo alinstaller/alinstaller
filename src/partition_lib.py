@@ -213,9 +213,9 @@ class PartitionLib(object):
             size = size,
             text = pref + name,
             size_text = self._format_size(size),
-            details_text = 'Size: ' + self._format_size(size) +
-                '\nPartitioning: ' +
-                (item['parttable'] if 'parttable' in item and item['parttable'] != None else 'unknown'),
+            details_text = _('Size: ') + self._format_size(size) + '\n' +
+                _('Partitioning: ') +
+                (item['parttable'] if 'parttable' in item and item['parttable'] != None else _('unknown')),
             ops = ['autosetup', 'parttable']
         ))
 
@@ -233,11 +233,11 @@ class PartitionLib(object):
         menu.append(PartitionMenuItem(
             name = '*' + parent_name + '*' + start_str + '*' + end_str,
             size = end - start + 1,
-            text = pref + 'Free Space',
+            text = pref + _('Free Space'),
             size_text = self._format_size(end - start + 1),
-            details_text = 'Size: ' + self._format_size(end - start + 1) +
-                '\nStart: ' + str(start) +
-                '\nEnd: ' + str(end),
+            details_text = _('Size: ') + self._format_size(end - start + 1) + '\n' +
+                _('Start: ') + str(start) + '\n' +
+                _('End: ') + str(end),
             ops = ['part']
         ))
 
@@ -247,25 +247,25 @@ class PartitionLib(object):
             size = size,
             text = pref + name,
             size_text = self._format_size(size),
-            details_text = 'Size: ' + self._format_size(size) +
-                '\nFilesystem: ' +
-                (item['fstype'] if 'fstype' in item and item['fstype'] != None else 'unknown'),
+            details_text = _('Size: ') + self._format_size(size) + '\n' +
+                _('Filesystem: ') +
+                (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')),
             ops = ['format', 'boot-target', 'install-target', 'swap-target', 'cryptclose']
         ))
 
     def _add_options_to_menu(self, menu, *args, **kwargs):
         menu.append(PartitionMenuItem(
             name = '*show-targets',
-            text = 'Show Configured Targets',
-            details_text = 'Boot target: ' + self.boot_target +
-                '\nEncryption target: ' + self.crypt_target +
-                '\nInstallation target: ' + self.install_target +
-                '\nSwap target: ' + self.swap_target,
+            text = _('Show Configured Targets'),
+            details_text = _('Boot target: ') + self.boot_target + '\n' +
+                _('Encryption target: ') + self.crypt_target + '\n' +
+                _('Installation target: ') + self.install_target + '\n' +
+                _('Swap target: ') + self.swap_target,
             ops = ['clear-boot-target', 'clear-crypt-target', 'clear-install-target', 'clear-swap-target']
         ))
         menu.append(PartitionMenuItem(
             name = '*refresh',
-            text = 'Refresh',
+            text = _('Refresh'),
             ops = ['refresh']
         ))
 
@@ -275,15 +275,15 @@ class PartitionLib(object):
             size = size,
             text = pref + name,
             size_text = self._format_size(size),
-            details_text = 'Size: ' + self._format_size(size) +
-                '\nFilesystem: ' +
-                (item['fstype'] if 'fstype' in item and item['fstype'] != None else 'unknown') +
-                '\nFlags: ' +
-                (item['flags'] if 'flags' in item and item['flags'] != None else '') +
-                '\nStart: ' +
-                (item['start'] if 'start' in item and item['start'] != None else 'unknown') +
-                '\nEnd: ' +
-                (item['end'] if 'end' in item and item['end'] != None else 'unknown'),
+            details_text = _('Size: ') + self._format_size(size) + '\n' +
+                _('Filesystem: ') +
+                (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')) + '\n' +
+                _('Flags: ') +
+                (item['flags'] if 'flags' in item and item['flags'] != None else '') + '\n' +
+                _('Start: ') +
+                (item['start'] if 'start' in item and item['start'] != None else _('unknown')) + '\n' +
+                _('End: ') +
+                (item['end'] if 'end' in item and item['end'] != None else _('unknown')),
             ops = ['boot', 'format', 'boot-target', 'install-target',
                 'swap-target', 'remove', 'cryptsetup', 'cryptopen']
         ))
@@ -491,23 +491,23 @@ class PartitionLib(object):
         return int(name[i + 1:])
 
     def get_text_for_op(self, op):
-        if op == 'autosetup': return 'Automatically Set Up This Disk'
-        if op == 'parttable': return 'Create/Rewrite Partition Table'
-        if op == 'part': return 'Create New Partition'
-        if op == 'format': return 'Format Selected Partition'
-        if op == 'boot': return 'Toggle Boot Flag'
-        if op == 'boot-target': return 'Select as Boot Target'
-        if op == 'install-target': return 'Select as Installation Target'
-        if op == 'swap-target': return 'Select as Swap Target'
-        if op == 'remove': return 'Remove Selected Partition'
-        if op == 'cryptsetup': return 'Set Up Encryption'
-        if op == 'cryptopen': return 'Open Encrypted Partition'
-        if op == 'cryptclose': return 'Close Encrypted Block'
-        if op == 'clear-boot-target': return 'Clear Boot Target'
-        if op == 'clear-crypt-target': return 'Clear Encryption Target'
-        if op == 'clear-install-target': return 'Clear Installation Target'
-        if op == 'clear-swap-target': return 'Clear Swap Target'
-        if op == 'refresh': return 'Refresh Partition List'
+        if op == 'autosetup': return _('Automatically Set Up This Disk')
+        if op == 'parttable': return _('Create/Rewrite Partition Table')
+        if op == 'part': return _('Create New Partition')
+        if op == 'format': return _('Format Selected Partition')
+        if op == 'boot': return _('Toggle Boot Flag')
+        if op == 'boot-target': return _('Select as Boot Target')
+        if op == 'install-target': return _('Select as Installation Target')
+        if op == 'swap-target': return _('Select as Swap Target')
+        if op == 'remove': return _('Remove Selected Partition')
+        if op == 'cryptsetup': return _('Set Up Encryption')
+        if op == 'cryptopen': return _('Open Encrypted Partition')
+        if op == 'cryptclose': return _('Close Encrypted Block')
+        if op == 'clear-boot-target': return _('Clear Boot Target')
+        if op == 'clear-crypt-target': return _('Clear Encryption Target')
+        if op == 'clear-install-target': return _('Clear Installation Target')
+        if op == 'clear-swap-target': return _('Clear Swap Target')
+        if op == 'refresh': return _('Refresh Partition List')
         return op
 
     def scan(self):
