@@ -15,7 +15,7 @@
 
 from dlg import dialog
 from hostname_lib import hostname_lib
-from password_cli import password_cli
+from install_cli import install_cli
 from step import Step
 
 class HostnameCLI(Step):
@@ -27,7 +27,7 @@ class HostnameCLI(Step):
         if res != dialog.OK: return False
         hostname_lib.hostname = text
 
-        password_cli.run()
+        install_cli.run()
         return True
 
 hostname_cli = HostnameCLI()

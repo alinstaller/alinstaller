@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-02-18 11:33+0000\n"
+"POT-Creation-Date: 2018-02-18 12:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.5.3\n"
 
-#: src/gui.py:79 src/init.py:37
+#: src/gui.py:78 src/init.py:37
 msgid "AL Installer"
 msgstr ""
 
-#: src/gui.py:80
+#: src/gui.py:79
 msgid "_Back"
 msgstr ""
 
-#: src/gui.py:81
+#: src/gui.py:80
 msgid "_Next"
 msgstr ""
 
@@ -305,22 +305,6 @@ msgstr ""
 
 #: src/partition_lib.py:510
 msgid "Refresh Partition List"
-msgstr ""
-
-#: src/password_gui.py:36 src/password_gui.py:71
-msgid "A new password is required."
-msgstr ""
-
-#: src/password_gui.py:49
-msgid "Enter root password:"
-msgstr ""
-
-#: src/password_gui.py:51
-msgid "Confirm root password:"
-msgstr ""
-
-#: src/password_gui.py:73
-msgid "Passwords do not match."
 msgstr ""
 
 #: src/welcome_gui.py:22

@@ -16,7 +16,6 @@
 from ai_exec import ai_call
 from hostname_lib import hostname_lib
 from partition_lib import partition_lib
-from password_lib import password_lib
 from set_font_lib import set_font_lib
 from set_keymap_lib import set_keymap_lib
 
@@ -85,8 +84,8 @@ class InstallLib(object):
         cmd += ' && sed -i \'s/\(HandleSuspendKey=\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && sed -i \'s/\(HandleHibernateKey=\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && rm -f /mnt/etc/udev/rules.d/81-dhcpcd.rules'
-
-        cmd += ' && cp /tmp/password /mnt/password'
+        cmd += ' && echo >> /mnt/etc/sudoers'
+        cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
 
         cmd += ' && arch-chroot /mnt /bin/bash -c \''
 
@@ -167,9 +166,6 @@ class InstallLib(object):
 
         cmd += ' && echo vm.swappiness=0 > /etc/sysctl.d/99-sysctl.conf'
 
-        cmd += ' && cat /password | chpasswd'
-        cmd += ' && rm -f /password'
-
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl set-default graphical.target'
         cmd += ' && systemctl enable NetworkManager firewalld gdm'
@@ -183,21 +179,9 @@ class InstallLib(object):
 
         cmd += '\''
 
-        cmd += ' && rm -f /tmp/password'
         cmd += ' && umount -R /mnt'
-
         cmd += ' && echo && echo Completed.'
 
         return cmd
-
-    def prepare_configure(self):
-        with open('/tmp/password', 'w') as f:
-            f.write('root:' + password_lib.password)
-
-    def cleanup_configure(self):
-        ai_call('rm -f /mnt/password')
-        try:
-            os.remove('/tmp/password')
-        except: pass
 
 install_lib = InstallLib()

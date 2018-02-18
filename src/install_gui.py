@@ -196,10 +196,7 @@ class InstallGUI(GUIStep):
         self._set_progress_thread(_('Configuring...'))
 
         cmd = install_lib.get_configure_cmd()
-
-        install_lib.prepare_configure()
         res = self._exec_thread(cmd, 'Configuring...')
-        install_lib.cleanup_configure()
 
         if res != 0:
             self._install_fail_thread()

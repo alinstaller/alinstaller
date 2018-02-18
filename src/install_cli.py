@@ -87,12 +87,8 @@ class InstallCLI(Step):
 
 
         cmd = install_lib.get_configure_cmd()
-        install_lib.prepare_configure()
-
         res = ai_dialog_exec(cmd, linger = True, msg = 'Configuring...',
             width = 75, height = 20, showcmd = False)
-
-        install_lib.cleanup_configure()
 
         return res
 
