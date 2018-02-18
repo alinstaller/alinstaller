@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-02-18 12:01+0000\n"
+"POT-Creation-Date: 2018-02-18 14:39+0000\n"
 "PO-Revision-Date: 2018-02-17 15:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en_US\n"
@@ -78,115 +78,121 @@ msgstr ""
 msgid "An installation target must be selected."
 msgstr ""
 
-#: src/partition_gui.py:139
-msgid "Edit partitions and choose your installation target below."
+#: src/partition_gui.py:105
+msgid ""
+"If not sure, choose an empty disk, and select \"Automatically Set Up This"
+" Disk\"."
 msgstr ""
 
 #: src/partition_gui.py:141
-msgid "Choose an action below:"
+msgid "Edit partitions and choose your installation target below."
 msgstr ""
 
 #: src/partition_gui.py:143
+msgid "Choose an action below:"
+msgstr ""
+
+#: src/partition_gui.py:145
 msgid "Log"
 msgstr ""
 
-#: src/partition_gui.py:145 src/partition_gui.py:155
+#: src/partition_gui.py:147 src/partition_gui.py:157
 msgid "Partitioning type"
 msgstr ""
 
-#: src/partition_gui.py:147
+#: src/partition_gui.py:149
 msgid "Encryption"
 msgstr ""
 
-#: src/partition_gui.py:149 src/partition_gui.py:171 src/partition_gui.py:177
+#: src/partition_gui.py:151 src/partition_gui.py:173 src/partition_gui.py:179
 msgid "Passphrase"
 msgstr ""
 
-#: src/partition_gui.py:151 src/partition_gui.py:173
+#: src/partition_gui.py:153 src/partition_gui.py:175
 msgid "Confirm passphrase"
 msgstr ""
 
-#: src/partition_gui.py:153
+#: src/partition_gui.py:155
 msgid "Set Up This Disk"
 msgstr ""
 
-#: src/partition_gui.py:157 src/partition_lib.py:495
+#: src/partition_gui.py:159 src/partition_lib.py:495
 msgid "Create/Rewrite Partition Table"
 msgstr ""
 
-#: src/partition_gui.py:159
+#: src/partition_gui.py:161
 msgid "Start"
 msgstr ""
 
-#: src/partition_gui.py:161
+#: src/partition_gui.py:163
 msgid "End"
 msgstr ""
 
-#: src/partition_gui.py:163 src/partition_gui.py:167
+#: src/partition_gui.py:165 src/partition_gui.py:169
 msgid "Filesystem"
 msgstr ""
 
-#: src/partition_gui.py:165
+#: src/partition_gui.py:167
 msgid "Create Partition"
 msgstr ""
 
-#: src/partition_gui.py:169 src/partition_gui.py:497
+#: src/partition_gui.py:171 src/partition_gui.py:499
 msgid "Format"
 msgstr ""
 
-#: src/partition_gui.py:175 src/partition_lib.py:503
+#: src/partition_gui.py:177 src/partition_lib.py:503
 msgid "Set Up Encryption"
 msgstr ""
 
-#: src/partition_gui.py:179
+#: src/partition_gui.py:181
 msgid "Open"
 msgstr ""
 
-#: src/partition_gui.py:212
+#: src/partition_gui.py:214
 msgid "Working"
 msgstr ""
 
-#: src/partition_gui.py:277
+#: src/partition_gui.py:279
 msgid "Select an item to view its details."
 msgstr ""
 
-#: src/partition_gui.py:384 src/partition_gui.py:553
+#: src/partition_gui.py:386 src/partition_gui.py:555
 msgid "Passphrases do not match."
 msgstr ""
 
-#: src/partition_gui.py:393 src/partition_gui.py:427
+#: src/partition_gui.py:395 src/partition_gui.py:429
 msgid "Are you sure you want to wipe this disk?"
 msgstr ""
 
-#: src/partition_gui.py:393 src/partition_gui.py:427
+#: src/partition_gui.py:395 src/partition_gui.py:429
 msgid "Wipe"
 msgstr ""
 
-#: src/partition_gui.py:496
+#: src/partition_gui.py:498
 msgid "Are you sure you want to format this partition?"
 msgstr ""
 
-#: src/partition_gui.py:526
+#: src/partition_gui.py:528
 msgid "Are you sure you want to remove this partition?"
 msgstr ""
 
-#: src/partition_gui.py:526
+#: src/partition_gui.py:528
 msgid "Remove"
 msgstr ""
 
-#: src/partition_gui.py:561
+#: src/partition_gui.py:563
 msgid "Are you sure you want to encrypt this disk? All data will be lost."
 msgstr ""
 
-#: src/partition_gui.py:562
+#: src/partition_gui.py:564
 msgid "Encrypt"
 msgstr ""
 
-#: src/partition_gui.py:643 src/partition_gui.py:645
+#: src/partition_gui.py:645 src/partition_gui.py:647
 msgid "Confirm"
 msgstr ""
 
-#: src/partition_gui.py:654
+#: src/partition_gui.py:656
 msgid "Cancel"
 msgstr ""
 
