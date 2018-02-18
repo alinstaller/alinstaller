@@ -1,7 +1,7 @@
 AL Installer
 ============
 AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It is
-intended for desktop use and provides a dialog-based installation guide to
+intended for desktop use and provides a step-by-step installation guide to
 perform a clean installation without the need of Internet access.
 
 The [GNOME](https://www.gnome.org/) desktop environment and several common
