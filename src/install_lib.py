@@ -172,8 +172,13 @@ class InstallLib(object):
 
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl set-default graphical.target'
-        cmd += ' && systemctl enable NetworkManager bluetooth firewalld' + \
-            ' gdm lvm2-monitor org.cups.cupsd spice-vdagentd upower'
+        cmd += ' && systemctl enable NetworkManager firewalld gdm'
+
+        cmd += ' && (systemctl enable bluetooth || true)'
+        cmd += ' && (systemctl enable lvm2-monitor || true)'
+        cmd += ' && (systemctl enable org.cups.cupsd || true)'
+        cmd += ' && (systemctl enable spice-vdagentd || true)'
+        cmd += ' && (systemctl enable upower || true)'
 
         cmd += '\''
 
