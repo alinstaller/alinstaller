@@ -26,6 +26,9 @@ arch:
   - sudo mv build/out/alinstaller.iso $RELEASE
   - sudo chmod 777 $RELEASE
 
+before_deploy:
+- md5sum $RELEASE
+
 deploy:
   provider: releases
   api_key:
