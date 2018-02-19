@@ -357,10 +357,6 @@ class PartitionGUI(GUIStep):
             handler = self._handle_cryptsetup
         elif op == 'cryptopen':
             handler = self._handle_cryptopen
-        elif op in ['boot-target', 'install-target', 'swap-target',
-            'clear-boot-target', 'clear-crypt-target', 'clear-install-target',
-            'clear-swap-target']:
-            handler = self._handle_noscan
         else:
             handler = self._handle_others
 
@@ -615,16 +611,6 @@ class PartitionGUI(GUIStep):
 
         dialog.run()
         dialog.hide()
-
-    def _handle_noscan(self, name, text, size, op, action):
-        def action_lib():
-            try:
-                partition_lib.action(op, name)
-                self._update_content_text_lib()
-            except:
-                self.add_log_lib(traceback.format_exc())
-
-        self._lib_loop_add(False, action_lib)
 
     def _handle_others(self, name, text, size, op, action):
         def action_lib():

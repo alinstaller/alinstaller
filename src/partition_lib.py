@@ -17,6 +17,7 @@ import json
 import os
 import psutil
 import subprocess
+import threading
 
 from ai_exec import ai_call, ai_dialog_exec, ai_popen
 from dlg import dialog
@@ -125,24 +126,24 @@ class PartitionLib(object):
 
     def _action_boot_target(self, name):
         self.boot_target = name
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_clear_boot_target(self, name):
         self.boot_target = ''
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_clear_crypt_target(self, name):
         self.crypt_passphrase = ''
         self.crypt_target = ''
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_clear_install_target(self, name):
         self.install_target = ''
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_clear_swap_target(self, name):
         self.swap_target = ''
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_cryptsetup(self, name, passphrase):
         with open('/tmp/keyfile', 'w') as f:
@@ -179,7 +180,7 @@ class PartitionLib(object):
 
     def _action_install_target(self, name):
         self.install_target = name
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _action_parttable(self, name, parttable):
         self._exec('parted -m -s \"' + name + '\" unit B mklabel \"' +
@@ -205,7 +206,7 @@ class PartitionLib(object):
 
     def _action_swap_target(self, name):
         self.swap_target = name
-        if not gui.started: dialog.msgbox('Successful.')
+        self._msgbox(_('Successful.'))
 
     def _add_disk_to_menu(self, menu, pref, name, item, size, *args, **kwargs):
         menu.append(PartitionMenuItem(
@@ -364,6 +365,26 @@ class PartitionLib(object):
             self._add_options_to_menu(menu = l)
 
         return l
+
+    def _msgbox(self, text):
+        if not gui.started:
+            dialog.msgbox(text)
+        else:
+            event = threading.Event()
+            def show():
+                from gi.repository import Gtk
+                dialog = Gtk.MessageDialog(
+                    gui.window,
+                    Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    Gtk.MessageType.INFO,
+                    Gtk.ButtonsType.CLOSE,
+                    text
+                )
+                dialog.run()
+                dialog.destroy()
+                event.set()
+            gui.idle_add(show)
+            event.wait()
 
     def _to_gran_end(self, x):
         return x // self.part_granularity
