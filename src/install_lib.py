@@ -170,6 +170,7 @@ class InstallLib(object):
         cmd += ' && systemctl set-default graphical.target'
         cmd += ' && systemctl enable NetworkManager firewalld gdm'
 
+        cmd += ' && (systemctl enable avahi-daemon || true)'
         cmd += ' && (systemctl enable bluetooth || true)'
         cmd += ' && (systemctl enable lvm2-monitor || true)'
         cmd += ' && (systemctl enable org.cups.cupsd || true)'
@@ -177,6 +178,9 @@ class InstallLib(object):
         cmd += ' && (systemctl enable upower || true)'
 
         cmd += ' && (systemctl --global enable pipewire || true)'
+
+        cmd += ' && (hostnamectl --static set-hostname \"' + \
+            hostname_lib.hostname + '\" || true)'
 
         cmd += '\''
 
