@@ -173,9 +173,10 @@ class InstallLib(object):
         cmd += ' && (systemctl enable bluetooth || true)'
         cmd += ' && (systemctl enable lvm2-monitor || true)'
         cmd += ' && (systemctl enable org.cups.cupsd || true)'
-        cmd += ' && (systemctl enable pipewire || true)'
         cmd += ' && (systemctl enable spice-vdagentd || true)'
         cmd += ' && (systemctl enable upower || true)'
+
+        cmd += ' && (systemctl --global enable pipewire || true)'
 
         cmd += '\''
 
