@@ -30,3 +30,9 @@ Output will be written to `build/out/alinstaller.iso`.
 You can edit the translation by editing the `.po` files inside `locale/`. New
 languages need to be added to `src/lang.txt` and `misc/*.desktop`. Run
 `make-locale.sh` to regenerate the locale files.
+
+## Distros based on Arch Linux
+
+Anarchy Linux (originally _Arch Linux Anywhere_): https://anarchy-linux.org/  
+Antergos: https://antergos.com/  
+Manjaro Linux: https://manjaro.org/
