@@ -17,12 +17,14 @@ from dlg import dialog
 from set_font_cli import set_font_cli
 from step import Step
 
+
 class WelcomeCLI(Step):
     def run_once(self):
         if (dialog.msgbox('Welcome to AL Installer!\n\n'
-            + 'This guide will help you install Arch Linux.',
-            width = 50, height = 8) == dialog.OK):
+                          + 'This guide will help you install Arch Linux.',
+                          width=50, height=8) == dialog.OK):
             set_font_cli.run()
         return True
+
 
 welcome_cli = WelcomeCLI()

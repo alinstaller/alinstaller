@@ -15,12 +15,10 @@
 
 from step import Step
 
-class GUIStep(Step):
-    def __init__(self):
-        super().__init__()
 
-    def run(self):
-        pass
+class GUIStep(Step):
+    def run_once(self):
+        raise Exception('run_once() called on GUIStep')
 
     def update_text(self):
         pass

@@ -21,6 +21,7 @@ from set_font_lib import set_font_lib
 from set_keymap_cli import set_keymap_cli
 from step import Step
 
+
 class SetFontCLI(Step):
     def run_once(self):
         fontsdir = '/usr/share/kbd/consolefonts'
@@ -31,9 +32,10 @@ class SetFontCLI(Step):
                 fonts.append((x, ''))
         ret, sel = dialog.menu(
             'Please choose a font:',
-            choices = fonts
+            choices=fonts
         )
-        if ret != dialog.OK: return False
+        if ret != dialog.OK:
+            return False
         if sel == '* Default':
             ai_dialog_exec('setfont')
             set_font_lib.font = ''
@@ -43,5 +45,6 @@ class SetFontCLI(Step):
 
         set_keymap_cli.run()
         return True
+
 
 set_font_cli = SetFontCLI()

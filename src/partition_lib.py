@@ -15,23 +15,29 @@
 
 import json
 import os
-import psutil
 import subprocess
 import threading
+
+import psutil
 
 from ai_exec import ai_call, ai_dialog_exec, ai_popen
 from dlg import dialog
 from gui import gui
 
+
 class PartitionMenuItem(object):
     def __init__(self, name='', size=0, text='', size_text='', details_text='',
-        ops=[]):
+                 ops=None):
         self.name = name
         self.size = size
         self.text = text
         self.size_text = size_text
         self.details_text = details_text
-        self.ops = ops
+        if ops is None:
+            self.ops = []
+        else:
+            self.ops = ops
+
 
 class PartitionLib(object):
     base = 1000
@@ -54,8 +60,8 @@ class PartitionLib(object):
     def __str__(self):
         return str(json.dumps(self.parts, sort_keys=True))
 
-    def _action_autosetup(self, name, size, parttable, crypt = False,
-        passphrase = ''):
+    def _action_autosetup(self, name, size, parttable, crypt=False,
+                          passphrase=''):
         boot_start = self.part_granularity
         boot_end = boot_start + self.boot_part_size - 1
         root_start = boot_end + 1
@@ -65,7 +71,8 @@ class PartitionLib(object):
         swap_start = root_end + 1
 
         boot_target = name + '1'
-        crypt_passphrase = ''; crypt_target = ''
+        crypt_passphrase = ''
+        crypt_target = ''
         install_target = name + '2'
         swap_target = name + '3'
         if crypt:
@@ -103,11 +110,11 @@ class PartitionLib(object):
 
         cmd += ' && echo Completed.'
 
-        self._exec(cmd, linger = True, msg = 'Automatically setting up disk...')
+        self._exec(cmd, linger=True, msg='Automatically setting up disk...')
 
         try:
             os.remove('/tmp/keyfile')
-        except:
+        except Exception:
             pass
 
         self.boot_target = boot_target
@@ -122,7 +129,7 @@ class PartitionLib(object):
         cmd = 'parted -m -s \"' + disk + '\" unit B toggle \"' + \
             str(num) + '\" boot && echo Completed.'
 
-        self._exec(cmd, linger = True, msg = 'Toggling boot flag...')
+        self._exec(cmd, linger=True, msg='Toggling boot flag...')
 
     def _action_boot_target(self, name):
         self.boot_target = name
@@ -149,23 +156,23 @@ class PartitionLib(object):
         with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
         self._exec('cryptsetup -v -q --key-file /tmp/keyfile luksFormat --type \"' +
-            self.default_luks_type + '\" \"' + name + '\" && echo Completed.',
-            linger = True, msg = 'Setting up encryption...')
+                   self.default_luks_type + '\" \"' + name + '\" && echo Completed.',
+                   linger=True, msg='Setting up encryption...')
         os.remove('/tmp/keyfile')
 
     def _action_cryptopen(self, name, passphrase):
         with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
         self._exec('cryptsetup -q --key-file /tmp/keyfile open \"' + name +
-            '\" cryptroot && echo Completed.',
-            linger = True, msg = 'Opening encrypted partition...')
+                   '\" cryptroot && echo Completed.',
+                   linger=True, msg='Opening encrypted partition...')
         self.crypt_passphrase = passphrase
         self.crypt_target = name
         os.remove('/tmp/keyfile')
 
     def _action_cryptclose(self, name):
         self._exec('cryptsetup close cryptroot && echo Completed.',
-            linger = True, msg = 'Closing encrypted block...')
+                   linger=True, msg='Closing encrypted block...')
         self.crypt_passphrase = ''
         self.crypt_target = ''
 
@@ -176,7 +183,7 @@ class PartitionLib(object):
         else:
             cmd = 'mkfs -t \"' + fstype + '\" \"' + name + '\"'
         cmd += ' && echo Completed.'
-        self._exec(cmd, linger = True, msg = 'Formatting partition...')
+        self._exec(cmd, linger=True, msg='Formatting partition...')
 
     def _action_install_target(self, name):
         self.install_target = name
@@ -184,15 +191,15 @@ class PartitionLib(object):
 
     def _action_parttable(self, name, parttable):
         self._exec('parted -m -s \"' + name + '\" unit B mklabel \"' +
-            parttable + '\" && echo Completed.', linger = True,
-            msg = 'Creating partition table...')
+                   parttable + '\" && echo Completed.', linger=True,
+                   msg='Creating partition table...')
 
     def _action_part(self, name, start, end, fstype):
         self._exec('parted -m -s \"' + name.split('*')[1] +
-            '\" unit \"' + self.part_granularity_unit + '\" mkpart primary \"' +
-            fstype + '\" \"' + str(start) + '\" \"' + str(end) + '\" ' +
-            '&& echo Completed.', linger = True,
-            msg = 'Creating new partition...')
+                   '\" unit \"' + self.part_granularity_unit + '\" mkpart primary \"' +
+                   fstype + '\" \"' + str(start) + '\" \"' + str(end) + '\" ' +
+                   '&& echo Completed.', linger=True,
+                   msg='Creating new partition...')
 
     def _action_refresh(self, name):
         pass
@@ -201,8 +208,8 @@ class PartitionLib(object):
         disk = self.get_disk_from_part(name)
         num = self.get_num_from_part(name)
         self._exec('parted -m -s \"' + disk + '\" unit B rm \"' + str(num)
-            + '\" && echo Completed.', linger = True,
-            msg = 'Removing partition...')
+                   + '\" && echo Completed.', linger=True,
+                   msg='Removing partition...')
 
     def _action_swap_target(self, name):
         self.swap_target = name
@@ -210,88 +217,95 @@ class PartitionLib(object):
 
     def _add_disk_to_menu(self, menu, pref, name, item, size, *args, **kwargs):
         menu.append(PartitionMenuItem(
-            name = name,
-            size = size,
-            text = pref + name,
-            size_text = self._format_size(size),
-            details_text = _('Size: ') + self._format_size(size) + '\n' +
-                _('Partitioning: ') +
-                (item['parttable'] if 'parttable' in item and item['parttable'] != None else _('unknown')),
-            ops = ['autosetup', 'parttable']
+            name=name,
+            size=size,
+            text=pref + name,
+            size_text=self._format_size(size),
+            details_text=_('Size: ') + self._format_size(size) + '\n' +
+            _('Partitioning: ') +
+            (item['parttable'] if 'parttable' in item and item['parttable']
+             != None else _('unknown')),
+            ops=['autosetup', 'parttable']
         ))
 
     def _add_free_space_to_menu(
-        self, menu, pref, parent_name, start, end, *args, **kwargs):
+            self, menu, pref, parent_name, start, end, *args, **kwargs):
 
         gran_start = self._to_gran_start(start)
         gran_end = self._to_gran_end(end)
-        if gran_start <= 0: gran_start = 1
-        if gran_end < gran_start: return
+        if gran_start <= 0:
+            gran_start = 1
+        if gran_end < gran_start:
+            return
 
         start_str = str(gran_start) + self.part_granularity_unit
         end_str = str(gran_end) + self.part_granularity_unit
 
         menu.append(PartitionMenuItem(
-            name = '*' + parent_name + '*' + start_str + '*' + end_str,
-            size = end - start + 1,
-            text = pref + _('Free Space'),
-            size_text = self._format_size(end - start + 1),
-            details_text = _('Size: ') + self._format_size(end - start + 1) + '\n' +
-                _('Start: ') + str(start) + '\n' +
-                _('End: ') + str(end),
-            ops = ['part']
+            name='*' + parent_name + '*' + start_str + '*' + end_str,
+            size=end - start + 1,
+            text=pref + _('Free Space'),
+            size_text=self._format_size(end - start + 1),
+            details_text=_('Size: ') + self._format_size(end - start + 1) + '\n' +
+            _('Start: ') + str(start) + '\n' +
+            _('End: ') + str(end),
+            ops=['part']
         ))
 
     def _add_other_to_menu(self, menu, pref, name, item, size, *args, **kwargs):
         menu.append(PartitionMenuItem(
-            name = name,
-            size = size,
-            text = pref + name,
-            size_text = self._format_size(size),
-            details_text = _('Size: ') + self._format_size(size) + '\n' +
-                _('Filesystem: ') +
-                (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')),
-            ops = ['format', 'boot-target', 'install-target', 'swap-target', 'cryptclose']
+            name=name,
+            size=size,
+            text=pref + name,
+            size_text=self._format_size(size),
+            details_text=_('Size: ') + self._format_size(size) + '\n' +
+            _('Filesystem: ') +
+            (item['fstype'] if 'fstype' in item and item['fstype']
+             != None else _('unknown')),
+            ops=['format', 'boot-target', 'install-target',
+                 'swap-target', 'cryptclose']
         ))
 
     def _add_options_to_menu(self, menu, *args, **kwargs):
         menu.append(PartitionMenuItem(
-            name = '*show-targets',
-            text = _('Show Configured Targets'),
-            details_text = _('Boot target: ') + self.boot_target + '\n' +
-                _('Encryption target: ') + self.crypt_target + '\n' +
-                _('Installation target: ') + self.install_target + '\n' +
-                _('Swap target: ') + self.swap_target,
-            ops = ['clear-boot-target', 'clear-crypt-target', 'clear-install-target', 'clear-swap-target']
+            name='*show-targets',
+            text=_('Show Configured Targets'),
+            details_text=_('Boot target: ') + self.boot_target + '\n' +
+            _('Encryption target: ') + self.crypt_target + '\n' +
+            _('Installation target: ') + self.install_target + '\n' +
+            _('Swap target: ') + self.swap_target,
+            ops=['clear-boot-target', 'clear-crypt-target',
+                 'clear-install-target', 'clear-swap-target']
         ))
         menu.append(PartitionMenuItem(
-            name = '*refresh',
-            text = _('Refresh'),
-            ops = ['refresh']
+            name='*refresh',
+            text=_('Refresh'),
+            ops=['refresh']
         ))
 
     def _add_part_to_menu(self, menu, pref, name, item, size, *args, **kwargs):
         menu.append(PartitionMenuItem(
-            name = name,
-            size = size,
-            text = pref + name,
-            size_text = self._format_size(size),
-            details_text = _('Size: ') + self._format_size(size) + '\n' +
-                _('Filesystem: ') +
-                (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')) + '\n' +
-                _('Flags: ') +
-                (item['flags'] if 'flags' in item and item['flags'] != None else '') + '\n' +
-                _('Start: ') +
-                (item['start'] if 'start' in item and item['start'] != None else _('unknown')) + '\n' +
-                _('End: ') +
-                (item['end'] if 'end' in item and item['end'] != None else _('unknown')),
-            ops = ['boot', 'format', 'boot-target', 'install-target',
-                'swap-target', 'remove', 'cryptsetup', 'cryptopen']
+            name=name,
+            size=size,
+            text=pref + name,
+            size_text=self._format_size(size),
+            details_text=_('Size: ') + self._format_size(size) + '\n' +
+            _('Filesystem: ') +
+            (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')) + '\n' +
+            _('Flags: ') +
+            (item['flags'] if 'flags' in item and item['flags'] != None else '') + '\n' +
+            _('Start: ') +
+            (item['start'] if 'start' in item and item['start'] != None else _('unknown')) + '\n' +
+            _('End: ') +
+            (item['end'] if 'end' in item and item['end']
+             != None else _('unknown')),
+            ops=['boot', 'format', 'boot-target', 'install-target',
+                 'swap-target', 'remove', 'cryptsetup', 'cryptopen']
         ))
 
-    def _exec(self, cmd, msg = '', **kwargs):
+    def _exec(self, cmd, msg='', **kwargs):
         if not gui.started:
-            ai_dialog_exec(cmd, msg = msg, **kwargs)
+            ai_dialog_exec(cmd, msg=msg, **kwargs)
         else:
             from partition_gui import partition_gui
             p = ai_popen(
@@ -299,7 +313,7 @@ class PartitionLib(object):
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                universal_newlines = True
+                universal_newlines=True
             )
             partition_gui.add_log_lib(msg)
             partition_gui.add_log_lib('- ' + cmd)
@@ -309,12 +323,14 @@ class PartitionLib(object):
     def _format_size(self, size):
         units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
         for x in units[:-1]:
-            if size < self.base: return str(size) + ' ' + x
+            if size < self.base:
+                return str(size) + ' ' + x
             size //= self.base
         return str(size) + ' ' + units[-1]
 
-    def _get_layout_menu_noscan(self, parts = None, parent = None, level = 0):
-        if parts == None: parts = self.parts
+    def _get_layout_menu_noscan(self, parts=None, parent=None, level=0):
+        if parts is None:
+            parts = self.parts
 
         l = []
         last = -1
@@ -323,12 +339,13 @@ class PartitionLib(object):
 
         for x in parts:
             start = 0
-            if 'start' in x: start = int(x['start'])
+            if 'start' in x:
+                start = int(x['start'])
 
             if start > last + 1:
-                self._add_free_space_to_menu(menu = l, pref = pref,
-                    parent_name = parent['name'], start = last + 1,
-                    end = start - 1)
+                self._add_free_space_to_menu(menu=l, pref=pref,
+                                             parent_name=parent['name'], start=last + 1,
+                                             end=start - 1)
 
             add_to_menu_func = self._add_other_to_menu
             if x['type'] == 'disk':
@@ -339,30 +356,31 @@ class PartitionLib(object):
                 has_special_type = True
 
             add_to_menu_func(
-                menu = l, pref = pref, name = x['name'], item = x,
-                size = int(x['size']) if 'size' in x else 0)
+                menu=l, pref=pref, name=x['name'], item=x,
+                size=int(x['size']) if 'size' in x else 0)
 
             if 'children' in x:
                 l += self._get_layout_menu_noscan(
-                    parts = x['children'], parent = x, level = level + 1)
+                    parts=x['children'], parent=x, level=level + 1)
             elif level == 0 and 'parttable' in x and x['parttable'] != None \
-                and x['parttable'] != 'unknown':
+                    and x['parttable'] != 'unknown':
                 # always consider a toplevel with a known partition table
                 # to possibly have free space
                 l += self._get_layout_menu_noscan(
-                    parts = [], parent = x, level = level + 1)
+                    parts=[], parent=x, level=level + 1)
 
-            if 'end' in x: last = max(last, int(x['end']))
+            if 'end' in x:
+                last = max(last, int(x['end']))
 
         if parent != None and 'size' in parent and not has_special_type:
             parent_size = int(parent['size'])
             if parent_size > last + 1:
-                self._add_free_space_to_menu(menu = l, pref = pref,
-                    parent_name = parent['name'], start = last + 1,
-                    end = parent_size - 1)
+                self._add_free_space_to_menu(menu=l, pref=pref,
+                                             parent_name=parent['name'], start=last + 1,
+                                             end=parent_size - 1)
 
         if level == 0:
-            self._add_options_to_menu(menu = l)
+            self._add_options_to_menu(menu=l)
 
         return l
 
@@ -371,17 +389,18 @@ class PartitionLib(object):
             dialog.msgbox(text)
         else:
             event = threading.Event()
+
             def show():
                 from gi.repository import Gtk
-                dialog = Gtk.MessageDialog(
+                dialog2 = Gtk.MessageDialog(
                     gui.window,
                     Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     Gtk.MessageType.INFO,
                     Gtk.ButtonsType.CLOSE,
                     text
                 )
-                dialog.run()
-                dialog.destroy()
+                dialog2.run()
+                dialog2.destroy()
                 event.set()
             gui.idle_add(show)
             event.wait()
@@ -407,27 +426,34 @@ class PartitionLib(object):
             if 'children' in x:
                 self._scan_for_details(x['children'])
 
-            ret, layout = ai_call(
+            __, layout = ai_call(
                 'parted -m -s \"' + x['name'] + '\" unit B print')
             # sometimes parted returns error, but with useful information
 
             layout = layout.decode('utf-8').split('\n')
 
-            if len(layout) <= 1: continue
+            if len(layout) <= 1:
+                continue
             info = layout[1].split(':')
-            if len(info) >= 6: x['parttable'] = info[5]
+            if len(info) >= 6:
+                x['parttable'] = info[5]
 
-            if 'children' not in x or len(x['children']) == 0: continue
+            if 'children' not in x or (not x['children']):
+                continue
 
-            if len(layout) <= 2: continue
+            if len(layout) <= 2:
+                continue
             layout = layout[2:]
 
             part_map = {}
             for y in layout:
-                if len(y) < 1: continue
+                if len(y) < 1:
+                    continue
                 info = y[:-1].split(':')
-                if len(info) < 7: continue
-                if len(info[1]) < 1 or len(info[2]) < 1: continue
+                if len(info) < 7:
+                    continue
+                if len(info[1]) < 1 or len(info[2]) < 1:
+                    continue
                 info[1] = info[1][:-1]
                 info[2] = info[2][:-1]
                 part_map[x['name'] + info[0]] = (info[1], info[2], info[6])
@@ -438,7 +464,7 @@ class PartitionLib(object):
                     y['start'], y['end'], y['flags'] = part_map[name]
 
     def _sort_parts(self, parts):
-        parts.sort(key = lambda x: 0 if 'start' not in x else int(x['start']))
+        parts.sort(key=lambda x: 0 if 'start' not in x else int(x['start']))
 
         for x in parts:
             if 'children' in x:
@@ -446,7 +472,8 @@ class PartitionLib(object):
 
     def _scan_for_all_disks(self):
         ret, p = ai_call('lsblk -b -J -O -p')
-        if ret != 0: raise Exception('lsblk failed')
+        if ret != 0:
+            raise Exception('lsblk failed')
         p = json.loads(p)['blockdevices']
         self._remove_mounted(p)
         self._scan_for_details(p)
@@ -492,46 +519,68 @@ class PartitionLib(object):
 
     def get_disk_from_part(self, name):
         i = len(name)
-        if i == 0: return ''
+        if i == 0:
+            return ''
         i -= 1
         while i >= 0 and name[i].isdigit():
             i -= 1
         return name[:i + 1]
 
-    def get_layout_menu(self, scan = False):
-        if scan: self.scan()
+    def get_layout_menu(self, scan=False):
+        if scan:
+            self.scan()
         return self._get_layout_menu_noscan()
 
     def get_num_from_part(self, name):
         i = len(name)
-        if i == 0: return 0
+        if i == 0:
+            return 0
         i -= 1
-        if not name[i].isdigit(): return 0
+        if not name[i].isdigit():
+            return 0
         while i >= 0 and name[i].isdigit():
             i -= 1
         return int(name[i + 1:])
 
     def get_text_for_op(self, op):
-        if op == 'autosetup': return _('Automatically Set Up This Disk')
-        if op == 'parttable': return _('Create/Rewrite Partition Table')
-        if op == 'part': return _('Create New Partition')
-        if op == 'format': return _('Format Selected Partition')
-        if op == 'boot': return _('Toggle Boot Flag')
-        if op == 'boot-target': return _('Select as Boot Target')
-        if op == 'install-target': return _('Select as Installation Target')
-        if op == 'swap-target': return _('Select as Swap Target')
-        if op == 'remove': return _('Remove Selected Partition')
-        if op == 'cryptsetup': return _('Set Up Encryption')
-        if op == 'cryptopen': return _('Open Encrypted Partition')
-        if op == 'cryptclose': return _('Close Encrypted Block')
-        if op == 'clear-boot-target': return _('Clear Boot Target')
-        if op == 'clear-crypt-target': return _('Clear Encryption Target')
-        if op == 'clear-install-target': return _('Clear Installation Target')
-        if op == 'clear-swap-target': return _('Clear Swap Target')
-        if op == 'refresh': return _('Refresh Partition List')
+        if op == 'autosetup':
+            return _('Automatically Set Up This Disk')
+        if op == 'parttable':
+            return _('Create/Rewrite Partition Table')
+        if op == 'part':
+            return _('Create New Partition')
+        if op == 'format':
+            return _('Format Selected Partition')
+        if op == 'boot':
+            return _('Toggle Boot Flag')
+        if op == 'boot-target':
+            return _('Select as Boot Target')
+        if op == 'install-target':
+            return _('Select as Installation Target')
+        if op == 'swap-target':
+            return _('Select as Swap Target')
+        if op == 'remove':
+            return _('Remove Selected Partition')
+        if op == 'cryptsetup':
+            return _('Set Up Encryption')
+        if op == 'cryptopen':
+            return _('Open Encrypted Partition')
+        if op == 'cryptclose':
+            return _('Close Encrypted Block')
+        if op == 'clear-boot-target':
+            return _('Clear Boot Target')
+        if op == 'clear-crypt-target':
+            return _('Clear Encryption Target')
+        if op == 'clear-install-target':
+            return _('Clear Installation Target')
+        if op == 'clear-swap-target':
+            return _('Clear Swap Target')
+        if op == 'refresh':
+            return _('Refresh Partition List')
         return op
 
     def scan(self):
         self._scan_for_all_disks()
+
 
 partition_lib = PartitionLib()

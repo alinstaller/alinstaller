@@ -18,16 +18,19 @@ from hostname_lib import hostname_lib
 from install_cli import install_cli
 from step import Step
 
+
 class HostnameCLI(Step):
     def run_once(self):
         res, text = dialog.inputbox(
-            text = 'Enter hostname:',
-            init = hostname_lib.hostname
+            text='Enter hostname:',
+            init=hostname_lib.hostname
         )
-        if res != dialog.OK: return False
+        if res != dialog.OK:
+            return False
         hostname_lib.hostname = text
 
         install_cli.run()
         return True
+
 
 hostname_cli = HostnameCLI()

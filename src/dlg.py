@@ -15,5 +15,5 @@
 
 from dialog import Dialog
 
-dialog = Dialog(dialog = 'dialog', autowidgetsize = True)
+dialog = Dialog(dialog='dialog', autowidgetsize=True)
 dialog.set_background_title('AL Installer')

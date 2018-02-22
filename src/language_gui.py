@@ -19,6 +19,7 @@ from gui import gui
 from gui_step import GUIStep
 from language_lib import language_lib
 
+
 class LanguageGUI(GUIStep):
     def __init__(self):
         super().__init__()
@@ -40,7 +41,8 @@ class LanguageGUI(GUIStep):
         desc = Gtk.Label(desc)
         desc.set_ellipsize(Pango.EllipsizeMode.END)
         desc.set_halign(Gtk.Align.START)
-        select = Gtk.Image.new_from_icon_name('object-select-symbolic', Gtk.IconSize.MENU)
+        select = Gtk.Image.new_from_icon_name(
+            'object-select-symbolic', Gtk.IconSize.MENU)
         select.set_opacity(0.0)
         select.set_halign(Gtk.Align.START)
         box2 = Gtk.Box(Gtk.Orientation.HORIZONTAL)
@@ -55,8 +57,8 @@ class LanguageGUI(GUIStep):
         row.add(box)
         row.show_all()
 
-        select_func = lambda x: \
-            select.set_opacity(1.0) if x else select.set_opacity(0.0)
+        def select_func(x):
+            return select.set_opacity(1.0) if x else select.set_opacity(0.0)
 
         return row, select_func
 
@@ -84,11 +86,14 @@ class LanguageGUI(GUIStep):
     def _row_activated(self, box, row, selects):
         index = row.get_index()
 
-        for i in range(len(selects)):
-            selects[i](i == index)
+        i = 0
+        for x in selects:
+            x(i == index)
+            i += 1
 
         lang = language_lib.languages[index][0]
         language_lib.install(lang)
         gui.update_text()
+
 
 language_gui = LanguageGUI()

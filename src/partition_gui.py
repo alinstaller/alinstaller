@@ -13,15 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 import queue
 import threading
 import traceback
 
+from gi.repository import Gtk
+
 from partition_lib import PartitionMenuItem, partition_lib
 from gui import gui
 from gui_step import GUIStep
+
 
 class PartitionGUI(GUIStep):
     def __init__(self):
@@ -48,7 +49,7 @@ class PartitionGUI(GUIStep):
         adjustment = gui.builder.get_object('scrolledwindow_partition_log') \
             .get_vadjustment()
         textview.connect('size-allocate', lambda x, y:
-            adjustment.set_value(adjustment.get_upper()))
+                         adjustment.set_value(adjustment.get_upper()))
 
         dialog = gui.builder.get_object('dialog_autosetup')
         dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
@@ -68,19 +69,23 @@ class PartitionGUI(GUIStep):
             'revealer_autosetup_passphrase').set_reveal_child(x.get_active()))
 
         button = gui.builder.get_object('button_autosetup')
-        self._button_autosetup_signal = button.connect('clicked', lambda x: False)
+        self._button_autosetup_signal = button.connect(
+            'clicked', lambda x: False)
         button = gui.builder.get_object('button_parttable')
-        self._button_parttable_signal = button.connect('clicked', lambda x: False)
+        self._button_parttable_signal = button.connect(
+            'clicked', lambda x: False)
         button = gui.builder.get_object('button_part')
         self._button_part_signal = button.connect('clicked', lambda x: False)
         button = gui.builder.get_object('button_format')
         self._button_format_signal = button.connect('clicked', lambda x: False)
         button = gui.builder.get_object('button_cryptsetup')
-        self._button_cryptsetup_signal = button.connect('clicked', lambda x: False)
+        self._button_cryptsetup_signal = button.connect(
+            'clicked', lambda x: False)
         button = gui.builder.get_object('button_cryptopen')
-        self._button_cryptopen_signal = button.connect('clicked', lambda x: False)
+        self._button_cryptopen_signal = button.connect(
+            'clicked', lambda x: False)
 
-        t = threading.Thread(target = self._lib_loop, daemon = True)
+        t = threading.Thread(target=self._lib_loop, daemon=True)
         t.start()
 
         def button_next():
@@ -102,8 +107,8 @@ class PartitionGUI(GUIStep):
                     Gtk.MessageType.ERROR,
                     Gtk.ButtonsType.CLOSE,
                     _('An installation target must be selected.') + '\n' +
-                        _('If not sure, choose an empty disk, and select ' +
-                            '"Automatically Set Up This Disk".')
+                    _('If not sure, choose an empty disk, and select ' +
+                      '"Automatically Set Up This Disk".')
                 )
                 dialog.run()
                 dialog.destroy()
@@ -115,9 +120,11 @@ class PartitionGUI(GUIStep):
         def focus_listbox(x, y, z):
             children = gui.builder.get_object('listbox_partition_actions') \
                 .get_children()
-            if len(children) != 0:
-                try: children[0].grab_focus()
-                except: raise
+            if children:
+                try:
+                    children[0].grab_focus()
+                except Exception:
+                    pass
 
         gui.builder.get_object('treeview_partitions') \
             .connect('row-activated', focus_listbox)
@@ -184,6 +191,7 @@ class PartitionGUI(GUIStep):
     def add_log_lib(self, log):
         with self._log_lock:
             self._log += log + '\n'
+
         def update():
             textbuffer = gui.builder.get_object('textbuffer_partition_log')
             with self._log_lock:
@@ -201,13 +209,17 @@ class PartitionGUI(GUIStep):
 
             if working_ui:
                 event = threading.Event()
+
                 def func():
                     treeview = gui.builder.get_object('treeview_partitions')
-                    listbox = gui.builder.get_object('listbox_partition_actions')
+                    listbox = gui.builder.get_object(
+                        'listbox_partition_actions')
                     label = gui.builder.get_object('label_partition_working')
-                    spinner = gui.builder.get_object('spinner_partition_working')
+                    spinner = gui.builder.get_object(
+                        'spinner_partition_working')
                     if gui.stack_main.get_visible_child_name() == 'partition':
-                        expander = gui.builder.get_object('expander_partition_log')
+                        expander = gui.builder.get_object(
+                            'expander_partition_log')
                         expander.grab_focus()
                     treeview.set_sensitive(False)
                     listbox.set_sensitive(False)
@@ -217,22 +229,27 @@ class PartitionGUI(GUIStep):
                 gui.idle_add(func)
                 event.wait()
 
-            try: f()
-            except: self.add_log_lib(traceback.format_exc())
+            try:
+                f()
+            except Exception:
+                self.add_log_lib(traceback.format_exc())
 
             if working_ui:
                 event = threading.Event()
-                def func():
+
+                def func2():
                     treeview = gui.builder.get_object('treeview_partitions')
-                    listbox = gui.builder.get_object('listbox_partition_actions')
+                    listbox = gui.builder.get_object(
+                        'listbox_partition_actions')
                     label = gui.builder.get_object('label_partition_working')
-                    spinner = gui.builder.get_object('spinner_partition_working')
+                    spinner = gui.builder.get_object(
+                        'spinner_partition_working')
                     treeview.set_sensitive(True)
                     listbox.set_sensitive(True)
                     label.set_label('')
                     spinner.stop()
                     event.set()
-                gui.idle_add(func)
+                gui.idle_add(func2)
                 event.wait()
 
             self._queue.task_done()
@@ -261,11 +278,14 @@ class PartitionGUI(GUIStep):
         it = treestore.get_iter_first()
 
         for x in menu:
-            if it == None: break
+            if it is None:
+                break
             text = treestore.get_value(it, 0)
             size_text = treestore.get_value(it, 1)
-            if text != x.text: treestore.set_value(it, 0, x.text)
-            if size_text != x.size_text: treestore.set_value(it, 1, x.size_text)
+            if text != x.text:
+                treestore.set_value(it, 0, x.text)
+            if size_text != x.size_text:
+                treestore.set_value(it, 1, x.size_text)
             it = treestore.iter_next(it)
 
         self._update_details_actions_from_menu(menu)
@@ -274,10 +294,11 @@ class PartitionGUI(GUIStep):
         treeselection = gui.builder.get_object('treeselection_partitions')
         label = gui.builder.get_object('label_partition_details')
 
-        model, paths = treeselection.get_selected_rows()
-        if len(paths) == 0:
+        __, paths = treeselection.get_selected_rows()
+        if not paths:
             label.set_label(_('Select an item to view its details.'))
-            self._lib_loop_add(False, self._update_actions_lib, PartitionMenuItem())
+            self._lib_loop_add(
+                False, self._update_actions_lib, PartitionMenuItem())
         else:
             index = paths[0].get_indices()[0]
             label.set_label(menu[index].details_text)
@@ -296,9 +317,9 @@ class PartitionGUI(GUIStep):
             listbox.remove(x)
 
         rows = []
-        for i in range(len(actions)):
+        for x in actions:
             row = Gtk.ListBoxRow()
-            label2 = Gtk.Label(actions[i])
+            label2 = Gtk.Label(x)
             label2.set_margin_top(4)
             label2.set_margin_bottom(4)
             label2.set_halign(Gtk.Align.START)
@@ -312,14 +333,12 @@ class PartitionGUI(GUIStep):
             'row-activated', self._listbox_row_activated, item, actions)
 
     def _refresh_content_text_from_menu(self, menu):
-        treeselection = gui.builder.get_object('treeselection_partitions')
         treestore = gui.builder.get_object('treestore_partitions')
-        label = gui.builder.get_object('label_partition_details')
-        listbox = gui.builder.get_object('listbox_partition_actions')
 
         treestore.clear()
         for x in menu:
-            treestore.insert_with_values(None, -1, [0, 1], [x.text, x.size_text])
+            treestore.insert_with_values(
+                None, -1, [0, 1], [x.text, x.size_text])
 
         self._update_details_actions_from_menu(menu)
 
@@ -331,7 +350,7 @@ class PartitionGUI(GUIStep):
             partition_lib.scan()
             menu = partition_lib.get_layout_menu()
             gui.idle_add(self._refresh_content_text_from_menu, menu)
-        except:
+        except Exception:
             self.add_log_lib(traceback.format_exc())
 
     def _listbox_row_activated(self, box, row, item, actions):
@@ -366,11 +385,13 @@ class PartitionGUI(GUIStep):
         def handle(button):
             dialog = gui.builder.get_object('dialog_autosetup')
 
-            crypt = False; passphrase = ''
+            crypt = False
+            passphrase = ''
             switch = gui.builder.get_object('switch_autosetup_encryption')
             if switch.get_active():
                 entry1 = gui.builder.get_object('entry_autosetup_passphrase')
-                entry2 = gui.builder.get_object('entry_autosetup_confirm_passphrase')
+                entry2 = gui.builder.get_object(
+                    'entry_autosetup_confirm_passphrase')
                 pass1 = entry1.get_text()
                 pass2 = entry2.get_text()
                 if pass1 != pass2:
@@ -388,20 +409,21 @@ class PartitionGUI(GUIStep):
                 passphrase = pass1
 
             res = self._show_confirm_dialog(dialog, text,
-                _('Are you sure you want to wipe this disk?'), _('Wipe'))
+                                            _('Are you sure you want to wipe this disk?'), _('Wipe'))
             if res != Gtk.ResponseType.OK:
                 return
 
             dialog.hide()
-            parttable = gui.builder.get_object('entry_autosetup_type').get_text()
+            parttable = gui.builder.get_object(
+                'entry_autosetup_type').get_text()
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, size = size,
-                        parttable = parttable, crypt = crypt,
-                        passphrase = passphrase)
+                    partition_lib.action(op, name, size=size,
+                                         parttable=parttable, crypt=crypt,
+                                         passphrase=passphrase)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -422,7 +444,7 @@ class PartitionGUI(GUIStep):
             dialog = gui.builder.get_object('dialog_parttable')
 
             res = self._show_confirm_dialog(dialog, text,
-                _('Are you sure you want to wipe this disk?'), _('Wipe'))
+                                            _('Are you sure you want to wipe this disk?'), _('Wipe'))
             if res != Gtk.ResponseType.OK:
                 return
 
@@ -431,9 +453,9 @@ class PartitionGUI(GUIStep):
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, parttable = parttable)
+                    partition_lib.action(op, name, parttable=parttable)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -462,10 +484,10 @@ class PartitionGUI(GUIStep):
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, start = start, end = end,
-                        fstype = fstype)
+                    partition_lib.action(op, name, start=start, end=end,
+                                         fstype=fstype)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -491,8 +513,8 @@ class PartitionGUI(GUIStep):
             dialog = gui.builder.get_object('dialog_format')
 
             res = self._show_confirm_dialog(dialog, text,
-                _('Are you sure you want to format this partition?'),
-                _('Format'))
+                                            _('Are you sure you want to format this partition?'),
+                                            _('Format'))
             if res != Gtk.ResponseType.OK:
                 return
 
@@ -501,9 +523,9 @@ class PartitionGUI(GUIStep):
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, fstype = fstype)
+                    partition_lib.action(op, name, fstype=fstype)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -521,7 +543,7 @@ class PartitionGUI(GUIStep):
 
     def _handle_remove(self, name, text, size, op, action):
         res = self._show_confirm_dialog(gui.window, text,
-            _('Are you sure you want to remove this partition?'), _('Remove'))
+                                        _('Are you sure you want to remove this partition?'), _('Remove'))
         if res != Gtk.ResponseType.OK:
             return
 
@@ -529,7 +551,7 @@ class PartitionGUI(GUIStep):
             try:
                 partition_lib.action(op, name)
                 self._scan_lib()
-            except:
+            except Exception:
                 self.add_log_lib(traceback.format_exc())
 
         self._lib_loop_add(True, action_lib)
@@ -539,7 +561,8 @@ class PartitionGUI(GUIStep):
             dialog = gui.builder.get_object('dialog_cryptsetup')
 
             entry1 = gui.builder.get_object('entry_cryptsetup_passphrase')
-            entry2 = gui.builder.get_object('entry_cryptsetup_confirm_passphrase')
+            entry2 = gui.builder.get_object(
+                'entry_cryptsetup_confirm_passphrase')
             pass1 = entry1.get_text()
             pass2 = entry2.get_text()
             if pass1 != pass2:
@@ -556,8 +579,8 @@ class PartitionGUI(GUIStep):
             passphrase = pass1
 
             res = self._show_confirm_dialog(dialog, text,
-                _('Are you sure you want to encrypt this disk? All data will be lost.'),
-                _('Encrypt'))
+                                            _('Are you sure you want to encrypt this disk? All data will be lost.'),
+                                            _('Encrypt'))
             if res != Gtk.ResponseType.OK:
                 return
 
@@ -565,9 +588,9 @@ class PartitionGUI(GUIStep):
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, passphrase = passphrase)
+                    partition_lib.action(op, name, passphrase=passphrase)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -594,9 +617,9 @@ class PartitionGUI(GUIStep):
 
             def action_lib():
                 try:
-                    partition_lib.action(op, name, passphrase = passphrase)
+                    partition_lib.action(op, name, passphrase=passphrase)
                     self._scan_lib()
-                except:
+                except Exception:
                     self.add_log_lib(traceback.format_exc())
 
             self._lib_loop_add(True, action_lib)
@@ -617,7 +640,7 @@ class PartitionGUI(GUIStep):
             try:
                 partition_lib.action(op, name)
                 self._scan_lib()
-            except:
+            except Exception:
                 self.add_log_lib(traceback.format_exc())
 
         self._lib_loop_add(True, action_lib)
@@ -653,5 +676,6 @@ class PartitionGUI(GUIStep):
         dialog.destroy()
 
         return res
+
 
 partition_gui = PartitionGUI()

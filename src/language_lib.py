@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import babel
 import gettext
+
+import babel
+
 
 class LanguageLib(object):
     def __init__(self):
@@ -27,12 +29,13 @@ class LanguageLib(object):
                 locale = babel.Locale.parse(x)
                 self.languages.append((x, locale.display_name))
 
-        l = sorted(self.languages[1:], key = lambda x: (x[1], x[0]))
+        l = sorted(self.languages[1:], key=lambda x: (x[1], x[0]))
         self.languages = [self.languages[0]] + l
 
-    def install(self, lang = None):
+    def install(self, lang=None):
         try:
-            if lang == None: lang = self.languages[0][0]
+            if lang is None:
+                lang = self.languages[0][0]
             self._real_install(lang)
         except FileNotFoundError:
             lang = self.languages[0][0]
@@ -40,8 +43,9 @@ class LanguageLib(object):
 
     def _real_install(self, lang):
         gettext.translation('alinstaller',
-            localedir='/usr/local/share/locale',
-            languages=[lang]).install()
+                            localedir='/usr/local/share/locale',
+                            languages=[lang]).install()
         self.lang = lang
+
 
 language_lib = LanguageLib()

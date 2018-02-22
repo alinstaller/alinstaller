@@ -19,6 +19,7 @@ from partition_lib import partition_lib
 from set_font_lib import set_font_lib
 from set_keymap_lib import set_keymap_lib
 
+
 class InstallLib(object):
     mirror_kw = ['https:', '.kernel.org']
     mirror_multiply = 10
@@ -47,23 +48,27 @@ class InstallLib(object):
         return cmd
 
     def update_mirrorlist(self):
-        l = []; fn = '/mnt/etc/pacman.d/mirrorlist'
+        l = []
+        fn = '/mnt/etc/pacman.d/mirrorlist'
 
         with open(fn, 'r') as f:
             for x in f:
                 x = x.strip('\n')
 
                 if x == '':
-                    l.append(''); continue
+                    l.append('')
+                    continue
                 elif x.startswith('#Server'):
                     x = x[1:]
                 elif x.startswith('#'):
-                    l.append(x); continue
+                    l.append(x)
+                    continue
 
                 is_mirror = True
                 for y in self.mirror_kw:
                     if not y in x:
-                        is_mirror = False; break
+                        is_mirror = False
+                        break
 
                 if is_mirror:
                     l = [x] * self.mirror_multiply + [''] + l
@@ -80,9 +85,9 @@ class InstallLib(object):
     def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'
         cmd += ' && sed -i \'s/Storage=volatile/#Storage=auto/\' /mnt/etc/systemd/journald.conf'
-        cmd += ' && sed -i \'s/^\(PermitRootLogin \).\+/#\\1prohibit-password/\' /mnt/etc/ssh/sshd_config'
-        cmd += ' && sed -i \'s/\(HandleSuspendKey=\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
-        cmd += ' && sed -i \'s/\(HandleHibernateKey=\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
+        cmd += ' && sed -i \'s/^\\(PermitRootLogin \\).\\+/#\\1prohibit-password/\' /mnt/etc/ssh/sshd_config'
+        cmd += ' && sed -i \'s/\\(HandleSuspendKey=\\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
+        cmd += ' && sed -i \'s/\\(HandleHibernateKey=\\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && rm -f /mnt/etc/udev/rules.d/81-dhcpcd.rules'
         cmd += ' && echo >> /mnt/etc/sudoers'
         cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
@@ -107,13 +112,13 @@ class InstallLib(object):
 
         swap_uuid = ''
         if partition_lib.swap_target != '':
-            res, swap_uuid = ai_call('blkid -s UUID -o value \"' +
-                partition_lib.swap_target + '\"')
+            __, swap_uuid = ai_call('blkid -s UUID -o value \"' +
+                                    partition_lib.swap_target + '\"')
             swap_uuid = swap_uuid.decode('utf-8').strip('\n')
         crypt_uuid = ''
         if partition_lib.crypt_target != '':
-            res, crypt_uuid = ai_call('blkid -s UUID -o value \"' +
-                partition_lib.crypt_target + '\"')
+            __, crypt_uuid = ai_call('blkid -s UUID -o value \"' +
+                                     partition_lib.crypt_target + '\"')
             crypt_uuid = crypt_uuid.decode('utf-8').strip('\n')
 
         cmd += ' && sed -i \"s/^\\\\(GRUB_CMDLINE_LINUX_DEFAULT=\\\\).*/\\1\\\"quiet'
@@ -188,5 +193,6 @@ class InstallLib(object):
         cmd += ' && echo && echo Completed.'
 
         return cmd
+
 
 install_lib = InstallLib()

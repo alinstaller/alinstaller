@@ -16,11 +16,13 @@
 from gui import gui
 from gui_step import GUIStep
 
+
 class WelcomeGUI(GUIStep):
     def update_text(self):
         gui.builder.get_object('label_welcome_title').set_label(
             _('Welcome to AL Installer!'))
         gui.builder.get_object('label_welcome_subtitle').set_label(
             _('This guide will help you install Arch Linux.'))
+
 
 welcome_gui = WelcomeGUI()

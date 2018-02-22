@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 class SetFontLib(object):
     def __init__(self):
         self.font = ''
+
 
 set_font_lib = SetFontLib()

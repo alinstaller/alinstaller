@@ -13,6 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 class Step(object):
     def run(self):
-        while self.run_once(): pass
+        while self.run_once():
+            pass
+
+    def run_once(self):
+        pass

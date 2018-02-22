@@ -15,12 +15,13 @@
 
 from gi.repository import Gio, Gtk
 
+
 class GUIApplication(Gtk.Application):
     application_id = 'io.github.alinstaller'
 
     def __init__(self, *args):
-        super().__init__(*args, application_id = self.application_id,
-            flags = Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+        super().__init__(*args, application_id=self.application_id,
+                         flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
         self.started = False
 
     def do_activate(self):
@@ -35,5 +36,6 @@ class GUIApplication(Gtk.Application):
     def do_command_line(self, command_line):
         self.activate()
         return 0
+
 
 gui_application = GUIApplication()

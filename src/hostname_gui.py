@@ -17,6 +17,7 @@ from gui import gui
 from gui_step import GUIStep
 from hostname_lib import hostname_lib
 
+
 class HostnameGUI(GUIStep):
     def __init__(self):
         entry = gui.builder.get_object('entry_hostname')
@@ -29,5 +30,6 @@ class HostnameGUI(GUIStep):
 
     def _changed(self, entry):
         hostname_lib.hostname = entry.get_text()
+
 
 hostname_gui = HostnameGUI()

@@ -13,22 +13,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import sys
+import time
+import traceback
+
 import gi
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
 
-from gi.repository import GLib, Gdk, Gtk
-
-import os
-import sys
-import time
-import traceback
+from gi.repository import GLib
 
 from ai_exec import ai_call
 from dlg import dialog
 from gui_application import gui_application
 from language_lib import language_lib
 from welcome_cli import welcome_cli
+
 
 def main():
     language_lib.install()
@@ -41,9 +41,9 @@ def main():
     if len(sys.argv) >= 2:
         if sys.argv[1] in ['--help', '-h']:
             print('Usage:\n\n' +
-                '(no argument)       Run in CLI (must be run as root)\n' +
-                '--gui               Run in GUI (must be run as a password-free sudoer user)\n' +
-                '--setup-gui         Prompt and set up GUI (must be run as root)\n')
+                  '(no argument)       Run in CLI (must be run as root)\n' +
+                  '--gui               Run in GUI (must be run as a password-free sudoer user)\n' +
+                  '--setup-gui         Prompt and set up GUI (must be run as root)\n')
             sys.exit(0)
 
         if sys.argv[1] == '--gui':
@@ -60,14 +60,18 @@ def main():
             if enable_gui:
                 print('\nSetting up GUI...')
 
-                ai_call('rm /etc/xdg/autostart/gnome-initial-setup-first-login.desktop')
+                ai_call(
+                    'rm /etc/xdg/autostart/gnome-initial-setup-first-login.desktop')
                 ai_call('rm /etc/xdg/autostart/gnome-welcome-tour.desktop')
-                ai_call('cp /usr/local/share/applications/*.desktop /etc/xdg/autostart')
+                ai_call(
+                    'cp /usr/local/share/applications/*.desktop /etc/xdg/autostart')
 
                 ai_call('useradd -c "Live User" -G users,wheel -m liveuser')
                 ai_call('passwd -d liveuser')
 
-                ai_call('sed -i \'s/\\[daemon\\]/[daemon]\\nAutomaticLoginEnable=True\\nAutomaticLogin=liveuser/\' /etc/gdm/custom.conf')
+                ai_call(
+                    'sed -i \'s/\\[daemon\\]/[daemon]\\nAutomaticLoginEnable=' +
+                    'True\\nAutomaticLogin=liveuser/\' /etc/gdm/custom.conf')
 
                 with open('/etc/sudoers', 'a') as f:
                     f.write('\n%wheel ALL=(ALL) ALL\n')
@@ -81,7 +85,8 @@ def main():
     else:
         try:
             welcome_cli.run()
-        except:
+        except (Exception, KeyboardInterrupt):
             dialog.msgbox('Installation failed.\n\n' + traceback.format_exc())
+
 
 main()

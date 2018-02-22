@@ -22,6 +22,7 @@ from gui import gui
 from gui_step import GUIStep
 from install_lib import install_lib
 
+
 class InstallGUI(GUIStep):
     def __init__(self):
         self._log = ''
@@ -40,7 +41,7 @@ class InstallGUI(GUIStep):
         adjustment = gui.builder.get_object('scrolledwindow_install_log') \
             .get_vadjustment()
         textview.connect('size-allocate', lambda x, y:
-            adjustment.set_value(adjustment.get_upper()))
+                         adjustment.set_value(adjustment.get_upper()))
 
     def update_text(self):
         gui.builder.get_object('label_install_ready').set_label(
@@ -53,6 +54,7 @@ class InstallGUI(GUIStep):
     def _add_log_thread(self, log):
         with self._log_lock:
             self._log += log + '\n'
+
         def update():
             textbuffer = gui.builder.get_object('textbuffer_install_log')
             with self._log_lock:
@@ -66,9 +68,11 @@ class InstallGUI(GUIStep):
             textbuffer.set_text(self._log)
 
     def _set_percent_thread(self, percent):
-        if percent < 0 or percent > 100: return
+        if percent < 0 or percent > 100:
+            return
         with self._percent_lock:
             self._percent = percent
+
         def update():
             progressbar = gui.builder.get_object('progressbar_install')
             with self._percent_lock:
@@ -78,6 +82,7 @@ class InstallGUI(GUIStep):
     def _set_progress_thread(self, text):
         with self._progress_lock:
             self._progress = text
+
         def update():
             label = gui.builder.get_object('label_install_progress')
             with self._progress_lock:
@@ -92,11 +97,10 @@ class InstallGUI(GUIStep):
 
     def _exec_thread(self, cmd, msg):
         p = ai_popen(
-            cmd,
+            cmd, universal_newlines=True,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines = True
+            stderr=subprocess.STDOUT
         )
         self._add_log_thread(msg)
         for x in p.stdout:
@@ -126,9 +130,10 @@ class InstallGUI(GUIStep):
     def _install(self):
         gui.builder.get_object('button_back').set_sensitive(False)
         gui.builder.get_object('button_next').set_sensitive(False)
-        gui.builder.get_object('stack_install').set_visible_child_name('progress')
+        gui.builder.get_object(
+            'stack_install').set_visible_child_name('progress')
 
-        t = threading.Thread(target = self._init_dirs_thread, daemon = True)
+        t = threading.Thread(target=self._init_dirs_thread, daemon=True)
         t.start()
 
     def _init_dirs_thread(self):
@@ -152,8 +157,8 @@ class InstallGUI(GUIStep):
         percent_prev = 0
 
         p = ai_popen(cmd, stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-            universal_newlines=True)
+                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                     universal_newlines=True)
         self._set_progress_thread(text)
         self._add_log_thread('Copying files...')
 
@@ -184,8 +189,8 @@ class InstallGUI(GUIStep):
     def _update_mirrorlist_thread(self):
         try:
             install_lib.update_mirrorlist()
-        except:
-            self_add_log_thread(traceback.format_exc())
+        except Exception:
+            self._add_log_thread(traceback.format_exc())
             self._install_fail_thread()
             return
 
@@ -203,5 +208,6 @@ class InstallGUI(GUIStep):
             return
 
         self._install_complete_thread()
+
 
 install_gui = InstallGUI()

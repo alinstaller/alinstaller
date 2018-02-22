@@ -14,13 +14,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import glob
-import os
 
 from ai_exec import ai_dialog_exec
 from dlg import dialog
 from partition_cli import partition_cli
 from set_keymap_lib import set_keymap_lib
 from step import Step
+
 
 class SetKeymapCLI(Step):
     def run_once(self):
@@ -31,9 +31,10 @@ class SetKeymapCLI(Step):
         keymaps = [('* No change', ''), ('* Default', '')] + keymaps
         ret, sel = dialog.menu(
             'Please select your keyboard layout:',
-            choices = keymaps
+            choices=keymaps
         )
-        if ret != dialog.OK: return False
+        if ret != dialog.OK:
+            return False
         if sel == '* Default':
             ai_dialog_exec('loadkeys -d')
             set_keymap_lib.keymap = ''
@@ -43,5 +44,6 @@ class SetKeymapCLI(Step):
 
         partition_cli.run()
         return True
+
 
 set_keymap_cli = SetKeymapCLI()
