@@ -15,6 +15,7 @@ arch:
   - archlinuxfr=http://repo.archlinux.fr/$arch
   packages:
   - archiso
+  - gtk3
   - python-babel
   - python-gobject
   - python-psutil
