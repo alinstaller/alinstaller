@@ -16,7 +16,10 @@ arch:
   packages:
   - archiso
   - python-babel
+  - python-gobject
+  - python-psutil
   - python-pylint
+  - python-pythondialog
   - python-setuptools
   script:
   - sudo pacman-key --init
