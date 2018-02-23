@@ -44,7 +44,7 @@ class PartitionLib(object):
     boot_part_size = 1024 * 1024 * 512
     default_filesystem = 'ext4'
     default_luks_type = 'luks2'
-    default_partitioning = 'gpt'
+    default_partitioning = 'gpt' if ai_call('efivar -l')[0] == 0 else 'msdos'
     part_granularity = 1024 * 1024
     part_granularity_unit = 'MiB'
 
