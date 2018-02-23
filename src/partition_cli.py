@@ -13,9 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# pylint currently throws RecursionError
-# pylint: skip-file
-
 import traceback
 
 from dlg import dialog
@@ -51,7 +48,7 @@ class PartitionCLI(Step):
         if not partition_lib.scanned:
             self._scan()
 
-        m = partition_lib.get_layout_menu()
+        m = list(partition_lib.get_layout_menu())
         l = [len(x.text) for x in m]
         max_len = max(l)
 
@@ -82,8 +79,9 @@ class PartitionCLI(Step):
         for x in m[sel].ops:
             menu.append((x, partition_lib.get_text_for_op(x)))
 
-        if len(menu) == 0:
-            dialog.msgbox('No action.')
+        if not menu:
+            dialog.msgbox('Name: ' + m[sel].text.strip(' ') + '\n' +
+                          m[sel].details_atext)
             return 'again'
 
         res, sel2 = dialog.menu('Name: ' + m[sel].text.strip(' ') + '\n' +
