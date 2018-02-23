@@ -38,8 +38,12 @@ class PartitionGUI(GUIStep):
 
         gui.builder.get_object('entry_autosetup_type').set_text(
             partition_lib.default_partitioning)
+        gui.builder.get_object('label_autosetup_recommend_type').set_label(
+            _('Recommended: ') + partition_lib.default_partitioning)
         gui.builder.get_object('entry_parttable').set_text(
             partition_lib.default_partitioning)
+        gui.builder.get_object('label_parttable_recommend').set_label(
+            _('Recommended: ') + partition_lib.default_partitioning)
         gui.builder.get_object('entry_part_fs').set_text(
             partition_lib.default_filesystem)
         gui.builder.get_object('entry_format').set_text(
