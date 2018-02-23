@@ -66,7 +66,7 @@ class InstallLib(object):
 
                 is_mirror = True
                 for y in self.mirror_kw:
-                    if not y in x:
+                    if y not in x:
                         is_mirror = False
                         break
 

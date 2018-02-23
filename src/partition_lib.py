@@ -224,7 +224,7 @@ class PartitionLib(object):
             details_text=_('Size: ') + self._format_size(size) + '\n' +
             _('Partitioning: ') +
             (item['parttable'] if 'parttable' in item and item['parttable']
-             != None else _('unknown')),
+             is not None else _('unknown')),
             ops=['autosetup', 'parttable']
         ))
 
@@ -261,7 +261,7 @@ class PartitionLib(object):
             details_text=_('Size: ') + self._format_size(size) + '\n' +
             _('Filesystem: ') +
             (item['fstype'] if 'fstype' in item and item['fstype']
-             != None else _('unknown')),
+             is not None else _('unknown')),
             ops=['format', 'boot-target', 'install-target',
                  'swap-target', 'cryptclose']
         ))
@@ -291,14 +291,14 @@ class PartitionLib(object):
             size_text=self._format_size(size),
             details_text=_('Size: ') + self._format_size(size) + '\n' +
             _('Filesystem: ') +
-            (item['fstype'] if 'fstype' in item and item['fstype'] != None else _('unknown')) + '\n' +
+            (item['fstype'] if 'fstype' in item and item['fstype'] is not None else _('unknown')) + '\n' +
             _('Flags: ') +
-            (item['flags'] if 'flags' in item and item['flags'] != None else '') + '\n' +
+            (item['flags'] if 'flags' in item and item['flags'] is not None else '') + '\n' +
             _('Start: ') +
-            (item['start'] if 'start' in item and item['start'] != None else _('unknown')) + '\n' +
+            (item['start'] if 'start' in item and item['start'] is not None else _('unknown')) + '\n' +
             _('End: ') +
             (item['end'] if 'end' in item and item['end']
-             != None else _('unknown')),
+             is not None else _('unknown')),
             ops=['boot', 'format', 'boot-target', 'install-target',
                  'swap-target', 'remove', 'cryptsetup', 'cryptopen']
         ))
@@ -362,7 +362,7 @@ class PartitionLib(object):
             if 'children' in x:
                 l += self._get_layout_menu_noscan(
                     parts=x['children'], parent=x, level=level + 1)
-            elif level == 0 and 'parttable' in x and x['parttable'] != None \
+            elif level == 0 and 'parttable' in x and x['parttable'] is not None \
                     and x['parttable'] != 'unknown':
                 # always consider a toplevel with a known partition table
                 # to possibly have free space
@@ -372,7 +372,7 @@ class PartitionLib(object):
             if 'end' in x:
                 last = max(last, int(x['end']))
 
-        if parent != None and 'size' in parent and not has_special_type:
+        if parent is not None and 'size' in parent and not has_special_type:
             parent_size = int(parent['size'])
             if parent_size > last + 1:
                 self._add_free_space_to_menu(menu=l, pref=pref,
@@ -414,7 +414,7 @@ class PartitionLib(object):
     def _remove_mounted(self, p):
         rm = []
         for x in p:
-            if 'mountpoint' in x and x['mountpoint'] != None:
+            if 'mountpoint' in x and x['mountpoint'] is not None:
                 rm.append(x)
             elif 'children' in x:
                 self._remove_mounted(x['children'])

@@ -75,7 +75,7 @@ class InstallCLI(Step):
                     '\n  ETA:  ' + eta
 
             if gauge_percent != gauge_percent_prev or \
-                gauge_text != gauge_text_prev:
+                    gauge_text != gauge_text_prev:
                 dialog.gauge_update(percent=gauge_percent, text=gauge_text,
                                     update_text=True)
                 gauge_text_prev = gauge_text
