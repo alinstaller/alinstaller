@@ -411,13 +411,11 @@ class PartitionLib(object):
     def _to_gran_start(self, x):
         return (x + self.part_granularity - 1) // self.part_granularity
 
-    def _remove_mounted(self, p):
+    def _remove_toplevel_mounted(self, p):
         rm = []
         for x in p:
             if 'mountpoint' in x and x['mountpoint'] is not None:
                 rm.append(x)
-            elif 'children' in x:
-                self._remove_mounted(x['children'])
         for x in rm:
             p.remove(x)
 
@@ -475,7 +473,7 @@ class PartitionLib(object):
         if ret != 0:
             raise Exception('lsblk failed')
         p = json.loads(p)['blockdevices']
-        self._remove_mounted(p)
+        self._remove_toplevel_mounted(p)
         self._scan_for_details(p)
         self._sort_parts(p)
         self.parts = p
