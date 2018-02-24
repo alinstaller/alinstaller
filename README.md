@@ -1,5 +1,5 @@
-AL Installer
-============
+# AL Installer
+
 AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It is
 intended for desktop use and provides a step-by-step installation guide to
 perform a clean installation without the need of Internet access.
