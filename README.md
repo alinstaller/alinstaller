@@ -1,12 +1,14 @@
 # AL Installer
 
-AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It is
-intended for desktop use and provides a step-by-step installation guide to
+AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It
+is intended for desktop use and provides a step-by-step installation guide to
 perform a clean installation without the need of Internet access.
 
-The [GNOME](https://www.gnome.org/) desktop environment and several common
-drivers are installed by default. Minimal configuration is done to ensure an
-out-of-the-box experience.
+AL Installer follows the Arch Linux
+[Installation Guide](https://wiki.archlinux.org/index.php/Installation_guide)
+to set up the base environment and installs the [GNOME](https://www.gnome.org/)
+desktop environment along with several common drivers. Minimal configuration is
+done to ensure an out-of-the-box experience.
 
 Feel free to open any issue / pull request.
 
@@ -18,8 +20,8 @@ Download the ISO image from [Releases](../../releases), and boot from it.
 
 Note: AL Installer needs to be built in Arch Linux.
 
-Install [archiso](https://www.archlinux.org/packages/?name=archiso), and run the
-following as root:
+Install [archiso](https://www.archlinux.org/packages/?name=archiso), and run
+the following as root:
 
 ```sh
 ./build.sh
