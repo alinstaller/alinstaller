@@ -3,6 +3,7 @@ bluez-utils
 cups
 dnsmasq
 efibootmgr
+efivar
 firefox
 firewalld
 gnome
