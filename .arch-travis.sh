@@ -58,6 +58,7 @@ repo_line=70
 get_base_archive() {
   local months=(
     # $(date +%Y.%m)
+    # $(date +%Y.%m -d "-1 month")
     '2017.12' # hardcoded to known good month
   )
 
@@ -94,19 +95,6 @@ get_base_archive() {
 # setup working Arch Linux chroot
 setup_chroot() {
   arch_msg "Setting up Arch chroot"
-
-  # if [ ! -f $archive ]; then
-  #   # get root fs
-  #   curl --fail -O "$ARCH_TRAVIS_MIRROR/iso/$ARCH_TRAVIS_ARCH_ISO/$archive" 2>&1
-  #   local ret=$?
-
-  #   # if it fails, try arch iso form the previous month
-  #   if [ $ret -gt 0 ]; then
-  #     ARCH_TRAVIS_ARCH_ISO="$(date +%Y.%m -d "-1 month").01"
-  #     archive="archlinux-bootstrap-$ARCH_TRAVIS_ARCH_ISO-${ARCH_TRAVIS_ARCH}.tar.gz"
-  #     as_normal "curl -O $ARCH_TRAVIS_MIRROR/iso/$ARCH_TRAVIS_ARCH_ISO/$archive"
-  #   fi
-  # fi
 
   get_base_archive
 
