@@ -16,3 +16,4 @@
 pybabel compile -D alinstaller -d locale
 
 cp --parents -R locale/*/*/*.mo "$1"
+rm -f locale/*/*/*.mo
