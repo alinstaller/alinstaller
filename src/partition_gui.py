@@ -149,7 +149,8 @@ class PartitionGUI(GUIStep):
 
     def update_text(self):
         gui.builder.get_object('label_edit_partitions').set_label(
-            _('Edit partitions and choose your installation target below.'))
+            _('Edit partitions below. If not sure, choose an empty disk, ' +
+              'and select "Automatically Set Up This Disk".'))
         gui.builder.get_object('label_partition_action').set_label(
             _('Choose an action below:'))
         gui.builder.get_object('label_partition_log').set_label(

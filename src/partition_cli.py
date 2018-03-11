@@ -60,8 +60,9 @@ class PartitionCLI(Step):
             i += 1
         menu.append((str(len(menu)), 'Finish Partitioning'))
 
-        res, sel = dialog.menu('Edit partitions and choose your installation '
-                               + 'target below.\n',
+        res, sel = dialog.menu('Edit partitions below. If not sure, ' +
+                               'choose an empty disk, and select ' +
+                               '\'Automatically Set Up This Disk\'.\n',
                                choices=menu,
                                no_tags=True,
                                default_item=str(len(menu) - 1) if self._switch_to_finish else '0')
