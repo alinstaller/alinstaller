@@ -18,8 +18,8 @@ import time
 import traceback
 
 import gi
-gi.require_version("Gdk", "3.0")
-gi.require_version("Gtk", "3.0")
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
 
 from gi.repository import GLib
 
@@ -66,7 +66,7 @@ def main():
                 ai_call(
                     'cp /usr/local/share/applications/*.desktop /etc/xdg/autostart')
 
-                ai_call('useradd -c "Live User" -G users,wheel -m liveuser')
+                ai_call('useradd -c \'Live User\' -G users,wheel -m liveuser')
                 ai_call('passwd -d liveuser')
 
                 ai_call(

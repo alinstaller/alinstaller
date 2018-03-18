@@ -39,7 +39,7 @@ class SetKeymapCLI(Step):
             ai_dialog_exec('loadkeys -d')
             set_keymap_lib.keymap = ''
         elif sel != '* No change':
-            ai_dialog_exec('loadkeys \"' + keymapsdir + '/' + sel + '\"')
+            ai_dialog_exec('loadkeys \'' + keymapsdir + '/' + sel + '\'')
             set_keymap_lib.keymap = keymapsdir + '/' + sel
 
         partition_cli.run()

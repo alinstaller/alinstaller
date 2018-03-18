@@ -28,11 +28,11 @@ class InstallLib(object):
         cmd = 'true'
 
         if partition_lib.swap_target != '':
-            cmd += ' && swapon \"' + partition_lib.swap_target + '\"'
-        cmd += ' && mount \"' + partition_lib.install_target + '\" /mnt'
+            cmd += ' && swapon \'' + partition_lib.swap_target + '\''
+        cmd += ' && mount \'' + partition_lib.install_target + '\' /mnt'
         cmd += ' && mkdir -p /mnt/boot'
         if partition_lib.boot_target != '':
-            cmd += ' && mount \"' + partition_lib.boot_target + '\" /mnt/boot'
+            cmd += ' && mount \'' + partition_lib.boot_target + '\' /mnt/boot'
 
         return cmd
 
@@ -80,7 +80,7 @@ class InstallLib(object):
             for x in l:
                 f.write(x + '\n')
 
-        ai_call('mv /tmp/mirrorlist \"' + fn + '\"')
+        ai_call('mv /tmp/mirrorlist \'' + fn + '\'')
 
     def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'
@@ -112,13 +112,13 @@ class InstallLib(object):
 
         swap_uuid = ''
         if partition_lib.swap_target != '':
-            __, swap_uuid = ai_call('blkid -s UUID -o value \"' +
-                                    partition_lib.swap_target + '\"')
+            __, swap_uuid = ai_call('blkid -s UUID -o value \'' +
+                                    partition_lib.swap_target + '\'')
             swap_uuid = swap_uuid.decode('utf-8').strip('\n')
         crypt_uuid = ''
         if partition_lib.crypt_target != '':
-            __, crypt_uuid = ai_call('blkid -s UUID -o value \"' +
-                                     partition_lib.crypt_target + '\"')
+            __, crypt_uuid = ai_call('blkid -s UUID -o value \'' +
+                                     partition_lib.crypt_target + '\'')
             crypt_uuid = crypt_uuid.decode('utf-8').strip('\n')
 
         cmd += ' && sed -i \"s/^\\\\(GRUB_CMDLINE_LINUX_DEFAULT=\\\\).*/\\1\\\"quiet'
@@ -165,7 +165,9 @@ class InstallLib(object):
         if set_keymap_lib.keymap != '':
             cmd += ' && echo \"KEYMAP=' + set_keymap_lib.keymap + '\" >> /etc/vconsole.conf'
 
-        cmd += ' && echo \"' + hostname_lib.hostname + '\" > /etc/hostname'
+        cmd += ' && echo \"' + \
+               hostname_lib.hostname.replace('\"', '').replace('\'', '') + \
+               '\" > /etc/hostname'
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
@@ -183,9 +185,6 @@ class InstallLib(object):
         cmd += ' && (systemctl enable upower || true)'
 
         cmd += ' && (systemctl --global enable pipewire || true)'
-
-        cmd += ' && (hostnamectl --static set-hostname \"' + \
-            hostname_lib.hostname + '\" || true)'
 
         cmd += '\''
 

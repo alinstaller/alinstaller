@@ -40,7 +40,7 @@ class SetFontCLI(Step):
             ai_dialog_exec('setfont')
             set_font_lib.font = ''
         elif sel != '* No change':
-            ai_dialog_exec('setfont \"' + fontsdir + '/' + sel + '\"')
+            ai_dialog_exec('setfont \'' + fontsdir + '/' + sel + '\'')
             set_font_lib.font = fontsdir + '/' + sel
 
         set_keymap_cli.run()

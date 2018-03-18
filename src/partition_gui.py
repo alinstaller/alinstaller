@@ -56,17 +56,17 @@ class PartitionGUI(GUIStep):
                          adjustment.set_value(adjustment.get_upper()))
 
         dialog = gui.builder.get_object('dialog_autosetup')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
         dialog = gui.builder.get_object('dialog_parttable')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
         dialog = gui.builder.get_object('dialog_part')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
         dialog = gui.builder.get_object('dialog_format')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
         dialog = gui.builder.get_object('dialog_cryptsetup')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
         dialog = gui.builder.get_object('dialog_cryptopen')
-        dialog.connect("delete-event", lambda x, y: dialog.hide_on_delete())
+        dialog.connect('delete-event', lambda x, y: dialog.hide_on_delete())
 
         switch = gui.builder.get_object('switch_autosetup_encryption')
         switch.connect('notify::active', lambda x, y: gui.builder.get_object(
@@ -112,7 +112,7 @@ class PartitionGUI(GUIStep):
                     Gtk.ButtonsType.CLOSE,
                     _('An installation target must be selected.') + '\n' +
                     _('If not sure, choose an empty disk, and select ' +
-                      '"Automatically Set Up This Disk".')
+                      '\"Automatically Set Up This Disk\".')
                 )
                 dialog.run()
                 dialog.destroy()
@@ -150,7 +150,7 @@ class PartitionGUI(GUIStep):
     def update_text(self):
         gui.builder.get_object('label_edit_partitions').set_label(
             _('Edit partitions below. If not sure, choose an empty disk, ' +
-              'and select "Automatically Set Up This Disk".'))
+              'and select \"Automatically Set Up This Disk\".'))
         gui.builder.get_object('label_partition_action').set_label(
             _('Choose an action below:'))
         gui.builder.get_object('label_partition_log').set_label(

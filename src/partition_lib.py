@@ -84,8 +84,8 @@ class PartitionLib(object):
             with open('/tmp/keyfile', 'w') as f:
                 f.write(passphrase)
 
-        cmd = 'parted -m -s \"' + name + '\" unit B mklabel \"' + \
-            parttable + '\"'
+        cmd = 'parted -m -s \'' + name + '\' unit B mklabel \'' + \
+            parttable + '\''
         if parttable == 'gpt':
             cmd += ' mkpart ESP fat32 ' + str(boot_start) + 'B ' + \
                 str(boot_end) + 'B'
@@ -96,17 +96,17 @@ class PartitionLib(object):
             str(root_start) + 'B ' + str(root_end) + 'B'
         cmd += ' set 1 boot on'
         cmd += ' mkpart primary linux-swap ' + str(swap_start) + 'B 100%'
-        cmd += ' && mkfs.fat -F32 \"' + name + '1\"'
+        cmd += ' && mkfs.fat -F32 \'' + name + '1\''
         if not crypt:
-            cmd += ' && mkfs.ext4 \"' + name + '2\"'
+            cmd += ' && mkfs.ext4 \'' + name + '2\''
         else:
             cmd += ' && cryptsetup -v -q --key-file /tmp/keyfile luksFormat ' + \
-                '--type \"' + self.default_luks_type + '\" \"' + name + \
-                '2\"'
-            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \"' + name + \
-                '2\" cryptroot'
+                '--type \'' + self.default_luks_type + '\' \'' + name + \
+                '2\''
+            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \'' + name + \
+                '2\' cryptroot'
             cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
-        cmd += ' && mkswap \"' + name + '3\"'
+        cmd += ' && mkswap \'' + name + '3\''
 
         cmd += ' && echo Completed.'
 
@@ -126,8 +126,8 @@ class PartitionLib(object):
     def _action_boot(self, name):
         disk = self.get_disk_from_part(name)
         num = self.get_num_from_part(name)
-        cmd = 'parted -m -s \"' + disk + '\" unit B toggle \"' + \
-            str(num) + '\" boot && echo Completed.'
+        cmd = 'parted -m -s \'' + disk + '\' unit B toggle \'' + \
+            str(num) + '\' boot && echo Completed.'
 
         self._exec(cmd, linger=True, msg='Toggling boot flag...')
 
@@ -155,16 +155,16 @@ class PartitionLib(object):
     def _action_cryptsetup(self, name, passphrase):
         with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
-        self._exec('cryptsetup -v -q --key-file /tmp/keyfile luksFormat --type \"' +
-                   self.default_luks_type + '\" \"' + name + '\" && echo Completed.',
+        self._exec('cryptsetup -v -q --key-file /tmp/keyfile luksFormat --type \'' +
+                   self.default_luks_type + '\' \'' + name + '\' && echo Completed.',
                    linger=True, msg='Setting up encryption...')
         os.remove('/tmp/keyfile')
 
     def _action_cryptopen(self, name, passphrase):
         with open('/tmp/keyfile', 'w') as f:
             f.write(passphrase)
-        self._exec('cryptsetup -q --key-file /tmp/keyfile open \"' + name +
-                   '\" cryptroot && echo Completed.',
+        self._exec('cryptsetup -q --key-file /tmp/keyfile open \'' + name +
+                   '\' cryptroot && echo Completed.',
                    linger=True, msg='Opening encrypted partition...')
         self.crypt_passphrase = passphrase
         self.crypt_target = name
@@ -179,9 +179,9 @@ class PartitionLib(object):
     def _action_format(self, name, fstype):
         cmd = ''
         if fstype == 'swap':
-            cmd = 'mkswap \"' + name + '\"'
+            cmd = 'mkswap \'' + name + '\''
         else:
-            cmd = 'mkfs -t \"' + fstype + '\" \"' + name + '\"'
+            cmd = 'mkfs -t \'' + fstype + '\' \'' + name + '\''
         cmd += ' && echo Completed.'
         self._exec(cmd, linger=True, msg='Formatting partition...')
 
@@ -190,14 +190,14 @@ class PartitionLib(object):
         self._msgbox(_('Successful.'))
 
     def _action_parttable(self, name, parttable):
-        self._exec('parted -m -s \"' + name + '\" unit B mklabel \"' +
-                   parttable + '\" && echo Completed.', linger=True,
+        self._exec('parted -m -s \'' + name + '\' unit B mklabel \'' +
+                   parttable + '\' && echo Completed.', linger=True,
                    msg='Creating partition table...')
 
     def _action_part(self, name, start, end, fstype):
-        self._exec('parted -m -s \"' + name.split('*')[1] +
-                   '\" unit \"' + self.part_granularity_unit + '\" mkpart primary \"' +
-                   fstype + '\" \"' + str(start) + '\" \"' + str(end) + '\" ' +
+        self._exec('parted -m -s \'' + name.split('*')[1] +
+                   '\' unit \'' + self.part_granularity_unit + '\' mkpart primary \'' +
+                   fstype + '\' \'' + str(start) + '\' \'' + str(end) + '\' ' +
                    '&& echo Completed.', linger=True,
                    msg='Creating new partition...')
 
@@ -207,8 +207,8 @@ class PartitionLib(object):
     def _action_remove(self, name):
         disk = self.get_disk_from_part(name)
         num = self.get_num_from_part(name)
-        self._exec('parted -m -s \"' + disk + '\" unit B rm \"' + str(num)
-                   + '\" && echo Completed.', linger=True,
+        self._exec('parted -m -s \'' + disk + '\' unit B rm \'' + str(num)
+                   + '\' && echo Completed.', linger=True,
                    msg='Removing partition...')
 
     def _action_swap_target(self, name):
@@ -425,7 +425,7 @@ class PartitionLib(object):
                 self._scan_for_details(x['children'])
 
             __, layout = ai_call(
-                'parted -m -s \"' + x['name'] + '\" unit B print')
+                'parted -m -s \'' + x['name'] + '\' unit B print')
             # sometimes parted returns error, but with useful information
 
             layout = layout.decode('utf-8').split('\n')
