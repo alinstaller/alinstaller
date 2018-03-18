@@ -24,9 +24,11 @@ ibus-kkc
 ibus-libpinyin
 ibus-m17n
 linux-zen
+lsb-release
 mesa
 noto-fonts-cjk
 noto-fonts-emoji
+os-prober
 python-babel
 python-gobject
 python-psutil
