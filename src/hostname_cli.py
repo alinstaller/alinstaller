@@ -37,6 +37,8 @@ class HostnameCLI(Step):
             else:
                 hostname_lib.hostname = text
 
+        # TODO: add a step to change VM swappiness
+
         install_cli.run()
         return True
 
