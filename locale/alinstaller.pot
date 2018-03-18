@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-11 05:50+0000\n"
+"POT-Creation-Date: 2018-03-18 05:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,12 @@ msgstr ""
 msgid "_Next"
 msgstr ""
 
-#: src/hostname_gui.py:29
-msgid "Enter a new hostname:"
+#: src/hostname_gui.py:38
+msgid "A new host name is required."
+msgstr ""
+
+#: src/hostname_gui.py:49
+msgid "Enter a new host name:"
 msgstr ""
 
 #: src/install_gui.py:48
