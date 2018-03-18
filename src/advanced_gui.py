@@ -39,6 +39,7 @@ class AdvancedGUI(GUIStep):
             'clicked', self._keymap_reset_clicked)
 
     def update_text(self):
+        # TODO: add a notice regarding where to change the font and the keymap
         gui.builder.get_object('label_vm').set_label(_('VM Swappiness'))
         gui.builder.get_object('label_vm_swapping').set_label(_(
             'Note: On modern computers with large memory, VM swapping can ' +
