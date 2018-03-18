@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-18 05:17+0000\n"
+"POT-Creation-Date: 2018-03-18 15:17+0000\n"
 "PO-Revision-Date: 2018-02-17 15:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en_GB\n"
@@ -18,15 +18,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.5.3\n"
 
-#: src/gui.py:83 src/init.py:37
+#: src/advanced_gui.py:43
+msgid "VM Swappiness"
+msgstr ""
+
+#: src/advanced_gui.py:44
+msgid ""
+"Note: On modern computers with large memory, VM swapping can slow the "
+"system down or even freeze the entire computer. Set the value to 0 to "
+"disable swapping (does not affect hibernation)."
+msgstr ""
+
+#: src/advanced_gui.py:49 src/advanced_gui.py:51 src/advanced_gui.py:53
+msgid "Reset"
+msgstr ""
+
+#: src/advanced_gui.py:50
+msgid "Virtual Console Font"
+msgstr ""
+
+#: src/advanced_gui.py:52
+msgid "Virtual Console Keymap"
+msgstr ""
+
+#: src/advanced_gui.py:54
+msgid "Advanced"
+msgstr ""
+
+#: src/advanced_gui.py:56
+msgid "Edit these options only when you are familiar with them."
+msgstr ""
+
+#: src/gui.py:85 src/init.py:37
 msgid "AL Installer"
 msgstr ""
 
-#: src/gui.py:84
+#: src/gui.py:86
 msgid "_Back"
 msgstr ""
 
-#: src/gui.py:85
+#: src/gui.py:87
 msgid "_Next"
 msgstr ""
 
