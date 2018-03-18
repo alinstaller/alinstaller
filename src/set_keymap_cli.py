@@ -30,7 +30,8 @@ class SetKeymapCLI(Step):
         keymaps = sorted(keymaps)
         keymaps = [('* No change', ''), ('* Default', '')] + keymaps
         ret, sel = dialog.menu(
-            'Please select your keyboard layout:',
+            'Please select your keyboard layout for the virtual console.' +
+            '\n' + 'You can change this later in /etc/vconsole.conf.',
             choices=keymaps
         )
         if ret != dialog.OK:

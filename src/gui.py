@@ -25,7 +25,7 @@ class GUI(object):
 
     _gui_file = 'gui.glade'
     # add pages here:
-    _pages = ['language', 'welcome', 'partition', 'hostname', 'install']
+    _pages = ['language', 'welcome', 'partition', 'hostname', 'advanced', 'install']
 
     def __init__(self):
         self.started = False
@@ -64,6 +64,8 @@ class GUI(object):
         self._pages_ins += [partition_gui]
         from hostname_gui import hostname_gui
         self._pages_ins += [hostname_gui]
+        from advanced_gui import advanced_gui
+        self._pages_ins += [advanced_gui]
         from install_gui import install_gui
         self._pages_ins += [install_gui]
 

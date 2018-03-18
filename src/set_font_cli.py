@@ -31,7 +31,8 @@ class SetFontCLI(Step):
             if x.endswith('.gz'):
                 fonts.append((x, ''))
         ret, sel = dialog.menu(
-            'Please choose a font:',
+            'Please choose a font for the virtual console.' + '\n' +
+            'You can change this later in /etc/vconsole.conf.',
             choices=fonts
         )
         if ret != dialog.OK:
