@@ -21,13 +21,21 @@ from step import Step
 
 class HostnameCLI(Step):
     def run_once(self):
-        res, text = dialog.inputbox(
-            text='Enter hostname:',
-            init=hostname_lib.hostname
-        )
-        if res != dialog.OK:
-            return False
-        hostname_lib.hostname = text
+        text = ''
+
+        while text == '':
+            res, text = dialog.inputbox(
+                text='Enter host name (leave empty to regenerate):',
+                init=hostname_lib.hostname,
+                width=50, height=9
+            )
+            if res != dialog.OK:
+                return False
+
+            if text == '':
+                hostname_lib.generate()
+            else:
+                hostname_lib.hostname = text
 
         install_cli.run()
         return True

@@ -13,10 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
 
 class HostnameLib(object):
     def __init__(self):
-        self.hostname = 'arch'
+        self.generate()
+
+    def generate(self):
+        new_hostname = 'arch-' + \
+            ''.join(random.choice('0123456789abcdef') for x in range(8))
+        self.hostname = new_hostname
+        return new_hostname
 
 
 hostname_lib = HostnameLib()
