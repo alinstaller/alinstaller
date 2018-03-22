@@ -13,11 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from ai_exec import ai_call
 
 class VMLib(object):
     default_swappiness = 0
 
     def __init__(self):
+        ai_call('sysctl vm.swappiness=0')
         self.swappiness = self.default_swappiness
 
 
