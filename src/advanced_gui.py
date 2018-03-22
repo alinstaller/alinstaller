@@ -47,9 +47,10 @@ class AdvancedGUI(GUIStep):
             'the value to 0 to disable swapping (does not affect hibernation).'
         ))
         gui.builder.get_object('button_vm_reset').set_label(_('Reset'))
-        gui.builder.get_object('label_font').set_label(_('Virtual Console Font'))
+        gui.builder.get_object('label_vconsole').set_label(_('Virtual Console'))
+        gui.builder.get_object('label_vconsole_font').set_label(_('Font'))
         gui.builder.get_object('button_font_reset').set_label(_('Reset'))
-        gui.builder.get_object('label_keymap').set_label(_('Virtual Console Keymap'))
+        gui.builder.get_object('label_vconsole_keymap').set_label(_('Keymap'))
         gui.builder.get_object('button_keymap_reset').set_label(_('Reset'))
         gui.builder.get_object('label_advanced').set_label(_('Advanced'))
         gui.builder.get_object('label_advanced_notice').set_label(

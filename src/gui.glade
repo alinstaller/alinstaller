@@ -45,6 +45,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Please select your language:</property>
+                <property name="ellipsize">end</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -123,6 +124,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Welcome to AL Installer!</property>
+                    <property name="ellipsize">end</property>
                     <property name="yalign">1</property>
                     <attributes>
                       <attribute name="font-desc" value="Sans Bold 16"/>
@@ -139,6 +141,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">This guide will help you install Arch Linux.</property>
+                    <property name="ellipsize">end</property>
                     <property name="yalign">0</property>
                   </object>
                   <packing>
@@ -281,6 +284,8 @@
                                     <property name="can_focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">Select an item to view its details.</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="xalign">0</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -305,6 +310,8 @@
                                     <property name="can_focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">Choose an action below:</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="xalign">0</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -399,6 +406,8 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Log</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
                       </object>
                     </child>
                   </object>
@@ -626,8 +635,9 @@
                       <object class="GtkLabel" id="label_vm_swapping">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Note: On modern computers with large memory, VM swapping can slow the system down or even freeze the entire computer. Set the value to 0 to disable swapping (does not affect hibernation).</property>
+                        <property name="halign">start</property>
                         <property name="wrap">True</property>
+                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -648,25 +658,25 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">4</property>
                     <property name="margin_right">4</property>
                     <property name="margin_top">4</property>
                     <property name="margin_bottom">4</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
+                    <property name="row_spacing">4</property>
+                    <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkEntry" id="entry_font">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
                         <property name="truncate_multiline">True</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
@@ -678,47 +688,20 @@
                         <property name="halign">end</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="label_font">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Virtual Console Font</property>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                    <property name="tab_fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_top">4</property>
-                    <property name="margin_bottom">4</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
                     <child>
                       <object class="GtkEntry" id="entry_keymap">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
                         <property name="truncate_multiline">True</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">2</property>
                       </packing>
                     </child>
                     <child>
@@ -730,24 +713,57 @@
                         <property name="halign">end</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">3</property>
                       </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label_vconsole_font">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Font</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label_vconsole_keymap">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Keymap</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
                     </child>
                   </object>
                   <packing>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label_keymap">
+                  <object class="GtkLabel" id="label_vconsole">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Virtual Console Keymap</property>
+                    <property name="label" translatable="yes">Virtual Console</property>
                   </object>
                   <packing>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                     <property name="tab_fill">False</property>
                   </packing>
                 </child>
@@ -805,6 +821,7 @@
               <object class="GtkLabel" id="label_advanced_notice">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">start</property>
                 <property name="label" translatable="yes">Edit these options only when you are familiar with them.</property>
                 <property name="ellipsize">end</property>
                 <property name="xalign">0</property>
