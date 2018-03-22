@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-22 13:26+0800\n"
+"POT-Creation-Date: 2018-03-22 17:17+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.5.3\n"
 
-#: src/advanced_gui.py:43
+#: src/advanced_gui.py:56
+msgid "Advanced Options"
+msgstr ""
+
+#: src/advanced_gui.py:58
+msgid "Do not edit unless you are familiar with them."
+msgstr ""
+
+#: src/advanced_gui.py:61
 msgid "VM Swappiness"
 msgstr ""
 
-#: src/advanced_gui.py:44
+#: src/advanced_gui.py:62
 msgid ""
 "Note: On modern computers with large memory, VM swapping can slow the "
 "system down or even freeze the entire computer. Set the value to 0 to "
@@ -30,32 +38,24 @@ msgid ""
 "You can edit this value later in /etc/sysctl.d/99-sysctl.conf."
 msgstr ""
 
-#: src/advanced_gui.py:52 src/advanced_gui.py:55 src/advanced_gui.py:57
+#: src/advanced_gui.py:70 src/advanced_gui.py:73 src/advanced_gui.py:76
 msgid "Reset"
 msgstr ""
 
-#: src/advanced_gui.py:53
+#: src/advanced_gui.py:71
 msgid "Virtual Console"
 msgstr ""
 
-#: src/advanced_gui.py:54
+#: src/advanced_gui.py:72
 msgid "Font"
 msgstr ""
 
-#: src/advanced_gui.py:56
-msgid "Keymap"
+#: src/advanced_gui.py:74
+msgid "Keyboard Mapping"
 msgstr ""
 
-#: src/advanced_gui.py:58
+#: src/advanced_gui.py:77
 msgid "You can edit these values later in /etc/vconsole.conf."
-msgstr ""
-
-#: src/advanced_gui.py:60
-msgid "Advanced"
-msgstr ""
-
-#: src/advanced_gui.py:62
-msgid "Edit these options only when you are familiar with them."
 msgstr ""
 
 #: src/gui.py:85 src/init.py:37
