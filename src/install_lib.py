@@ -172,7 +172,7 @@ class InstallLib(object):
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
-        cmd += ' && echo vm.swappiness=' + str(vm_lib.swappiness) + \
+        cmd += ' && echo vm.swappiness=' + str(vm_lib.get_swappiness()) + \
             ' > /etc/sysctl.d/99-sysctl.conf'
 
         cmd += ' && systemctl disable multi-user.target'

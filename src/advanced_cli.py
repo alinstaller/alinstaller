@@ -13,32 +13,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from advanced_cli import advanced_cli
 from dlg import dialog
-from hostname_lib import hostname_lib
+from install_cli import install_cli
 from step import Step
+from vm_lib import vm_lib
 
 
-class HostnameCLI(Step):
+class AdvancedCLI(Step):
     def run_once(self):
-        text = ''
+        res = dialog.yesno(
+            text='Do you want to edit advanced configurations?',
+            width=50, height=5, defaultno=True,
+            help_button=True, help_label='Cancel'
+        )
 
-        while text == '':
+        if res == dialog.HELP:
+            return False
+        elif res == dialog.OK:
             res, text = dialog.inputbox(
-                text='Enter host name (leave empty to regenerate):',
-                init=hostname_lib.hostname,
+                text='VM Swappiness (default=' +
+                     str(vm_lib.default_swappiness) + '):',
+                init=str(vm_lib.get_swappiness()),
                 width=50, height=9
             )
             if res != dialog.OK:
                 return False
 
-            if text == '':
-                hostname_lib.generate()
-            else:
-                hostname_lib.hostname = text
+            value = vm_lib.default_swappiness
+            try:
+                value = int(text)
+            except Exception:
+                pass
 
-        advanced_cli.run()
+            try:
+                vm_lib.set_swappiness(value)
+            except Exception:
+                vm_lib.set_swappiness(vm_lib.default_swappiness)
+
+        install_cli.run()
         return True
 
 
-hostname_cli = HostnameCLI()
+advanced_cli = AdvancedCLI()

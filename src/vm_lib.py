@@ -20,7 +20,16 @@ class VMLib(object):
 
     def __init__(self):
         ai_call('sysctl vm.swappiness=0')
-        self.swappiness = self.default_swappiness
+        self.set_swappiness(self.default_swappiness)
+
+    def get_swappiness(self):
+        return self._swappiness
+
+    def set_swappiness(self, value):
+        value = int(value)
+        if value < 0 or value > 100:
+            raise Exception('invalid value')
+        self._swappiness = value
 
 
 vm_lib = VMLib()
