@@ -32,9 +32,11 @@ class AdvancedCLI(Step):
         elif res == dialog.OK:
             res, text = dialog.inputbox(
                 text='VM Swappiness (default=' + str(
-                    vm_lib.default_swappiness) + '):',
+                    vm_lib.default_swappiness) + ')' + '\n' +
+                    'You can change this later in ' +
+                    '/etc/sysctl.d/99-sysctl.conf.',
                 init=str(vm_lib.get_swappiness()),
-                width=50, height=9
+                width=64, height=9
             )
             if res != dialog.OK:
                 return False
