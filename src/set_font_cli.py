@@ -13,36 +13,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-
-from ai_exec import ai_dialog_exec
 from dlg import dialog
-from set_font_lib import set_font_lib
 from set_keymap_cli import set_keymap_cli
 from step import Step
+from vconsole_lib import vconsole_lib
 
 
 class SetFontCLI(Step):
     def run_once(self):
-        fontsdir = '/usr/share/kbd/consolefonts'
-        l = sorted(os.listdir(fontsdir))
-        fonts = [('* No change', ''), ('* Default', '')]
-        for x in l:
-            if x.endswith('.gz'):
-                fonts.append((x, ''))
+        fonts = vconsole_lib.get_fonts()
+        fonts = [(x, '') for x in fonts]
+        fonts = [('* No change', ''), ('* Default', '')] + fonts
+
+        default_item = vconsole_lib.get_font()
+        if default_item == '':
+            default_item = '* Default'
         ret, sel = dialog.menu(
             'Please choose a font for the virtual console.' + '\n' +
             'You can change this later in /etc/vconsole.conf.',
-            choices=fonts
+            choices=fonts,
+            default_item=default_item
         )
         if ret != dialog.OK:
             return False
+
         if sel == '* Default':
-            ai_dialog_exec('setfont')
-            set_font_lib.font = ''
+            vconsole_lib.set_font('')
         elif sel != '* No change':
-            ai_dialog_exec('setfont \'' + fontsdir + '/' + sel + '\'')
-            set_font_lib.font = fontsdir + '/' + sel
+            vconsole_lib.set_font(sel)
 
         set_keymap_cli.run()
         return True

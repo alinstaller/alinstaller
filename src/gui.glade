@@ -742,7 +742,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Keymap</property>
+                            <property name="label" translatable="yes">Keyboard Mapping</property>
                             <property name="ellipsize">end</property>
                             <property name="xalign">0</property>
                           </object>

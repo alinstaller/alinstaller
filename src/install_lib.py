@@ -16,8 +16,7 @@
 from ai_exec import ai_call
 from hostname_lib import hostname_lib
 from partition_lib import partition_lib
-from set_font_lib import set_font_lib
-from set_keymap_lib import set_keymap_lib
+from vconsole_lib import vconsole_lib
 from vm_lib import vm_lib
 
 
@@ -161,10 +160,10 @@ class InstallLib(object):
         cmd += ' && grub-mkconfig -o /boot/grub/grub.cfg'
 
         cmd += ' && true > /etc/vconsole.conf'
-        if set_font_lib.font != '':
-            cmd += ' && echo \"FONT=' + set_font_lib.font + '\" >> /etc/vconsole.conf'
-        if set_keymap_lib.keymap != '':
-            cmd += ' && echo \"KEYMAP=' + set_keymap_lib.keymap + '\" >> /etc/vconsole.conf'
+        if vconsole_lib.get_font_full() != '':
+            cmd += ' && echo \"FONT=' + vconsole_lib.get_font_full() + '\" >> /etc/vconsole.conf'
+        if vconsole_lib.get_keymap_full() != '':
+            cmd += ' && echo \"KEYMAP=' + vconsole_lib.get_keymap_full() + '\" >> /etc/vconsole.conf'
 
         cmd += ' && echo \"' + \
                hostname_lib.hostname.replace('\"', '').replace('\'', '') + \

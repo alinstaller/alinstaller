@@ -13,35 +13,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import glob
-
-from ai_exec import ai_dialog_exec
 from dlg import dialog
 from partition_cli import partition_cli
-from set_keymap_lib import set_keymap_lib
 from step import Step
+from vconsole_lib import vconsole_lib
 
 
 class SetKeymapCLI(Step):
     def run_once(self):
-        keymapsdir = '/usr/share/kbd/keymaps'
-        keymaps = glob.glob(keymapsdir + '/**/*.map.gz')
-        keymaps = [(x[len(keymapsdir)+1:], '') for x in keymaps]
-        keymaps = sorted(keymaps)
+        keymaps = vconsole_lib.get_keymaps()
+        keymaps = [(x, '') for x in keymaps]
         keymaps = [('* No change', ''), ('* Default', '')] + keymaps
+
+        default_item = vconsole_lib.get_keymap()
+        if default_item == '':
+            default_item = '* Default'
         ret, sel = dialog.menu(
-            'Please select your keyboard layout for the virtual console.' +
+            'Please select your keyboard mapping for the virtual console.' +
             '\n' + 'You can change this later in /etc/vconsole.conf.',
-            choices=keymaps
+            choices=keymaps,
+            default_item=default_item
         )
         if ret != dialog.OK:
             return False
+
         if sel == '* Default':
-            ai_dialog_exec('loadkeys -d')
-            set_keymap_lib.keymap = ''
+            vconsole_lib.set_keymap('')
         elif sel != '* No change':
-            ai_dialog_exec('loadkeys \'' + keymapsdir + '/' + sel + '\'')
-            set_keymap_lib.keymap = keymapsdir + '/' + sel
+            vconsole_lib.set_keymap(sel)
 
         partition_cli.run()
         return True
