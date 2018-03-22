@@ -22,7 +22,8 @@ from vm_lib import vm_lib
 
 class AdvancedGUI(GUIStep):
     def __init__(self):
-        gui.builder.get_object('spinbutton_vm').set_value(vm_lib.swappiness)
+        gui.builder.get_object('spinbutton_vm').set_value(
+            vm_lib.get_swappiness())
         gui.builder.get_object('spinbutton_vm').connect(
             'value-changed', self._vm_swappiness_changed)
         gui.builder.get_object('button_vm_reset').connect(
@@ -61,7 +62,7 @@ class AdvancedGUI(GUIStep):
             _('Edit these options only when you are familiar with them.'))
 
     def _vm_swappiness_changed(self, spinbutton):
-        vm_lib.swappiness = spinbutton.get_value()
+        vm_lib.set_swappiness(spinbutton.get_value())
 
     def _vm_swappiness_reset_clicked(self, button):
         gui.builder.get_object('spinbutton_vm').set_value(
