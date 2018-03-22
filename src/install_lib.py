@@ -18,6 +18,7 @@ from hostname_lib import hostname_lib
 from partition_lib import partition_lib
 from set_font_lib import set_font_lib
 from set_keymap_lib import set_keymap_lib
+from vm_lib import vm_lib
 
 
 class InstallLib(object):
@@ -171,7 +172,8 @@ class InstallLib(object):
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
-        cmd += ' && echo vm.swappiness=0 > /etc/sysctl.d/99-sysctl.conf'
+        cmd += ' && echo vm.swappiness=' + str(vm_lib.swappiness) + \
+            ' > /etc/sysctl.d/99-sysctl.conf'
 
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl set-default graphical.target'
