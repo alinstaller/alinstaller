@@ -31,8 +31,8 @@ class AdvancedCLI(Step):
             return False
         elif res == dialog.OK:
             res, text = dialog.inputbox(
-                text='VM Swappiness (default=' +
-                     str(vm_lib.default_swappiness) + '):',
+                text='VM Swappiness (default=' + str(
+                    vm_lib.default_swappiness) + '):',
                 init=str(vm_lib.get_swappiness()),
                 width=50, height=9
             )
