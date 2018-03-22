@@ -27,19 +27,37 @@ class AdvancedGUI(GUIStep):
             'value-changed', self._vm_swappiness_changed)
         gui.builder.get_object('button_vm_reset').connect(
             'clicked', self._vm_swappiness_reset_clicked)
-        gui.builder.get_object('entry_font').set_text(vconsole_lib.get_font())
-        gui.builder.get_object('entry_font').connect(
-            'changed', self._font_changed)
+
+        liststore = gui.builder.get_object('liststore_fonts')
+        liststore.insert_with_valuesv(-1, [0], [''])
+        for x in vconsole_lib.get_fonts():
+            liststore.insert_with_valuesv(-1, [0], [x])
+
+        combobox = gui.builder.get_object('combobox_font')
+        combobox.set_active(0)
+        combobox.connect('changed', self._font_changed)
+
         gui.builder.get_object('button_font_reset').connect(
             'clicked', self._font_reset_clicked)
-        gui.builder.get_object('entry_keymap').set_text(
-            vconsole_lib.get_keymap())
-        gui.builder.get_object('entry_keymap').connect(
-            'changed', self._keymap_changed)
+
+        liststore = gui.builder.get_object('liststore_keymaps')
+        liststore.insert_with_valuesv(-1, [0], [''])
+        for x in vconsole_lib.get_keymaps():
+            liststore.insert_with_valuesv(-1, [0], [x])
+
+        combobox = gui.builder.get_object('combobox_keymap')
+        combobox.set_active(0)
+        combobox.connect('changed', self._keymap_changed)
+
         gui.builder.get_object('button_keymap_reset').connect(
             'clicked', self._keymap_reset_clicked)
 
     def update_text(self):
+        gui.builder.get_object('label_advanced_options').set_label(_(
+            'Advanced Options'))
+        gui.builder.get_object('label_advanced_warning').set_label(_(
+            'Do not edit unless you are familiar with them.'))
+
         gui.builder.get_object('label_vm').set_label(_('VM Swappiness'))
         gui.builder.get_object('label_vm_swapping').set_label(_(
             'Note: On modern computers with large memory, VM swapping can ' +
@@ -58,9 +76,6 @@ class AdvancedGUI(GUIStep):
         gui.builder.get_object('button_keymap_reset').set_label(_('Reset'))
         gui.builder.get_object('label_vconsole_notice').set_label(_(
             'You can edit these values later in /etc/vconsole.conf.'))
-        gui.builder.get_object('label_advanced').set_label(_('Advanced'))
-        gui.builder.get_object('label_advanced_notice').set_label(
-            _('Edit these options only when you are familiar with them.'))
 
     def _vm_swappiness_changed(self, spinbutton):
         vm_lib.set_swappiness(spinbutton.get_value())
@@ -69,17 +84,25 @@ class AdvancedGUI(GUIStep):
         gui.builder.get_object('spinbutton_vm').set_value(
             vm_lib.default_swappiness)
 
-    def _font_changed(self, entry):
-        vconsole_lib.set_font(entry.get_text())
+    def _font_changed(self, combobox):
+        active = combobox.get_active()
+        if active == 0:
+            vconsole_lib.set_font('')
+        elif active > 0:
+            vconsole_lib.set_font(vconsole_lib.get_fonts()[active - 1])
 
     def _font_reset_clicked(self, button):
-        gui.builder.get_object('entry_font').set_text('')
+        gui.builder.get_object('combobox_font').set_active(0)
 
-    def _keymap_changed(self, entry):
-        vconsole_lib.set_keymap(entry.get_text())
+    def _keymap_changed(self, combobox):
+        active = combobox.get_active()
+        if active == 0:
+            vconsole_lib.set_keymap('')
+        elif active > 0:
+            vconsole_lib.set_keymap(vconsole_lib.get_keymaps()[active - 1])
 
     def _keymap_reset_clicked(self, button):
-        gui.builder.get_object('entry_keymap').set_text('')
+        gui.builder.get_object('combobox_keymap').set_active(0)
 
 
 advanced_gui = AdvancedGUI()
