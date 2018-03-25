@@ -92,6 +92,10 @@ class InstallLib(object):
         cmd += ' && echo >> /mnt/etc/sudoers'
         cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
 
+        cmd += ' && echo \'' + \
+            hostname_lib.hostname.replace('\'', '') + \
+            '\' > /mnt/etc/hostname'
+
         cmd += ' && arch-chroot /mnt /bin/bash -c \''
 
         cmd += 'systemctl disable pacman-init.service choose-mirror.service'
@@ -165,9 +169,6 @@ class InstallLib(object):
         if vconsole_lib.get_keymap_full() != '':
             cmd += ' && echo \"KEYMAP=' + vconsole_lib.get_keymap_full() + '\" >> /etc/vconsole.conf'
 
-        cmd += ' && echo \"' + \
-               hostname_lib.hostname.replace('\"', '').replace('\'', '') + \
-               '\" > /etc/hostname'
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
