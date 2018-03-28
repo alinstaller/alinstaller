@@ -76,6 +76,8 @@ def main():
                 with open('/etc/sudoers', 'a') as f:
                     f.write('\n%wheel ALL=(ALL) ALL\n')
 
+                ai_call('systemctl start firewalld')
+                ai_call('systemctl start NetworkManager')
                 ai_call('systemctl start spice-vdagentd')
                 ai_call('systemctl start gdm')
                 sys.exit(0)
