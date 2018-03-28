@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import getpass
+import os
 import sys
 import time
 import traceback
@@ -48,6 +50,9 @@ def main():
 
         if sys.argv[1] == '--gui':
             enable_gui = True
+            if getpass.getuser() == 'liveuser':
+                cmd = 'gsettings set org.gnome.software download-updates false'
+                os.system(cmd)
 
         elif sys.argv[1] == '--setup-gui':
             print('\n\nTo use CLI instead of GUI, press Ctrl+C (once) in 3 seconds.')
