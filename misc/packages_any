@@ -10,6 +10,7 @@ gnome
 gnome-extra
 gnome-games
 gnome-initial-setup
+gnome-menus
 gnome-packagekit
 gnome-power-manager
 gnome-software-packagekit-plugin
