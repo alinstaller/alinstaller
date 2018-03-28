@@ -889,7 +889,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="valign">end</property>
-                <property name="icon_name">preferences-other</property>
+                <property name="icon_name">preferences-system</property>
                 <property name="icon_size">6</property>
               </object>
               <packing>
