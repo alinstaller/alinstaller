@@ -51,6 +51,7 @@ class AdvancedGUI(GUIStep):
             'clicked', self._keymap_reset_clicked)
 
     def update_text(self):
+        gui.builder.get_object('label_advanced_cover').set_label(_('Cover'))
         gui.builder.get_object('label_advanced_options').set_label(_(
             'Advanced Options'))
         gui.builder.get_object('label_advanced_warning').set_label(_(
