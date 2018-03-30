@@ -14,18 +14,10 @@
 from gui import gui
 from gui_step import GUIStep
 from vconsole_lib import vconsole_lib
-from vm_lib import vm_lib
 
 
 class AdvancedGUI(GUIStep):
     def __init__(self):
-        gui.builder.get_object('spinbutton_vm').set_value(
-            vm_lib.get_swappiness())
-        gui.builder.get_object('spinbutton_vm').connect(
-            'value-changed', self._vm_swappiness_changed)
-        gui.builder.get_object('button_vm_reset').connect(
-            'clicked', self._vm_swappiness_reset_clicked)
-
         liststore = gui.builder.get_object('liststore_fonts')
         liststore.insert_with_valuesv(-1, [0], [''])
         for x in vconsole_lib.get_fonts():
@@ -57,16 +49,6 @@ class AdvancedGUI(GUIStep):
         gui.builder.get_object('label_advanced_warning').set_label(_(
             'Do not edit unless you are familiar with them.'))
 
-        gui.builder.get_object('label_vm').set_label(_('VM Swappiness'))
-        gui.builder.get_object('label_vm_swapping').set_label(_(
-            'Note: On modern computers with large memory, VM swapping can ' +
-            'slow the system down or even freeze the entire computer. Set ' +
-            'the value to 0 to disable swapping (does not affect hibernation)' +
-            '.' +
-            '\n\n' +
-            'You can edit this value later in /etc/sysctl.d/99-sysctl.conf.'
-        ))
-        gui.builder.get_object('button_vm_reset').set_label(_('Reset'))
         gui.builder.get_object('label_vconsole').set_label(_('Virtual Console'))
         gui.builder.get_object('label_vconsole_font').set_label(_('Font'))
         gui.builder.get_object('button_font_reset').set_label(_('Reset'))
@@ -75,13 +57,6 @@ class AdvancedGUI(GUIStep):
         gui.builder.get_object('button_keymap_reset').set_label(_('Reset'))
         gui.builder.get_object('label_vconsole_notice').set_label(_(
             'You can edit these values later in /etc/vconsole.conf.'))
-
-    def _vm_swappiness_changed(self, spinbutton):
-        vm_lib.set_swappiness(spinbutton.get_value())
-
-    def _vm_swappiness_reset_clicked(self, button):
-        gui.builder.get_object('spinbutton_vm').set_value(
-            vm_lib.default_swappiness)
 
     def _font_changed(self, combobox):
         active = combobox.get_active()

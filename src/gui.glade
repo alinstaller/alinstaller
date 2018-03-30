@@ -2,11 +2,6 @@
 <!-- Generated with glade 3.22.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkAdjustment" id="adjustment_vm">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
   <object class="GtkListStore" id="liststore_fonts">
     <columns>
       <!-- column-name font -->
@@ -664,74 +659,6 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">4</property>
                     <child>
-                      <object class="GtkSpinButton" id="spinbutton_vm">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="activates_default">True</property>
-                        <property name="truncate_multiline">True</property>
-                        <property name="adjustment">adjustment_vm</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_vm_reset">
-                        <property name="label" translatable="yes">Reset</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="halign">end</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label_vm_swapping">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="wrap">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="label_vm">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">VM Swappiness</property>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                    <property name="tab_fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">8</property>
-                    <property name="margin_right">8</property>
-                    <property name="margin_top">8</property>
-                    <property name="margin_bottom">8</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
-                    <child>
                       <object class="GtkGrid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -862,7 +789,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child type="tab">
@@ -872,7 +799,7 @@
                     <property name="label" translatable="yes">Virtual Console</property>
                   </object>
                   <packing>
-                    <property name="position">2</property>
+                    <property name="position">1</property>
                     <property name="tab_fill">False</property>
                   </packing>
                 </child>

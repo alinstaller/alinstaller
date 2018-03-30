@@ -15,7 +15,6 @@ from ai_exec import ai_call
 from hostname_lib import hostname_lib
 from partition_lib import partition_lib
 from vconsole_lib import vconsole_lib
-from vm_lib import vm_lib
 
 
 class InstallLib(object):
@@ -170,9 +169,6 @@ class InstallLib(object):
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
-        cmd += ' && echo vm.swappiness=' + str(vm_lib.get_swappiness()) + \
-            ' > /etc/sysctl.d/99-sysctl.conf'
-
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl set-default graphical.target'
         cmd += ' && systemctl enable NetworkManager firewalld gdm'
@@ -189,6 +185,9 @@ class InstallLib(object):
         cmd += '\''
 
         cmd += ' && umount -R /mnt'
+        if partition_lib.swap_target != '':
+            cmd += ' && swapoff \'' + partition_lib.swap_target + '\''
+
         cmd += ' && echo && echo Completed.'
 
         return cmd

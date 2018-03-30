@@ -11,9 +11,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from advanced_cli import advanced_cli
 from dlg import dialog
 from hostname_lib import hostname_lib
+from install_cli import install_cli
 from step import Step
 
 
@@ -35,7 +35,7 @@ class HostnameCLI(Step):
             else:
                 hostname_lib.hostname = text
 
-        advanced_cli.run()
+        install_cli.run()
         return True
 
 
