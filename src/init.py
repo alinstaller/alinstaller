@@ -84,6 +84,7 @@ def main():
                 ai_call('systemctl start firewalld')
                 ai_call('systemctl start NetworkManager')
                 ai_call('systemctl start avahi-daemon')
+                ai_call('systemctl start systemd-resolved')
                 ai_call('systemctl start spice-vdagentd')
                 ai_call('systemctl start gdm')
                 sys.exit(0)
