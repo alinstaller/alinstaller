@@ -40,7 +40,6 @@ class InstallLib(object):
         cmd += ' && rm -rf /mnt/usr/local/share/{applications,locale}'
         cmd += ' && rm -rf /mnt/tmp/*'
         cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
-        cmd += ' && cp -aT /usr/local/lib/alinstaller/vmlinuz-linux-zen /mnt/boot/vmlinuz-linux-zen'
 
         return cmd
 
@@ -140,7 +139,6 @@ class InstallLib(object):
                 ' filesystems keyboard fsck)/\" /etc/mkinitcpio.conf'
 
         cmd += ' && mkinitcpio -p linux'
-        cmd += ' && mkinitcpio -p linux-zen'
 
         grub_i386_target = ''
         if partition_lib.boot_target != '':
