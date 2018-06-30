@@ -29,7 +29,10 @@ cp misc/*.desktop build/airootfs/usr/local/share/applications
 
 ./install-locale.sh build/airootfs/usr/local/share
 
-cat misc/packages_any >> build/packages.both
+for file in build/packages.*; do
+	cat misc/packages_any >> "$file"
+done
+
 cat misc/rc.sh >> build/airootfs/root/.zlogin
 
 sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\/locale.gen; locale-gen/" build/airootfs/root/customize_airootfs.sh
