@@ -17,7 +17,7 @@ from partition_lib import partition_lib
 from vconsole_lib import vconsole_lib
 
 
-class InstallLib(object):
+class InstallLib():
     mirror_kw = ['https:', '.kernel.org']
     mirror_multiply = 10
 

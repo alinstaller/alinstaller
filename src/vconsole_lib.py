@@ -18,7 +18,7 @@ from ai_exec import ai_dialog_exec
 from gui import gui
 
 
-class VConsoleLib(object):
+class VConsoleLib():
     fontsdir = '/usr/share/kbd/consolefonts'
     keymapsdir = '/usr/share/kbd/keymaps'
 

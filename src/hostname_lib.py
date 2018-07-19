@@ -13,7 +13,7 @@
 
 import random
 
-class HostnameLib(object):
+class HostnameLib():
     def __init__(self):
         self.generate()
 

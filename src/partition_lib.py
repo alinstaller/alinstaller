@@ -23,7 +23,7 @@ from dlg import dialog
 from gui import gui
 
 
-class PartitionMenuItem(object):
+class PartitionMenuItem():
     def __init__(self, name='', size=0, text='', size_text='', details_text='',
                  ops=None):
         self.name = name
@@ -37,7 +37,7 @@ class PartitionMenuItem(object):
             self.ops = ops
 
 
-class PartitionLib(object):
+class PartitionLib():
     base = 1000
     boot_part_size = 1024 * 1024 * 512
     default_filesystem = 'ext4'
@@ -443,12 +443,12 @@ class PartitionLib(object):
 
             part_map = {}
             for y in layout:
-                if len(y) < 1:
+                if not y:
                     continue
                 info = y[:-1].split(':')
                 if len(info) < 7:
                     continue
-                if len(info[1]) < 1 or len(info[2]) < 1:
+                if (not info[1]) or (not info[2]):
                     continue
                 info[1] = info[1][:-1]
                 info[2] = info[2][:-1]

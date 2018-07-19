@@ -18,7 +18,7 @@ from gi.repository import GLib, Gtk
 from gui_application import gui_application
 
 
-class GUI(object):
+class GUI():
     # NOTE: all GUI calls have to be made from the main thread.
 
     _gui_file = 'gui.glade'

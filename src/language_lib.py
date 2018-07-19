@@ -16,7 +16,7 @@ import gettext
 import babel
 
 
-class LanguageLib(object):
+class LanguageLib():
     def __init__(self):
         self.lang = None
         self.languages = []

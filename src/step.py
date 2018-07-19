@@ -12,7 +12,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-class Step(object):
+class Step():
     def run(self):
         while self.run_once():
             pass
