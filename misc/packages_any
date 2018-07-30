@@ -16,6 +16,7 @@ gnome-power-manager
 gnome-software-packagekit-plugin
 gnome-system-log
 grub
+gst-libav
 gst-plugins-ugly
 gst-plugins-bad
 ibus
