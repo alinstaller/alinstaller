@@ -181,6 +181,9 @@ class InstallLib():
 
         cmd += ' && (systemctl --global enable pipewire || true)'
 
+        # disable root login
+        cmd += ' && passwd -l root'
+
         cmd += '\''
 
         cmd += ' && umount -R /mnt'
