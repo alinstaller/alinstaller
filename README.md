@@ -1,4 +1,4 @@
-# AL Installer
+# AL Installer [![Build Status](https://travis-ci.org/alinstaller/alinstaller.svg?branch=master)](https://travis-ci.org/alinstaller/alinstaller)
 
 AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It
 is intended for desktop use and provides a step-by-step installation guide to
