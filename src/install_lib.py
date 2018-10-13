@@ -143,7 +143,7 @@ class InstallLib():
         cmd += '\\\"/\" /etc/default/grub'
 
         cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
-            ' autodetect keyboard sd-vconsole modconf block sd-encrypt' + \
+            ' keyboard autodetect sd-vconsole modconf block sd-encrypt' + \
             ' filesystems fsck)/\" /etc/mkinitcpio.conf'
 
         cmd += ' && mkinitcpio -P'
