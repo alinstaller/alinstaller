@@ -35,7 +35,7 @@ class PartitionCLI(Step):
 
         if res == 'next':
             if partition_lib.install_target == '':
-                dialog.msgbox('An installation target must be selected.',
+                dialog.msgbox('A main installation target must be selected.',
                               width=50, height=6)
                 return True
             hostname_cli.run()

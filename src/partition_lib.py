@@ -163,14 +163,14 @@ class PartitionLib():
             f.write(passphrase)
         self._exec('cryptsetup -q --key-file /tmp/keyfile open \'' + name +
                    '\' cryptroot && echo Completed.',
-                   linger=True, msg='Opening encrypted partition...')
+                   linger=True, msg='Opening main encrypted partition...')
         self.crypt_passphrase = passphrase
         self.crypt_target = name
         os.remove('/tmp/keyfile')
 
     def _action_cryptclose(self, name):
         self._exec('cryptsetup close cryptroot && echo Completed.',
-                   linger=True, msg='Closing encrypted block...')
+                   linger=True, msg='Closing main encrypted block...')
         self.crypt_passphrase = ''
         self.crypt_target = ''
 
@@ -269,8 +269,8 @@ class PartitionLib():
             name='*show-targets',
             text=_('Show Configured Targets'),
             details_text=_('Boot target: ') + self.boot_target + '\n' +
-            _('Encryption target: ') + self.crypt_target + '\n' +
-            _('Installation target: ') + self.install_target + '\n' +
+            _('Main encryption target: ') + self.crypt_target + '\n' +
+            _('Main installation target: ') + self.install_target + '\n' +
             _('Swap target: ') + self.swap_target,
             ops=['clear-boot-target', 'clear-crypt-target',
                  'clear-install-target', 'clear-swap-target']
@@ -552,7 +552,7 @@ class PartitionLib():
         if op == 'boot-target':
             return _('Select as Boot Target')
         if op == 'install-target':
-            return _('Select as Installation Target')
+            return _('Select as Main Installation Target')
         if op == 'swap-target':
             return _('Select as Swap Target')
         if op == 'remove':
@@ -560,15 +560,15 @@ class PartitionLib():
         if op == 'cryptsetup':
             return _('Set Up Encryption')
         if op == 'cryptopen':
-            return _('Open Encrypted Partition')
+            return _('Open Main Encrypted Partition')
         if op == 'cryptclose':
-            return _('Close Encrypted Block')
+            return _('Close Main Encrypted Block')
         if op == 'clear-boot-target':
             return _('Clear Boot Target')
         if op == 'clear-crypt-target':
-            return _('Clear Encryption Target')
+            return _('Clear Main Encryption Target')
         if op == 'clear-install-target':
-            return _('Clear Installation Target')
+            return _('Clear Main Installation Target')
         if op == 'clear-swap-target':
             return _('Clear Swap Target')
         if op == 'refresh':

@@ -108,7 +108,7 @@ class PartitionGUI(GUIStep):
                     Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     Gtk.MessageType.ERROR,
                     Gtk.ButtonsType.CLOSE,
-                    _('An installation target must be selected.') + '\n' +
+                    _('A main installation target must be selected.') + '\n' +
                     _('If not sure, choose an empty disk, and select ' +
                       '\"Automatically Set Up This Disk\".')
                 )
