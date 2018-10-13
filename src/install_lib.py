@@ -110,6 +110,12 @@ class InstallLib():
 
         cmd += ' && echo LANG=en_US.UTF-8 > /etc/locale.conf'
 
+        cmd += ' && true > /etc/vconsole.conf'
+        if vconsole_lib.get_font_full() != '':
+            cmd += ' && echo \"FONT=' + vconsole_lib.get_font_full() + '\" >> /etc/vconsole.conf'
+        if vconsole_lib.get_keymap_full() != '':
+            cmd += ' && echo \"KEYMAP=' + vconsole_lib.get_keymap_full() + '\" >> /etc/vconsole.conf'
+
         swap_uuid = ''
         if partition_lib.swap_target != '':
             __, swap_uuid = ai_call('blkid -s UUID -o value \'' +
@@ -159,12 +165,6 @@ class InstallLib():
             ' --bootloader-id=grub || true)'
 
         cmd += ' && grub-mkconfig -o /boot/grub/grub.cfg'
-
-        cmd += ' && true > /etc/vconsole.conf'
-        if vconsole_lib.get_font_full() != '':
-            cmd += ' && echo \"FONT=' + vconsole_lib.get_font_full() + '\" >> /etc/vconsole.conf'
-        if vconsole_lib.get_keymap_full() != '':
-            cmd += ' && echo \"KEYMAP=' + vconsole_lib.get_keymap_full() + '\" >> /etc/vconsole.conf'
 
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
