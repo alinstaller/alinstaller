@@ -120,8 +120,15 @@ class InstallLib():
             __, crypt_uuid = ai_call('blkid -s UUID -o value \'' +
                                      partition_lib.crypt_target + '\'')
             crypt_uuid = crypt_uuid.decode('utf-8').strip('\n')
+        swap_crypt_uuid = ''
+        if partition_lib.swap_crypt_target != '':
+            __, swap_crypt_uuid = ai_call('blkid -s UUID -o value \'' +
+                                          partition_lib.swap_crypt_target + '\'')
+            swap_crypt_uuid = swap_crypt_uuid.decode('utf-8').strip('\n')
 
         cmd += ' && sed -i \"s/^\\\\(GRUB_CMDLINE_LINUX_DEFAULT=\\\\).*/\\1\\\"quiet'
+        if swap_crypt_uuid != '':
+            cmd += ' rd.luks.name=' + swap_crypt_uuid + '=swap'
         if swap_uuid != '':
             cmd += ' resume=UUID=' + swap_uuid
         if crypt_uuid != '':
@@ -129,14 +136,9 @@ class InstallLib():
                 ' root=\\/dev\\/mapper\\/cryptroot'
         cmd += '\\\"/\" /etc/default/grub'
 
-        if partition_lib.crypt_target == '':
-            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
-                ' autodetect keyboard sd-vconsole modconf block' + \
-                ' filesystems fsck)/\" /etc/mkinitcpio.conf'
-        else:
-            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
-                ' autodetect keyboard sd-vconsole modconf block sd-encrypt' + \
-                ' filesystems fsck)/\" /etc/mkinitcpio.conf'
+        cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
+            ' autodetect keyboard sd-vconsole modconf block sd-encrypt' + \
+            ' filesystems fsck)/\" /etc/mkinitcpio.conf'
 
         cmd += ' && mkinitcpio -P'
 

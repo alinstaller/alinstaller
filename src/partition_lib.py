@@ -51,6 +51,8 @@ class PartitionLib():
         self.crypt_passphrase = ''
         self.crypt_target = ''
         self.install_target = ''
+        self.swap_crypt_passphrase = ''
+        self.swap_crypt_target = ''
         self.swap_target = ''
         self.parts = []
         self.scanned = False
@@ -72,11 +74,16 @@ class PartitionLib():
         crypt_passphrase = ''
         crypt_target = ''
         install_target = name + '2'
+        swap_crypt_passphrase = ''
+        swap_crypt_target = ''
         swap_target = name + '3'
         if crypt:
             crypt_passphrase = passphrase
             crypt_target = install_target
             install_target = '/dev/mapper/cryptroot'
+            swap_crypt_passphrase = passphrase
+            swap_crypt_target = swap_target
+            swap_target = '/dev/mapper/swap'
 
         if crypt:
             with open('/tmp/keyfile', 'w') as f:
@@ -104,7 +111,15 @@ class PartitionLib():
             cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \'' + name + \
                 '2\' cryptroot'
             cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
-        cmd += ' && mkswap \'' + name + '3\''
+        if not crypt:
+            cmd += ' && mkswap \'' + name + '3\''
+        else:
+            cmd += ' && cryptsetup -v -q --key-file /tmp/keyfile luksFormat ' + \
+                '--type \'' + self.default_luks_type + '\' \'' + name + \
+                '3\''
+            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \'' + name + \
+                '3\' swap'
+            cmd += ' && mkswap /dev/mapper/swap'
 
         cmd += ' && echo Completed.'
 
@@ -119,6 +134,8 @@ class PartitionLib():
         self.crypt_passphrase = crypt_passphrase
         self.crypt_target = crypt_target
         self.install_target = install_target
+        self.swap_crypt_passphrase = swap_crypt_passphrase
+        self.swap_crypt_target = swap_crypt_target
         self.swap_target = swap_target
 
     def _action_boot(self, name):
@@ -144,6 +161,11 @@ class PartitionLib():
 
     def _action_clear_install_target(self, name):
         self.install_target = ''
+        self._msgbox(_('Successful.'))
+
+    def _action_clear_swap_crypt_target(self, name):
+        self.swap_crypt_passphrase = ''
+        self.swap_crypt_target = ''
         self._msgbox(_('Successful.'))
 
     def _action_clear_swap_target(self, name):
@@ -173,6 +195,22 @@ class PartitionLib():
                    linger=True, msg='Closing main encrypted block...')
         self.crypt_passphrase = ''
         self.crypt_target = ''
+
+    def _action_swap_cryptopen(self, name, passphrase):
+        with open('/tmp/keyfile', 'w') as f:
+            f.write(passphrase)
+        self._exec('cryptsetup -q --key-file /tmp/keyfile open \'' + name +
+                   '\' swap && echo Completed.',
+                   linger=True, msg='Opening swap encrypted partition...')
+        self.swap_crypt_passphrase = passphrase
+        self.swap_crypt_target = name
+        os.remove('/tmp/keyfile')
+
+    def _action_swap_cryptclose(self, name):
+        self._exec('cryptsetup close swap && echo Completed.',
+                   linger=True, msg='Closing swap encrypted block...')
+        self.swap_crypt_passphrase = ''
+        self.swap_crypt_target = ''
 
     def _action_format(self, name, fstype):
         cmd = ''
@@ -261,7 +299,7 @@ class PartitionLib():
             (item['fstype'] if 'fstype' in item and item['fstype']
              is not None else _('unknown')),
             ops=['format', 'boot-target', 'install-target',
-                 'swap-target', 'cryptclose']
+                 'swap-target', 'cryptclose', 'swap-cryptclose']
         ))
 
     def _add_options_to_menu(self, menu, *args, **kwargs):
@@ -271,9 +309,11 @@ class PartitionLib():
             details_text=_('Boot target: ') + self.boot_target + '\n' +
             _('Main encryption target: ') + self.crypt_target + '\n' +
             _('Main installation target: ') + self.install_target + '\n' +
+            _('Swap encryption target: ') + self.swap_crypt_target + '\n' +
             _('Swap target: ') + self.swap_target,
             ops=['clear-boot-target', 'clear-crypt-target',
-                 'clear-install-target', 'clear-swap-target']
+                 'clear-install-target', 'clear-swap-crypt-target',
+                 'clear-swap-target']
         ))
         menu.append(PartitionMenuItem(
             name='*refresh',
@@ -298,7 +338,8 @@ class PartitionLib():
             (item['end'] if 'end' in item and item['end']
              is not None else _('unknown')),
             ops=['boot', 'format', 'boot-target', 'install-target',
-                 'swap-target', 'remove', 'cryptsetup', 'cryptopen']
+                 'swap-target', 'remove', 'cryptsetup', 'cryptopen',
+                 'swap-cryptopen']
         ))
 
     def _exec(self, cmd, msg='', **kwargs):
@@ -502,12 +543,18 @@ class PartitionLib():
             self._action_cryptopen(name, *args, **kwargs)
         elif op == 'cryptclose':
             self._action_cryptclose(name, *args, **kwargs)
+        elif op == 'swap-cryptopen':
+            self._action_swap_cryptopen(name, *args, **kwargs)
+        elif op == 'swap-cryptclose':
+            self._action_swap_cryptclose(name, *args, **kwargs)
         elif op == 'clear-boot-target':
             self._action_clear_boot_target(name, *args, **kwargs)
         elif op == 'clear-crypt-target':
             self._action_clear_crypt_target(name, *args, **kwargs)
         elif op == 'clear-install-target':
             self._action_clear_install_target(name, *args, **kwargs)
+        elif op == 'clear-swap-crypt-target':
+            self._action_clear_swap_crypt_target(name, *args, **kwargs)
         elif op == 'clear-swap-target':
             self._action_clear_swap_target(name, *args, **kwargs)
         elif op == 'refresh':
@@ -563,12 +610,18 @@ class PartitionLib():
             return _('Open Main Encrypted Partition')
         if op == 'cryptclose':
             return _('Close Main Encrypted Block')
+        if op == 'swap-cryptopen':
+            return _('Open Swap Encrypted Partition')
+        if op == 'swap-cryptclose':
+            return _('Close Swap Encrypted Block')
         if op == 'clear-boot-target':
             return _('Clear Boot Target')
         if op == 'clear-crypt-target':
             return _('Clear Main Encryption Target')
         if op == 'clear-install-target':
             return _('Clear Main Installation Target')
+        if op == 'clear-swap-crypt-target':
+            return _('Clear Swap Encryption Target')
         if op == 'clear-swap-target':
             return _('Clear Swap Target')
         if op == 'refresh':

@@ -202,7 +202,7 @@ class PartitionCLI(Step):
 
             partition_lib.action(op, name, passphrase=passphrase)
 
-        elif op == 'cryptopen':
+        elif op in ['cryptopen', 'swap-cryptopen']:
             res, passphrase = dialog.passwordbox(
                 text='Enter passphrase:',
                 insecure=True)

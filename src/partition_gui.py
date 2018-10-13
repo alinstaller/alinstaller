@@ -377,7 +377,7 @@ class PartitionGUI(GUIStep):
             handler = self._handle_remove
         elif op == 'cryptsetup':
             handler = self._handle_cryptsetup
-        elif op == 'cryptopen':
+        elif op in ['cryptopen', 'swap-cryptopen']:
             handler = self._handle_cryptopen
         else:
             handler = self._handle_others
