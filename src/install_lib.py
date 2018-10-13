@@ -125,20 +125,20 @@ class InstallLib():
         if swap_uuid != '':
             cmd += ' resume=UUID=' + swap_uuid
         if crypt_uuid != '':
-            cmd += ' cryptdevice=UUID=' + crypt_uuid + \
-                ':cryptroot root=\\/dev\\/mapper\\/cryptroot'
+            cmd += ' rd.luks.name=' + crypt_uuid + '=cryptroot' + \
+                ' root=\\/dev\\/mapper\\/cryptroot'
         cmd += '\\\"/\" /etc/default/grub'
 
         if partition_lib.crypt_target == '':
-            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base udev resume' + \
-                ' autodetect modconf keyboard keymap block filesystems' + \
-                ' keyboard fsck)/\" /etc/mkinitcpio.conf'
+            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
+                ' autodetect keyboard sd-vconsole modconf block' + \
+                ' filesystems fsck)/\" /etc/mkinitcpio.conf'
         else:
-            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base udev resume' + \
-                ' autodetect modconf keyboard keymap block encrypt' + \
-                ' filesystems keyboard fsck)/\" /etc/mkinitcpio.conf'
+            cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
+                ' autodetect keyboard sd-vconsole modconf block sd-encrypt' + \
+                ' filesystems fsck)/\" /etc/mkinitcpio.conf'
 
-        cmd += ' && mkinitcpio -p linux'
+        cmd += ' && mkinitcpio -P'
 
         grub_i386_target = ''
         if partition_lib.boot_target != '':
