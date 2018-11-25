@@ -134,6 +134,7 @@ class InstallLib():
         cmd += ' && echo 127.0.0.1 localhost > /etc/hosts'
         cmd += ' && echo ::1 localhost >> /etc/hosts'
 
+        cmd += ' && systemctl unmask ldconfig'
         cmd += ' && systemctl disable multi-user.target'
         cmd += ' && systemctl set-default graphical.target'
         cmd += ' && systemctl enable NetworkManager firewalld gdm'

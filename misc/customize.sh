@@ -57,3 +57,4 @@ EOF
 
 # rebuild dynamic linker cache
 ldconfig -X
+systemctl mask ldconfig
