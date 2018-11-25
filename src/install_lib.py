@@ -72,11 +72,11 @@ class InstallLib():
                 x = '#' + x
                 l.append(x)
 
-        with open('/tmp/mirrorlist', 'w') as f:
+        with open('/tmp/alinstaller-mirrorlist', 'w') as f:
             for x in l:
                 f.write(x + '\n')
 
-        ai_call('mv /tmp/mirrorlist \'' + fn + '\'')
+        ai_call('mv /tmp/alinstaller-mirrorlist \'' + fn + '\'')
 
     def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'

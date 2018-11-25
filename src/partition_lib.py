@@ -86,7 +86,7 @@ class PartitionLib():
             swap_target = '/dev/mapper/swap'
 
         if crypt:
-            with open('/tmp/keyfile', 'w') as f:
+            with open('/tmp/alinstaller-keyfile', 'w') as f:
                 f.write(passphrase)
 
         cmd = 'parted -m -s \'' + name + '\' unit B mklabel \'' + \
@@ -105,19 +105,19 @@ class PartitionLib():
         if not crypt:
             cmd += ' && mkfs.ext4 \'' + name + '2\''
         else:
-            cmd += ' && cryptsetup -v -q --key-file /tmp/keyfile luksFormat ' + \
+            cmd += ' && cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat ' + \
                 '--type \'' + self.default_luks_type + '\' \'' + name + \
                 '2\''
-            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \'' + name + \
+            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name + \
                 '2\' cryptroot'
             cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
         if not crypt:
             cmd += ' && mkswap \'' + name + '3\''
         else:
-            cmd += ' && cryptsetup -v -q --key-file /tmp/keyfile luksFormat ' + \
+            cmd += ' && cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat ' + \
                 '--type \'' + self.default_luks_type + '\' \'' + name + \
                 '3\''
-            cmd += ' && cryptsetup -q --key-file /tmp/keyfile open \'' + name + \
+            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name + \
                 '3\' swap'
             cmd += ' && mkswap /dev/mapper/swap'
 
@@ -126,7 +126,7 @@ class PartitionLib():
         self._exec(cmd, linger=True, msg='Automatically setting up disk...')
 
         try:
-            os.remove('/tmp/keyfile')
+            os.remove('/tmp/alinstaller-keyfile')
         except Exception:
             pass
 
@@ -173,22 +173,22 @@ class PartitionLib():
         self._msgbox(_('Successful.'))
 
     def _action_cryptsetup(self, name, passphrase):
-        with open('/tmp/keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w') as f:
             f.write(passphrase)
-        self._exec('cryptsetup -v -q --key-file /tmp/keyfile luksFormat --type \'' +
+        self._exec('cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat --type \'' +
                    self.default_luks_type + '\' \'' + name + '\' && echo Completed.',
                    linger=True, msg='Setting up encryption...')
-        os.remove('/tmp/keyfile')
+        os.remove('/tmp/alinstaller-keyfile')
 
     def _action_cryptopen(self, name, passphrase):
-        with open('/tmp/keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w') as f:
             f.write(passphrase)
-        self._exec('cryptsetup -q --key-file /tmp/keyfile open \'' + name +
+        self._exec('cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name +
                    '\' cryptroot && echo Completed.',
                    linger=True, msg='Opening main encrypted partition...')
         self.crypt_passphrase = passphrase
         self.crypt_target = name
-        os.remove('/tmp/keyfile')
+        os.remove('/tmp/alinstaller-keyfile')
 
     def _action_cryptclose(self, name):
         self._exec('cryptsetup close cryptroot && echo Completed.',
@@ -197,14 +197,14 @@ class PartitionLib():
         self.crypt_target = ''
 
     def _action_swap_cryptopen(self, name, passphrase):
-        with open('/tmp/keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w') as f:
             f.write(passphrase)
-        self._exec('cryptsetup -q --key-file /tmp/keyfile open \'' + name +
+        self._exec('cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name +
                    '\' swap && echo Completed.',
                    linger=True, msg='Opening swap encrypted partition...')
         self.swap_crypt_passphrase = passphrase
         self.swap_crypt_target = name
-        os.remove('/tmp/keyfile')
+        os.remove('/tmp/alinstaller-keyfile')
 
     def _action_swap_cryptclose(self, name):
         self._exec('cryptsetup close swap && echo Completed.',
