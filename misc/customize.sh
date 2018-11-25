@@ -11,6 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# choose a mirror
 python << EOF
 
 import os
@@ -53,3 +54,6 @@ with open('/tmp/alinstaller-mirrorlist', 'w') as f:
 os.system('mv /tmp/alinstaller-mirrorlist \'' + filename + '\'')
 
 EOF
+
+# rebuild dynamic linker cache
+ldconfig -X
