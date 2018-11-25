@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-11-02 10:32+0800\n"
+"POT-Creation-Date: 2018-11-25 12:00+0800\n"
 "PO-Revision-Date: 2018-02-17 15:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en_GB\n"
@@ -70,35 +70,35 @@ msgstr ""
 msgid "Enter a new host name:"
 msgstr ""
 
-#: src/install_gui.py:46
+#: src/install_gui.py:45
 msgid "We are ready to install Arch Linux."
 msgstr ""
 
-#: src/install_gui.py:48
+#: src/install_gui.py:47
 msgid "Install Now"
 msgstr ""
 
-#: src/install_gui.py:50
+#: src/install_gui.py:49
 msgid "Restart System"
 msgstr ""
 
-#: src/install_gui.py:110
+#: src/install_gui.py:109
 msgid "Installation failed."
 msgstr ""
 
-#: src/install_gui.py:120
+#: src/install_gui.py:119
 msgid "Installation completed. You can restart your system now."
 msgstr ""
 
-#: src/install_gui.py:140
+#: src/install_gui.py:139
 msgid "Initializing directories..."
 msgstr ""
 
-#: src/install_gui.py:151
+#: src/install_gui.py:150
 msgid "Copying files..."
 msgstr ""
 
-#: src/install_gui.py:199
+#: src/install_gui.py:188
 msgid "Configuring..."
 msgstr ""
 
