@@ -12,6 +12,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 if [[ $(tty) == "/dev/tty1" ]]; then
-	systemctl unmask ldconfig
+	systemctl unmask ldconfig > /dev/null 2>&1
 	alinstaller --setup-gui
 fi
