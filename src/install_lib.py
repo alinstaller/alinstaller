@@ -18,9 +18,6 @@ from vconsole_lib import vconsole_lib
 
 
 class InstallLib():
-    mirror_kw = ['https:', '.kernel.org']
-    mirror_multiply = 10
-
     def get_init_dirs_cmd(self):
         cmd = 'true'
 
@@ -42,41 +39,6 @@ class InstallLib():
         cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
 
         return cmd
-
-    def update_mirrorlist(self):
-        l = []
-        fn = '/mnt/etc/pacman.d/mirrorlist'
-
-        with open(fn, 'r') as f:
-            for x in f:
-                x = x.strip('\n')
-
-                if x == '':
-                    l.append('')
-                    continue
-                elif x.startswith('#Server'):
-                    x = x[1:]
-                elif x.startswith('#'):
-                    l.append(x)
-                    continue
-
-                is_mirror = True
-                for y in self.mirror_kw:
-                    if y not in x:
-                        is_mirror = False
-                        break
-
-                if is_mirror:
-                    l = [x] * self.mirror_multiply + [''] + l
-
-                x = '#' + x
-                l.append(x)
-
-        with open('/tmp/alinstaller-mirrorlist', 'w') as f:
-            for x in l:
-                f.write(x + '\n')
-
-        ai_call('mv /tmp/alinstaller-mirrorlist \'' + fn + '\'')
 
     def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'

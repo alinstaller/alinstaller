@@ -84,8 +84,6 @@ class InstallCLI(Step):
         if p.returncode != 0:
             return p.returncode
 
-        install_lib.update_mirrorlist()
-
         cmd = install_lib.get_configure_cmd()
         res = ai_dialog_exec(cmd, linger=True, msg='Configuring...',
                              width=75, height=20, showcmd=False)

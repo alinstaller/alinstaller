@@ -13,7 +13,6 @@
 
 import subprocess
 import threading
-import traceback
 
 from ai_exec import ai_popen, ai_call
 from gui import gui
@@ -179,16 +178,6 @@ class InstallGUI(GUIStep):
 
         p.communicate()
         if p.returncode != 0:
-            self._install_fail_thread()
-            return
-
-        self._update_mirrorlist_thread()
-
-    def _update_mirrorlist_thread(self):
-        try:
-            install_lib.update_mirrorlist()
-        except Exception:
-            self._add_log_thread(traceback.format_exc())
             self._install_fail_thread()
             return
 
