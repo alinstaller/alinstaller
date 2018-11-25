@@ -33,9 +33,11 @@ for file in build/packages.*; do
 	cat misc/packages_any >> "$file"
 done
 
+echo '' >> build/airootfs/root/.zlogin
 cat misc/rc.sh >> build/airootfs/root/.zlogin
 
 sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\/locale.gen; locale-gen/" build/airootfs/root/customize_airootfs.sh
+echo '' >> build/airootfs/root/customize_airootfs.sh
 cat misc/customize.sh >> build/airootfs/root/customize_airootfs.sh
 
 sed -i "s/\.archlinux\.org\/mirrorlist\/.*\'/\.archlinux\.org\/mirrorlist\/all\/\'/" build/build.sh
