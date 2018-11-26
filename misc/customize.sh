@@ -55,9 +55,8 @@ os.system('mv /tmp/alinstaller-mirrorlist \'' + filename + '\'')
 
 EOF
 
-# rebuild dynamic linker cache
-ldconfig -X
-systemctl mask ldconfig
+# mark update as done to reduce boot time
+/usr/lib/systemd/systemd-update-done
 
 # remove special udev dhcpcd rule to avoid conflicting with NetworkManager
 rm -f /etc/udev/rules.d/81-dhcpcd.rules
