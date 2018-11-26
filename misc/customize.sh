@@ -58,3 +58,6 @@ EOF
 # rebuild dynamic linker cache
 ldconfig -X
 systemctl mask ldconfig
+
+# remove special udev dhcpcd rule to avoid conflicting with NetworkManager
+rm -f /etc/udev/rules.d/81-dhcpcd.rules

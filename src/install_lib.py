@@ -48,7 +48,6 @@ class InstallLib():
         cmd += ' && sed -i \'s/\\(HandleSuspendKey=\\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && sed -i \'s/\\(HandleHibernateKey=\\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
         cmd += ' && sed -i \'s/\\(HandleLidSwitch=\\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
-        cmd += ' && rm -f /mnt/etc/udev/rules.d/81-dhcpcd.rules'
 
         cmd += ' && echo \'\' >> /mnt/etc/sudoers'
         cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
