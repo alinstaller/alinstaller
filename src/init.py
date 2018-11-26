@@ -15,6 +15,7 @@
 
 import getpass
 import os
+import signal
 import sys
 import time
 import traceback
@@ -59,6 +60,15 @@ def main():
             try:
                 time.sleep(3)
                 enable_gui = True
+
+                def handle_interrupt(signum, frame):
+                    signal.signal(signal.SIGINT, lambda signum, frame: None)
+                    print('\nToo late.\n')
+                    time.sleep(2)
+                    ai_call('reboot')
+                    sys.exit(0)
+
+                signal.signal(signal.SIGINT, handle_interrupt)
             except KeyboardInterrupt:
                 enable_gui = False
 
