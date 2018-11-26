@@ -155,6 +155,10 @@ class InstallLib():
         cmd += ' && umount -R /mnt'
         if partition_lib.swap_target != '':
             cmd += ' && swapoff \'' + partition_lib.swap_target + '\''
+        if partition_lib.crypt_target != '':
+            cmd += ' && cryptsetup close /dev/mapper/cryptroot'
+        if partition_lib.swap_crypt_target != '':
+            cmd += ' && cryptsetup close /dev/mapper/swap'
 
         cmd += ' && echo && echo Completed.'
 
