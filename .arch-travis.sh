@@ -20,7 +20,7 @@
 
 ARCH_TRAVIS_ISO_MIRRORS=${ARCH_TRAVIS_ISO_MIRRORS:-"https://archive.archlinux.org"}
 iso_mirrors=(${ARCH_TRAVIS_ISO_MIRRORS//,/ })
-ARCH_TRAVIS_MIRRORS=${ARCH_TRAVIS_MIRRORS:-"https://mirrors.ocf.berkeley.edu/archlinux,https://mirror.csclub.uwaterloo.ca/archlinux,https://mirror.lty.me/archlinux"}
+ARCH_TRAVIS_MIRRORS=${ARCH_TRAVIS_MIRRORS:-"https://mirrors.ocf.berkeley.edu/archlinux,https://mirrors.ocf.berkeley.edu/archlinux,https://mirrors.ocf.berkeley.edu/archlinux,https://mirrors.ocf.berkeley.edu/archlinux,https://mirrors.ocf.berkeley.edu/archlinux"}
 mirrors=(${ARCH_TRAVIS_MIRRORS//,/ })
 ARCH_TRAVIS_ARCH=${ARCH_TRAVIS_ARCH:-"x86_64"}
 mirror_entry_fmt='Server = %s/\$repo/os/\$arch'
