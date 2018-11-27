@@ -42,10 +42,6 @@ fi
 
 GOROOT=""
 
-# set EDITOR to make pacaur happy:
-# https://github.com/rmarquis/pacaur/issues/637
-export EDITOR=false
-
 
 # default packages
 default_packages=("base-devel" "git")
@@ -163,9 +159,6 @@ setup_chroot() {
 
   # add custom repos
   add_repositories
-
-  # setup pacaur for AUR packages
-  setup_pacaur
 }
 
 # add custom repositories to pacman.conf
@@ -247,39 +240,14 @@ run_build_script() {
   fi
 }
 
-# setup pacaur
-setup_pacaur() {
-  # Check if pacaur is available in the added repos
-  if _chroot_as_normal "pacman -Si pacaur &> /dev/null"; then
-    chroot_as_root "pacman -S --noconfirm pacaur"
-  else
-    local cowerarchive="cower.tar.gz"
-    local aururl="https://aur.archlinux.org/cgit/aur.git/snapshot/"
-    # install cower
-    as_normal "curl -O $aururl/$cowerarchive"
-    as_normal "tar xf $cowerarchive"
-    chroot_as_normal "cd cower && makepkg -is --skippgpcheck --noconfirm"
-    as_root "rm -r cower"
-    as_normal "rm $cowerarchive"
-    # install pacaur
-    chroot_as_normal "cower -dd pacaur"
-    chroot_as_normal "cd pacaur && makepkg -is --noconfirm"
-    chroot_as_normal "rm -rf pacaur"
-  fi
-}
-
-# install package through pacaur
-_pacaur() {
+# install package through pacman
+_pacman() {
   local IFS=" ";
-  local pacaur="pacaur -S $* --noconfirm --noedit --needed"
-  echo "$ARCH_TRAVIS_CONFIRM_YES"
-  if [ -n "$ARCH_TRAVIS_CONFIRM_YES" ]; then
-    pacaur="yes | $pacaur"
-  fi
+  local pacman="yes | pacman -S $* --noconfirm --needed"
 
-  echo "$pacaur"
+  echo "$pacman"
 
-  chroot_as_normal "$pacaur"
+  chroot_as_root "$pacman"
 }
 
 # takedown chroot
@@ -329,14 +297,14 @@ build_scripts() {
 # install packages defined in .travis.yml
 install_packages() {
   if [ "${#CONFIG_PACKAGES[@]}" -gt 0 ]; then
-    _pacaur "${CONFIG_PACKAGES[@]}"
+    _pacman "${CONFIG_PACKAGES[@]}"
   fi
 }
 
 # install custom compiler if CC != gcc
 install_c_compiler() {
   if [ "$TRAVIS_CC" != "gcc" ]; then
-    _pacaur "$TRAVIS_CC"
+    _pacman "$TRAVIS_CC"
   fi
 }
 

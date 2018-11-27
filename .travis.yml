@@ -4,7 +4,6 @@ matrix:
     sudo: required
     env:
     - ARCH_TRAVIS_CLEAN_CHROOT=1
-    - ARCH_TRAVIS_CONFIRM_YES=1
     - RELEASE="alinstaller-$(date -u +%Y.%m.%d)-$TRAVIS_TAG-x86_64.iso"
     script:
     - while true; do echo [PING]; sleep 100; done &
@@ -12,7 +11,6 @@ matrix:
 
 arch:
   repos:
-  - archlinuxfr=http://repo.archlinux.fr/$arch
   packages:
   - archiso
   - gtk3
