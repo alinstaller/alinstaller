@@ -61,12 +61,19 @@ def main():
                 time.sleep(3)
                 enable_gui = True
 
+                def handle_interrupt_immediate(signum, frame):
+                    ai_call('reboot')
+                    while True:
+                        time.sleep(1000)
+
                 def handle_interrupt(signum, frame):
                     signal.signal(signal.SIGINT, lambda signum, frame: None)
                     print('\nToo late.\n')
                     time.sleep(2)
+                    signal.signal(signal.SIGINT, handle_interrupt_immediate)
                     ai_call('reboot')
-                    sys.exit(0)
+                    while True:
+                        time.sleep(1000)
 
                 signal.signal(signal.SIGINT, handle_interrupt)
             except KeyboardInterrupt:
