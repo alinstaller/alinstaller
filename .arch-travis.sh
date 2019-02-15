@@ -44,10 +44,7 @@ GOROOT=""
 
 
 # default packages
-default_packages=("base-devel" "git")
-
-# pacman.conf repository line
-repo_line=70
+default_packages=("fakeroot" "file" "findutils" "gawk" "gettext" "git" "grep" "gzip" "patch" "sed" "sudo" "util-linux" "which")
 
 # try to find the latest iso by iterating through the dates of the current
 # month, falling back to the last month if needed.
@@ -111,11 +108,8 @@ setup_chroot() {
   # don't care for signed packages
   as_root "sed -i 's|SigLevel    = Required DatabaseOptional|SigLevel = Never|' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
 
-  # enable multilib
-  as_root "sed -i 's|#\[multilib\]|\[multilib\]\nInclude = /etc/pacman.d/mirrorlist|' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
-
   # pin systemd
-  as_root "sed -i 's|#IgnorePkg   =|IgnorePkg   = systemd libsystemd|' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
+  as_root "sed -i 's|#IgnorePkg   =|IgnorePkg   = systemd libsystemd systemd-libs|' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
 
   # add mirrors
   for mirror in "${mirrors[@]}"; do
@@ -136,7 +130,9 @@ setup_chroot() {
 
   # update packages
   chroot_as_root "pacman -Syy"
-  chroot_as_root "pacman -Syu ${default_packages[*]} --noconfirm"
+  chroot_as_root "pacman -Su ${default_packages[*]} --needed --noconfirm"
+  chroot_as_root "pacman-key --init"
+  chroot_as_root "pacman-key --populate archlinux"
 
   # use LANG=en_US.UTF-8 as expected in travis environments
   as_root "sed -i 's|#en_US.UTF-8|en_US.UTF-8|' $ARCH_TRAVIS_CHROOT/etc/locale.gen"
@@ -156,26 +152,6 @@ setup_chroot() {
       sudo mount --bind "$d" "$ARCH_TRAVIS_CHROOT$dir"
     fi
   done
-
-  # add custom repos
-  add_repositories
-}
-
-# add custom repositories to pacman.conf
-add_repositories() {
-  if [ ${#CONFIG_REPOS[@]} -gt 0 ]; then
-    for r in "${CONFIG_REPOS[@]}"; do
-      local splitarr=(${r//=/ })
-      ((repo_line+=1))
-      as_root "sed -i '${repo_line}i[${splitarr[0]}]' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
-      ((repo_line+=1))
-      as_root "sed -i '${repo_line}iServer = ${splitarr[1]}\n' $ARCH_TRAVIS_CHROOT/etc/pacman.conf"
-      ((repo_line+=1))
-    done
-
-    # update repos
-    chroot_as_root "pacman -Syy"
-  fi
 }
 
 # a wrapper which can be used to eventually add fakeroot support.
@@ -222,7 +198,6 @@ run() {
   local ret=$?
 
   if [ $ret -gt 0 ]; then
-    # takedown_chroot
     exit $ret
   fi
 }
@@ -235,7 +210,6 @@ run_build_script() {
   local ret=$?
 
   if [ $ret -gt 0 ]; then
-    # takedown_chroot
     exit $ret
   fi
 }
@@ -250,23 +224,6 @@ _pacman() {
   chroot_as_root "$pacman"
 }
 
-# takedown chroot
-# unmounts anything mounted in the chroot setup
-takedown_chroot() {
-  sudo umount $ARCH_TRAVIS_CHROOT/{run,dev/shm,dev/pts,dev,sys,proc}
-  # umount HOME dirs
-  for d in $HOME/*/; do
-    if [ "$d" != "$ARCH_TRAVIS_CHROOT/" ]; then
-      sudo umount "$ARCH_TRAVIS_CHROOT$user_home/$(basename "$d")"
-    fi
-  done
-  sudo umount $ARCH_TRAVIS_CHROOT
-
-  if [ -n "$ARCH_TRAVIS_CLEAN_CHROOT" ]; then
-    as_root "rm -rf $ARCH_TRAVIS_CHROOT"
-  fi
-}
-
 # read value from .travis.yml
 travis_yml() {
   ruby -ryaml -e 'puts ARGV[1..-1].inject(YAML.load(File.read(ARGV[0]))) {|acc, key| acc[key] }' .travis.yml $@
@@ -277,7 +234,6 @@ read_config() {
     IFS=$'\n'
     CONFIG_BUILD_SCRIPTS=($(travis_yml arch script))
     CONFIG_PACKAGES=($(travis_yml arch packages))
-    CONFIG_REPOS=($(travis_yml arch repos))
     IFS=$old_ifs
 }
 
@@ -289,7 +245,6 @@ build_scripts() {
     done
   else
     echo "No build scripts defined"
-    # takedown_chroot
     exit 1
   fi
 }
@@ -333,7 +288,3 @@ echo ""
 
 arch_msg "Running travis build"
 build_scripts
-
-# takedown_chroot
-
-# vim:set ts=2 sw=2 et:
