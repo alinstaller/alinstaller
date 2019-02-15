@@ -30,7 +30,6 @@ mesa
 noto-fonts-cjk
 noto-fonts-emoji
 os-prober
-pacman-contrib
 parcellite
 python-babel
 python-gobject
