@@ -23,7 +23,7 @@ matrix:
 
 before_deploy:
 - sudo mv build/out/alinstaller.iso $RELEASE && sudo chown $USER:$USER $RELEASE
-- md5sum $RELEASE
+- sha1sum $RELEASE
 
 deploy:
   provider: releases
