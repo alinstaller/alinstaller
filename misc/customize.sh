@@ -55,6 +55,10 @@ os.system('mv /tmp/alinstaller-mirrorlist \'' + filename + '\'')
 
 EOF
 
+# backup /boot
+cp -ax /boot /usr/local/lib/alinstaller/boot-copy
+rm -f /usr/local/lib/alinstaller/boot-copy/archiso.img
+
 # mark update as done to reduce boot time
 /usr/lib/systemd/systemd-update-done
 

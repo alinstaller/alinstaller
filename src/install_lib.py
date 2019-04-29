@@ -32,11 +32,12 @@ class InstallLib():
 
     def get_copy_files_cmd(self):
         cmd = 'rsync --info=progress2 --no-inc-recursive -ax /run/archiso/sfs/airootfs/* /mnt'
+        cmd += ' && rm -rf /mnt/boot/*'
         cmd += ' && rm -rf /mnt/root/*'
         cmd += ' && rm -rf /mnt/usr/local/{bin,lib}/*'
         cmd += ' && rm -rf /mnt/usr/local/share/{applications,locale}'
         cmd += ' && rm -rf /mnt/tmp/*'
-        cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
+        cmd += ' && cp -a /usr/local/lib/alinstaller/boot-copy/* /mnt/boot'
 
         return cmd
 
