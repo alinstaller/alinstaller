@@ -148,6 +148,10 @@ class InstallLib():
 
         cmd += ' && (systemctl --global enable pipewire || true)'
 
+        # reenable pacman CheckSpace
+        cmd += ' && sed -i "/# We cannot check disk space from within a chroot environment/d" /etc/pacman.conf'
+        cmd += ' && sed -i "s/^#CheckSpace$/CheckSpace/" /etc/pacman.conf'
+
         # disable root login
         cmd += ' && passwd -l root'
 
