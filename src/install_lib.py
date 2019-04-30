@@ -72,6 +72,7 @@ class InstallLib():
 
         cmd += ' && pacman-key --init'
         cmd += ' && pacman-key --populate archlinux'
+        cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux && rm -f /var/log/pacman.log'
 
         cmd += ' && echo LANG=en_US.UTF-8 > /etc/locale.conf'
 
