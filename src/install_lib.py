@@ -38,6 +38,7 @@ class InstallLib():
         cmd += ' && rm -rf /mnt/usr/local/share/{applications,locale}'
         cmd += ' && rm -rf /mnt/tmp/*'
         cmd += ' && cp -a /usr/local/lib/alinstaller/boot-copy/* /mnt/boot'
+        cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
 
         return cmd
 

@@ -57,7 +57,7 @@ EOF
 
 # backup /boot
 cp -ax /boot /usr/local/lib/alinstaller/boot-copy
-rm -f /usr/local/lib/alinstaller/boot-copy/archiso.img
+rm -rf /usr/local/lib/alinstaller/boot-copy/{archiso.img,initramfs-*.img,memtest86+,syslinux,vmlinuz-linux}
 
 # mark update as done to reduce boot time
 /usr/lib/systemd/systemd-update-done
