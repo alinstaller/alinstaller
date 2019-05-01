@@ -67,13 +67,18 @@ class InstallLib():
         cmd += ' && rm -f /etc/systemd/system/multi-user.target.wants/archiso-start.service'
 
         cmd += ' && rm -f /etc/systemd/system/getty@tty1.service.d/autologin.conf'
-        cmd += ' && rm -f /root/{.automated_script.sh,.zlogin}'
+        cmd += ' && rm -f /root/{.automated_script.sh,.zlogin,.zshrc}'
         cmd += ' && rm -f /etc/mkinitcpio-archiso.conf'
         cmd += ' && rm -rf /etc/initcpio'
 
         cmd += ' && pacman-key --init'
         cmd += ' && pacman-key --populate archlinux'
-        cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux && rm -f /var/log/pacman.log'
+
+        cmd += ' && chsh -s /bin/bash'
+
+        cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux'
+        cmd += ' && pacman -Rsc --noconfirm --noprogressbar zsh'
+        cmd += ' && rm -f /var/log/pacman.log'
 
         cmd += ' && echo LANG=en_US.UTF-8 > /etc/locale.conf'
 
