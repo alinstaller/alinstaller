@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import getpass
-import os
 import signal
 import sys
 import time
@@ -51,16 +49,6 @@ def main():
 
         if sys.argv[1] == '--gui':
             enable_gui = True
-            if getpass.getuser() == 'liveuser':
-                cmd = 'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing'
-                os.system(cmd)
-                cmd = 'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing'
-                os.system(cmd)
-                cmd = 'gsettings set org.gnome.software allow-updates false'
-                os.system(cmd)
-                cmd = 'gsettings set org.gnome.software download-updates false'
-                os.system(cmd)
-
         elif sys.argv[1] == '--setup-gui':
             print('\n\nTo use CLI instead of GUI, press Ctrl+C (once) in 3 seconds.')
             try:
@@ -103,6 +91,14 @@ def main():
 
                 with open('/etc/sudoers', 'a') as f:
                     f.write('\n%wheel ALL=(ALL) ALL\n')
+
+                ai_call(
+                    'sudo -u liveuser dbus-launch bash -c \'' +
+                    'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing && ' +
+                    'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing && ' +
+                    'gsettings set org.gnome.software allow-updates false && ' +
+                    'gsettings set org.gnome.software download-updates false' +
+                    '\'')
 
                 ai_call('systemctl start firewalld')
                 ai_call('systemctl start NetworkManager')
