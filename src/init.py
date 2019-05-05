@@ -56,6 +56,8 @@ def main():
                 os.system(cmd)
                 cmd = 'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing'
                 os.system(cmd)
+                cmd = 'gsettings set org.gnome.software allow-updates false'
+                os.system(cmd)
                 cmd = 'gsettings set org.gnome.software download-updates false'
                 os.system(cmd)
 
