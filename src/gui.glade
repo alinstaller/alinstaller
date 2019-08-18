@@ -1745,7 +1745,7 @@
                 <property name="has_entry">True</property>
                 <items>
                   <item translatable="yes">ext4</item>
-                  <item translatable="yes">swap</item>
+                  <item translatable="yes">linux-swap</item>
                   <item translatable="yes">fat32</item>
                 </items>
                 <child internal-child="entry">
