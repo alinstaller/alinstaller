@@ -150,10 +150,11 @@ class PartitionCLI(Step):
             info = name.split('*')
             res, lst = dialog.form(
                 text=partition_lib.get_text_for_op(op) + '\n',
-                elements=[('Disk', 1, 1, info[1], 1, 32, -32, 1024),
-                          ('Start', 3, 1, info[2], 3, 32, 32, 1024),
-                          ('End', 5, 1, info[3], 5, 32, 32, 1024),
-                          ('Filesystem', 7, 1, partition_lib.default_filesystem, 7, 32, 32, 1024)])
+                elements=[('Disk', 1, 1, info[1], 1, 48, -32, 1024),
+                          ('Start', 3, 1, info[2], 3, 48, 32, 1024),
+                          ('End', 5, 1, info[3], 5, 48, 32, 1024),
+                          ('Filesystem (ext4, linux-swap, fat32, ...)', 7, 1,
+                           partition_lib.default_filesystem, 7, 48, 32, 1024)])
             if res != dialog.OK:
                 return False
 
