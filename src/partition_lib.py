@@ -491,9 +491,13 @@ class PartitionLib():
                     continue
                 if (not info[1]) or (not info[2]):
                     continue
+                if not x['name'].startswith('/dev/nvme'):
+                    part = x['name'] + info[0]
+                else:
+                    part = x['name'] + 'p' + info[0]
                 info[1] = info[1][:-1]
                 info[2] = info[2][:-1]
-                part_map[x['name'] + info[0]] = (info[1], info[2], info[6])
+                part_map[part] = (info[1], info[2], info[6])
 
             for y in x['children']:
                 name = y['name']
@@ -567,6 +571,8 @@ class PartitionLib():
         i -= 1
         while i >= 0 and name[i].isdigit():
             i -= 1
+        if name.startswith('/dev/nvme'):
+            return name[:i]
         return name[:i + 1]
 
     def get_layout_menu(self, scan=False):
