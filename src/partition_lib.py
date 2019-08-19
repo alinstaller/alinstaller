@@ -70,13 +70,13 @@ class PartitionLib():
         root_end = self._to_gran_end(root_end) * self.part_granularity - 1
         swap_start = root_end + 1
 
-        boot_target = name + '1'
+        boot_target = self.get_part_from_disk_num(name, 1)
         crypt_passphrase = ''
         crypt_target = ''
-        install_target = name + '2'
+        install_target = self.get_part_from_disk_num(name, 2)
         swap_crypt_passphrase = ''
         swap_crypt_target = ''
-        swap_target = name + '3'
+        swap_target = self.get_part_from_disk_num(name, 3)
         if crypt:
             crypt_passphrase = passphrase
             crypt_target = install_target
@@ -101,24 +101,24 @@ class PartitionLib():
             str(root_start) + 'B ' + str(root_end) + 'B'
         cmd += ' set 1 boot on'
         cmd += ' mkpart primary linux-swap ' + str(swap_start) + 'B 100%'
-        cmd += ' && mkfs.fat -F32 \'' + name + '1\''
+        cmd += ' && mkfs.fat -F32 \'' + self.get_part_from_disk_num(name, 1) + '\''
         if not crypt:
-            cmd += ' && mkfs.ext4 \'' + name + '2\''
+            cmd += ' && mkfs.ext4 \'' + self.get_part_from_disk_num(name, 2) + '\''
         else:
             cmd += ' && cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat ' + \
-                '--type \'' + self.default_luks_type + '\' \'' + name + \
-                '2\''
-            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name + \
-                '2\' cryptroot'
+                '--type \'' + self.default_luks_type + '\' \'' + \
+                self.get_part_from_disk_num(name, 2) + '\''
+            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + \
+                self.get_part_from_disk_num(name, 2) + '\' cryptroot'
             cmd += ' && mkfs.ext4 /dev/mapper/cryptroot'
         if not crypt:
-            cmd += ' && mkswap \'' + name + '3\''
+            cmd += ' && mkswap \'' + self.get_part_from_disk_num(name, 3) + '\''
         else:
             cmd += ' && cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat ' + \
-                '--type \'' + self.default_luks_type + '\' \'' + name + \
-                '3\''
-            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name + \
-                '3\' swap'
+                '--type \'' + self.default_luks_type + '\' \'' + \
+                self.get_part_from_disk_num(name, 3) + '\''
+            cmd += ' && cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + \
+                self.get_part_from_disk_num(name, 3) + '\' swap'
             cmd += ' && mkswap /dev/mapper/swap'
 
         cmd += ' && echo Completed.'
@@ -491,10 +491,7 @@ class PartitionLib():
                     continue
                 if (not info[1]) or (not info[2]):
                     continue
-                if not x['name'].startswith('/dev/nvme'):
-                    part = x['name'] + info[0]
-                else:
-                    part = x['name'] + 'p' + info[0]
+                part = self.get_part_from_disk_num(x['name'], info[0])
                 info[1] = info[1][:-1]
                 info[2] = info[2][:-1]
                 part_map[part] = (info[1], info[2], info[6])
@@ -590,6 +587,11 @@ class PartitionLib():
         while i >= 0 and name[i].isdigit():
             i -= 1
         return int(name[i + 1:])
+
+    def get_part_from_disk_num(self, disk, num):
+        if disk.startswith('/dev/nvme'):
+            return disk + 'p' + str(num)
+        return disk + str(num)
 
     def get_text_for_op(self, op):
         if op == 'autosetup':
