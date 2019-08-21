@@ -6,6 +6,13 @@ trigger:
     include:
     - '*'
 
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily build
+  branches:
+    include:
+    - master
+
 jobs:
 - job: Build
   pool:
