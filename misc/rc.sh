@@ -12,5 +12,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 if [[ $(tty) == "/dev/tty1" ]]; then
-	alinstaller --setup-gui
+	xvfb-run alinstaller --setup-gui
 fi

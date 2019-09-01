@@ -49,3 +49,4 @@ xf86-video-openchrome
 xf86-video-qxl
 xf86-video-vesa
 xf86-video-vmware
+xorg-server-xvfb
