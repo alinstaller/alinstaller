@@ -6,6 +6,7 @@ efibootmgr
 efivar
 firefox
 firewalld
+fwupd
 gnome
 gnome-extra
 gnome-initial-setup
