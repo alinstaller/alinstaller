@@ -34,6 +34,8 @@ jobs:
           ;;
       esac
 
+      while ! curl -L -o /dev/null https://dev.azure.com/alinstaller/alinstaller/_build; do true; done
+
       docker pull archlinux/base
       docker run -d -i -t --privileged -v `pwd`:/root/repo --name build archlinux/base
       docker exec -t build pacman -Syy --noconfirm
