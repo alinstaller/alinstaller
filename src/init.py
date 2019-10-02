@@ -77,10 +77,8 @@ def main():
                 print('\nSetting up GUI...')
 
                 ai_call(
-                    'rm /etc/xdg/autostart/gnome-initial-setup-first-login.desktop')
-                ai_call('rm /etc/xdg/autostart/gnome-welcome-tour.desktop')
-                ai_call('systemctl --global mask gnome-initial-setup')
-                ai_call('systemctl --global mask gnome-initial-setup-first-login')
+                    'pacman -R --noconfirm --noprogressbar gnome-initial-setup && ' +
+                    'rm -f /var/log/pacman.log')
 
                 ai_call(
                     'cp /usr/local/share/applications/*.desktop /etc/xdg/autostart')
