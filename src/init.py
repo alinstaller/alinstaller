@@ -79,6 +79,9 @@ def main():
                 ai_call(
                     'rm /etc/xdg/autostart/gnome-initial-setup-first-login.desktop')
                 ai_call('rm /etc/xdg/autostart/gnome-welcome-tour.desktop')
+                ai_call('systemctl --global mask gnome-initial-setup')
+                ai_call('systemctl --global mask gnome-initial-setup-first-login')
+
                 ai_call(
                     'cp /usr/local/share/applications/*.desktop /etc/xdg/autostart')
 
