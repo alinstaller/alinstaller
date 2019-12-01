@@ -77,7 +77,7 @@ class InstallCLI(Step):
                 dialog.gauge_update(percent=gauge_percent, text=gauge_text,
                                     update_text=True)
                 gauge_text_prev = gauge_text
-                gauge_percent = gauge_percent
+                gauge_percent_prev = gauge_percent
 
         p.communicate()
         dialog.gauge_stop()
