@@ -103,7 +103,7 @@ class InstallLib():
                                           partition_lib.swap_crypt_target + '\'')
             swap_crypt_uuid = swap_crypt_uuid.decode('utf-8').strip('\n')
 
-        cmd += ' && sed -i \"s/^\\\\(GRUB_CMDLINE_LINUX_DEFAULT=\\\\).*/\\1\\\"quiet'
+        cmd += ' && sed -i \"s/^\\\\(GRUB_CMDLINE_LINUX_DEFAULT=\\\\).*/\\1\\\"loglevel=3 quiet'
         if swap_crypt_uuid != '':
             cmd += ' rd.luks.name=' + swap_crypt_uuid + '=swap'
         if swap_uuid != '':
