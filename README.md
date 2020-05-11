@@ -1,4 +1,4 @@
-# AL Installer [![Build Status](https://dev.azure.com/alinstaller/alinstaller/_apis/build/status/alinstaller.alinstaller?branchName=master)](https://dev.azure.com/alinstaller/alinstaller/_build/latest?definitionId=1&branchName=master)
+# AL Installer [![Build](https://github.com/alinstaller/alinstaller/workflows/Build/badge.svg)](https://github.com/alinstaller/alinstaller/actions)
 
 AL Installer is an installer for [Arch Linux](https://www.archlinux.org/). It
 is intended for desktop use and provides a step-by-step installation guide to

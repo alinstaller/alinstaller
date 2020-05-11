@@ -1,0 +1,70 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+  schedule:
+  - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get variables
+      id: get_variables
+      run: |
+        case ${{ github.ref }} in
+          refs/tags/*)
+            TAG=`echo ${{ github.ref }} | sed 's/^refs\/tags\///'`
+            OUTPUT_FILE=alinstaller-`date -u +%Y.%m.%d`-$TAG-x86_64.iso
+            echo "::set-output name=tag::$TAG"
+            echo "::set-output name=output_file::$OUTPUT_FILE"
+            echo "Tag: $TAG"
+            echo "Output file: $OUTPUT_FILE"
+            ;;
+          *)
+            OUTPUT_FILE=alinstaller-`date -u +%Y.%m.%d`-debug-x86_64.iso
+            echo "::set-output name=output_file::$OUTPUT_FILE"
+            echo "Output file: $OUTPUT_FILE"
+            ;;
+        esac
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build project
+      run: |
+        docker pull archlinux/base
+        docker run -d -i -t --privileged -v `pwd`:/root/repo --name build archlinux/base
+        docker exec -t build pacman -Syy --noconfirm
+        docker exec -t build pacman -Su --noconfirm
+        docker exec -t build pacman -S --needed --noconfirm base base-devel archiso gtk3 python-babel python-gobject python-psutil python-pylint python-pythondialog python-setuptools
+        docker exec -t build sed -i 's/\(mksquashfs .*\)-comp/\1-b 1024K -comp/' /bin/mkarchiso # reduce image size
+        docker exec -t build bash -c "cd /root/repo && ./check.sh && ./build.sh"
+        sudo chown $USER:$USER build/out/alinstaller.iso
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ steps.get_variables.outputs.tag }}
+        body: Release ${{ steps.get_variables.outputs.tag }}.
+        draft: false
+        prerelease: true
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/out/alinstaller.iso
+        asset_name: ${{ steps.get_variables.outputs.output_file }}
+        asset_content_type: application/x-cd-image
