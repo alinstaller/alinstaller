@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import signal
 import sys
 import time
@@ -23,6 +24,19 @@ gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import GLib
+
+
+def init_gtk():
+    # Prevent gtk from spamming warnings on init
+    stderr = os.dup(sys.stderr.fileno())
+    with open('/dev/null', 'w') as null_file:
+        os.dup2(null_file.fileno(), sys.stderr.fileno())
+        from gi.repository import Gtk as _
+        os.dup2(stderr, sys.stderr.fileno())
+        os.close(stderr)
+
+
+init_gtk()
 
 from ai_exec import ai_call
 from dlg import dialog
