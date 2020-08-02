@@ -45,13 +45,13 @@ sed -i "s/\.archlinux\.org\/mirrorlist\/.*\'/\.archlinux\.org\/mirrorlist\/all\/
 mkdir -p build/out
 rm -f build/work/build.make_*
 
-pushd build
+pushd build > /dev/null
 ./build.sh -v
 
-pushd out
+pushd out > /dev/null
 for file in archlinux-*.iso; do
 	mv "$file" alinstaller.iso;
 done
 
-popd
-popd
+popd > /dev/null
+popd > /dev/null
