@@ -75,7 +75,7 @@ class InstallLib():
 
         cmd += ' && chsh -s /bin/bash'
 
-        cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux xorg-server-xvfb'
+        cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux'
         cmd += ' && pacman -Rsc --noconfirm --noprogressbar zsh'
         cmd += ' && rm -f /var/log/pacman.log'
 
