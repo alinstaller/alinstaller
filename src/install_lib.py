@@ -36,19 +36,19 @@ class InstallLib():
             ' --exclude=/usr/local/share/applications --exclude=/usr/local/share/locale' + \
             ' --exclude=\"/tmp/*\" /run/archiso/sfs/airootfs/* /mnt'
         cmd += ' && rm -rf /mnt/tmp/*'
+        cmd += ' && rm -rf /mnt/root/{.automated_script.sh,.bash_login,.zlogin,.zshrc}'
         cmd += ' && cp -a /usr/local/lib/alinstaller/boot-copy/* /mnt/boot'
-        cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz /mnt/boot/vmlinuz-linux'
+        cmd += ' && cp -aT /run/archiso/bootmnt/arch/boot/$(uname -m)/vmlinuz-linux /mnt/boot/vmlinuz-linux'
 
         return cmd
 
     def get_configure_cmd(self):
         cmd = 'genfstab -U /mnt > /mnt/etc/fstab'
 
-        cmd += ' && sed -i \'s/Storage=volatile/#Storage=auto/\' /mnt/etc/systemd/journald.conf'
-        cmd += ' && sed -i \'s/^\\(PermitRootLogin \\).\\+/#\\1prohibit-password/\' /mnt/etc/ssh/sshd_config'
-        cmd += ' && sed -i \'s/\\(HandleSuspendKey=\\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
-        cmd += ' && sed -i \'s/\\(HandleHibernateKey=\\)ignore/#\\1hibernate/\' /mnt/etc/systemd/logind.conf'
-        cmd += ' && sed -i \'s/\\(HandleLidSwitch=\\)ignore/#\\1suspend/\' /mnt/etc/systemd/logind.conf'
+        cmd += ' && rm -r /mnt/etc/systemd/{journald.conf.d,logind.conf.d}'
+        cmd += ' && rm -rf /mnt/etc/systemd/system/{pacman-init.service,etc-pacman.d-gnupg.mount,getty@tty1.service.d}'
+        cmd += ' && rm -rf /mnt/etc/systemd/system/multi-user.target.wants/pacman-init.service'
+        cmd += ' && rm /mnt/etc/mkinitcpio.d/*'
 
         cmd += ' && echo \'\' >> /mnt/etc/sudoers'
         cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
@@ -59,24 +59,13 @@ class InstallLib():
 
         cmd += ' && arch-chroot /mnt /bin/bash -c \''
 
-        cmd += 'systemctl disable pacman-init.service choose-mirror.service'
-        cmd += ' && rm -rf /etc/systemd/system/{choose-mirror.service,pacman-init.service,etc-pacman.d-gnupg.mount,getty@tty1.service.d}'
-        cmd += ' && rm -f /etc/systemd/scripts/choose-mirror'
-        cmd += ' && rm -f /etc/systemd/system/archiso-start.service'
-        cmd += ' && rm -f /etc/systemd/system/multi-user.target.wants/archiso-start.service'
-
-        cmd += ' && rm -f /etc/systemd/system/getty@tty1.service.d/autologin.conf'
-        cmd += ' && rm -f /root/{.automated_script.sh,.zlogin,.zshrc}'
-        cmd += ' && rm -f /etc/mkinitcpio-archiso.conf'
-        cmd += ' && rm -rf /etc/initcpio'
-
-        cmd += ' && pacman-key --init'
+        cmd += 'pacman-key --init'
         cmd += ' && pacman-key --populate archlinux'
 
         cmd += ' && chsh -s /bin/bash'
 
         cmd += ' && pacman -Rs --noconfirm --noprogressbar memtest86+ syslinux'
-        cmd += ' && pacman -Rsc --noconfirm --noprogressbar zsh'
+        cmd += ' && pacman -Rsc --noconfirm --noprogressbar zsh mkinitcpio-archiso'
         cmd += ' && rm -f /var/log/pacman.log'
 
         cmd += ' && echo LANG=en_US.UTF-8 > /etc/locale.conf'
@@ -116,8 +105,11 @@ class InstallLib():
         cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
             ' keyboard autodetect sd-vconsole modconf block sd-encrypt' + \
             ' filesystems fsck)/\" /etc/mkinitcpio.conf'
+        cmd += ' && sed -i \"s/COMPRESSION=\\\"xz\\\"/#COMPRESSION=\\\"xz\\\"/\" /etc/mkinitcpio.conf'
 
-        cmd += ' && mkinitcpio -P'
+        # Generate preset and mkinitcpio
+        cmd += ' && for module in /usr/lib/modules/*; do echo $module/vmlinuz' + \
+               ' | sudo /usr/share/libalpm/scripts/mkinitcpio-install; done'
 
         grub_i386_target = ''
         if partition_lib.boot_target != '':

@@ -19,6 +19,35 @@ mkdir -p build
 rm -rf build/airootfs
 cp -r /usr/share/archiso/configs/releng/* build
 
+pushd build/airootfs/etc > /dev/null
+find . \
+    ! -path '.' \
+    ! -path './locale.conf' \
+    ! -path './localtime' \
+    ! -path './machine-id' \
+    ! -path './mkinitcpio.conf' \
+    ! -path './mkinitcpio.d' \
+    ! -path './mkinitcpio.d/linux.preset' \
+    ! -path './modprobe.d' \
+    ! -path './modprobe.d/broadcom-wl.conf' \
+    ! -path './shadow' \
+    ! -path './systemd' \
+    ! -path './systemd/journald.conf.d' \
+    ! -path './systemd/journald.conf.d/*' \
+    ! -path './systemd/logind.conf.d' \
+    ! -path './systemd/logind.conf.d/*' \
+    ! -path './systemd/system' \
+    ! -path './systemd/system/dbus-org.freedesktop.resolve1.service' \
+    ! -path './systemd/system/etc-pacman.d-gnupg.mount' \
+    ! -path './systemd/system/getty@tty1.service.d' \
+    ! -path './systemd/system/getty@tty1.service.d/*' \
+    ! -path './systemd/system/multi-user.target.wants' \
+    ! -path './systemd/system/multi-user.target.wants/pacman-init.service' \
+    ! -path './systemd/system/multi-user.target.wants/systemd-resolved.service' \
+    ! -path './systemd/system/pacman-init.service' \
+    -delete
+popd > /dev/null
+
 mkdir -p build/airootfs/usr/local/bin
 mkdir -p build/airootfs/usr/local/lib/alinstaller
 mkdir -p build/airootfs/usr/local/share/{applications,locale}
@@ -33,8 +62,9 @@ for file in build/packages.*; do
 	cat misc/packages_any >> "$file"
 done
 
-echo '' >> build/airootfs/root/.zlogin
-cat misc/rc.sh >> build/airootfs/root/.zlogin
+mv build/airootfs/root/.zlogin build/airootfs/root/.bash_login
+echo '' >> build/airootfs/root/.bash_login
+cat misc/rc.sh >> build/airootfs/root/.bash_login
 
 sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\/locale.gen; locale-gen/" build/airootfs/root/customize_airootfs.sh
 echo '' >> build/airootfs/root/customize_airootfs.sh
