@@ -1,0 +1,19 @@
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Derived from archiso pacman-init.service.
+
+[Unit]
+Description=Initializes Pacman keyring
+Wants=haveged.service
+After=haveged.service
+Requires=etc-pacman.d-gnupg.mount
+After=etc-pacman.d-gnupg.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/sh -c '/usr/bin/pacman-key --init && /usr/bin/pacman-key --populate archlinux &'
+
+[Install]
+WantedBy=multi-user.target
