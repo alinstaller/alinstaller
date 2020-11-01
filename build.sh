@@ -71,13 +71,11 @@ sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\
 echo '' >> build/airootfs/root/customize_airootfs.sh
 cat misc/customize.sh >> build/airootfs/root/customize_airootfs.sh
 
-sed -i "s/\.archlinux\.org\/mirrorlist\/.*\'/\.archlinux\.org\/mirrorlist\/all\/\'/" build/build.sh
-
 mkdir -p build/out
 rm -f build/work/build.make_*
 
 pushd build > /dev/null
-./build.sh -v
+mkarchiso -v .
 
 pushd out > /dev/null
 for file in archlinux-*.iso; do
