@@ -61,8 +61,3 @@ rm -rf /usr/local/lib/alinstaller/boot-copy/{archiso.img,initramfs-*.img,memtest
 
 # mark update as done to reduce boot time
 /usr/lib/systemd/systemd-update-done
-
-# fix gnome-initial-setup not in pam config of gdm
-sed 's/user = gdm/user in gdm:gnome-initial-setup/g' /etc/pam.d/gdm-launch-environment > /etc/pam.d/tmp-gdm-launch-environment
-touch -r /etc/pam.d/gdm-launch-environment /etc/pam.d/tmp-gdm-launch-environment
-mv /etc/pam.d/tmp-gdm-launch-environment /etc/pam.d/gdm-launch-environment
