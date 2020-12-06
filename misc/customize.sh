@@ -55,6 +55,9 @@ os.system('mv /tmp/alinstaller-mirrorlist \'' + filename + '\'')
 
 EOF
 
+chmod +x /usr/local/bin/alinstaller
+chmod +x /usr/local/lib/alinstaller/init.py
+
 # backup /boot
 cp -ax /boot /usr/local/lib/alinstaller/boot-copy
 rm -rf /usr/local/lib/alinstaller/boot-copy/{archiso.img,initramfs-*.img,memtest86+,syslinux,vmlinuz-linux}
