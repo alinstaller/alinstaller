@@ -71,6 +71,8 @@ sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\
 echo '' >> build/airootfs/root/customize_airootfs.sh
 cat misc/customize.sh >> build/airootfs/root/customize_airootfs.sh
 
+echo "airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '22' '-b' '1M')" >> build/profiledef.sh
+
 mkdir -p build/out
 rm -f build/work/build.make_*
 
