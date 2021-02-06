@@ -1,13 +1,10 @@
 [Desktop Entry]
-Name[en_GB]=AL Installer
 Name=AL Installer
-Comment[en_GB]=Install Arch Linux
 Comment=Install Arch Linux
 Icon=software-update-available
 Exec=alinstaller --gui
 Terminal=false
 Type=Application
 Categories=GTK;System;
-Keywords[en_GB]=Install;
 Keywords=Install;
 StartupNotify=true
