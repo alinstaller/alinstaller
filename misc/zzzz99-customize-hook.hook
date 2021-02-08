@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = python
+
+[Action]
+Description = Customize airootfs
+When = PostTransaction
+Depends = python
+Depends = sh
+Exec = /bin/sh -c '/bin/sh /root/alinstaller_customize.sh && rm /root/alinstaller_customize.sh && rm -r /etc/pacman.d/hooks'
