@@ -11,6 +11,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+set -e
+
+# enable all locales
+sed -i 's/^#\([A-Za-z].* UTF-8\)/\1/' /etc/locale.gen
+locale-gen
+
 # choose a mirror
 python << EOF
 

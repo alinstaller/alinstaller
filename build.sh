@@ -67,9 +67,9 @@ mv build/airootfs/root/.zlogin build/airootfs/root/.bash_login
 echo '' >> build/airootfs/root/.bash_login
 cat misc/rc.sh >> build/airootfs/root/.bash_login
 
-sed -i "s/locale-gen/sed -i 's\\/^#\\\([A-Za-z].* UTF-8\\\)\\/\\\\1\\/' \\/etc\\/locale.gen; locale-gen/" build/airootfs/root/customize_airootfs.sh
-echo '' >> build/airootfs/root/customize_airootfs.sh
-cat misc/customize.sh >> build/airootfs/root/customize_airootfs.sh
+mkdir -p build/airootfs/etc/pacman.d/hooks
+cp misc/zzzz99-customize-hook.hook build/airootfs/etc/pacman.d/hooks/zzzz99-customize-hook.hook
+cp misc/customize.sh build/airootfs/root/alinstaller_customize.sh
 
 echo "airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '22' '-b' '1M')" >> build/profiledef.sh
 
