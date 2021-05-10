@@ -36,7 +36,7 @@ jobs:
 
     - name: Build project
       run: |
-        docker pull archlinux/base
+        docker pull archlinux:base
         docker run -d -i -t --privileged -v `pwd`:/root/repo --name build archlinux/base
         docker exec -t build pacman -Syy --noconfirm
         docker exec -t build pacman -Su --noconfirm
