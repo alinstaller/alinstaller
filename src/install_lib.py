@@ -34,7 +34,7 @@ class InstallLib():
         cmd = 'rsync --info=progress2 --no-inc-recursive -ax --exclude=/boot --exclude=\"/root/*\"' + \
             ' --exclude=\"/usr/local/bin/*\" --exclude=\"/usr/local/lib/*\"' + \
             ' --exclude=/usr/local/share/applications --exclude=/usr/local/share/locale' + \
-            ' --exclude=\"/tmp/*\" /run/archiso/sfs/airootfs/* /mnt'
+            ' --exclude=\"/tmp/*\" /run/archiso/airootfs/* /mnt'
         cmd += ' && rm -rf /mnt/tmp/*'
         cmd += ' && rm -rf /mnt/root/{.automated_script.sh,.bash_login,.zlogin,.zshrc}'
         cmd += ' && cp -a /usr/local/lib/alinstaller/boot-copy/* /mnt/boot'
