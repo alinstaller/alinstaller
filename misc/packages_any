@@ -28,6 +28,7 @@ ibus-libpinyin
 ibus-m17n
 lsb-release
 mesa
+networkmanager
 noto-fonts-cjk
 noto-fonts-emoji
 os-prober
