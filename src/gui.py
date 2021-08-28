@@ -102,8 +102,8 @@ class GUI():
             del self._button_next_hooks[page]
 
     def _get_number_from_page(self, name):
-        for i in range(len(self._pages)):
-            if self._pages[i] == name:
+        for i, page in enumerate(self._pages):
+            if page == name:
                 return i
         return -1
 

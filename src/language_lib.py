@@ -21,7 +21,7 @@ class LanguageLib():
         self.lang = None
         self.languages = []
 
-        with open('lang.txt', 'r') as f:
+        with open('lang.txt', 'r', encoding='utf_8') as f:
             for x in f:
                 x = x.strip('\n')
                 locale = babel.Locale.parse(x)

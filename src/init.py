@@ -29,7 +29,7 @@ from gi.repository import GLib
 def init_gtk():
     # Prevent gtk from spamming warnings on init
     stderr = os.dup(sys.stderr.fileno())
-    with open('/dev/null', 'w') as null_file:
+    with open('/dev/null', 'wb') as null_file:
         os.dup2(null_file.fileno(), sys.stderr.fileno())
         from gi.repository import Gtk as _
         os.dup2(stderr, sys.stderr.fileno())
@@ -104,7 +104,7 @@ def main():
                     'sed -i \'s/\\[daemon\\]/[daemon]\\nAutomaticLoginEnable=' +
                     'True\\nAutomaticLogin=liveuser/\' /etc/gdm/custom.conf')
 
-                with open('/etc/sudoers', 'a') as f:
+                with open('/etc/sudoers', 'a', encoding='utf_8') as f:
                     f.write('\n%wheel ALL=(ALL) ALL\n')
 
                 ai_call(

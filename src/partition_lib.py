@@ -86,7 +86,7 @@ class PartitionLib():
             swap_target = '/dev/mapper/swap'
 
         if crypt:
-            with open('/tmp/alinstaller-keyfile', 'w') as f:
+            with open('/tmp/alinstaller-keyfile', 'w', encoding='utf_8') as f:
                 f.write(passphrase)
 
         cmd = 'parted -m -s \'' + name + '\' unit B mklabel \'' + \
@@ -173,7 +173,7 @@ class PartitionLib():
         self._msgbox(_('Successful.'))
 
     def _action_cryptsetup(self, name, passphrase):
-        with open('/tmp/alinstaller-keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w', encoding='utf_8') as f:
             f.write(passphrase)
         self._exec('cryptsetup -v -q --key-file /tmp/alinstaller-keyfile luksFormat --type \'' +
                    self.default_luks_type + '\' \'' + name + '\' && echo Completed.',
@@ -181,7 +181,7 @@ class PartitionLib():
         os.remove('/tmp/alinstaller-keyfile')
 
     def _action_cryptopen(self, name, passphrase):
-        with open('/tmp/alinstaller-keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w', encoding='utf_8') as f:
             f.write(passphrase)
         self._exec('cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name +
                    '\' cryptroot && echo Completed.',
@@ -197,7 +197,7 @@ class PartitionLib():
         self.crypt_target = ''
 
     def _action_swap_cryptopen(self, name, passphrase):
-        with open('/tmp/alinstaller-keyfile', 'w') as f:
+        with open('/tmp/alinstaller-keyfile', 'w', encoding='utf_8') as f:
             f.write(passphrase)
         self._exec('cryptsetup -q --key-file /tmp/alinstaller-keyfile open \'' + name +
                    '\' swap && echo Completed.',
