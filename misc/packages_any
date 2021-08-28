@@ -8,12 +8,10 @@ firefox
 firewalld
 fwupd
 gnome
-gnome-extra
 gnome-initial-setup
 gnome-menus
 gnome-packagekit
 gnome-power-manager
-gnome-software-packagekit-plugin
 gnome-system-log
 gparted
 grub
