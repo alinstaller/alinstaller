@@ -14,7 +14,7 @@ Feel free to open any issue / pull request.
 
 ## Install
 
-Download the ISO image from [Releases](../../releases), and boot from it.
+Download the ISO image from [Releases](../../releases), and boot from it. **Do not** download pre-releases as these are untested.
 
 ## Build
 
