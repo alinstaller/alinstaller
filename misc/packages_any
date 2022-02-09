@@ -33,6 +33,7 @@ networkmanager
 noto-fonts-cjk
 noto-fonts-emoji
 os-prober
+pipewire-pulse
 python-babel
 python-gobject
 python-psutil
