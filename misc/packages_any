@@ -39,6 +39,7 @@ python-gobject
 python-psutil
 python-pythondialog
 rsync
+rtkit
 spice-vdagent
 systemd-ui
 sudo
