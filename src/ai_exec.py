@@ -27,7 +27,7 @@ def ai_dialog_exec(*args, **kwargs):
               'width': 0, 'height': 0}
     for arg in myargs:
         if arg in kwargs:
-            myargs[arg] = kwargs[arg]
+            myargs[arg] = kwargs[arg] # pylint: disable=modified-iterating-dict
             kwargs.pop(arg)
 
     if myargs['msg'] != '':
