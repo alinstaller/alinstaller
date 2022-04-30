@@ -38,6 +38,8 @@ jobs:
       run: |
         docker pull archlinux:base
         docker run -d -i -t --privileged -v `pwd`:/root/repo --name build archlinux:base
+        docker exec -t build pacman-key --init
+        docker exec -t build pacman-key --populate archlinux
         docker exec -t build pacman -Syy --noconfirm
         docker exec -t build pacman -Su --noconfirm
         docker exec -t build pacman -S --needed --noconfirm base base-devel archiso gtk3 python-astroid python-babel python-gobject python-isort python-mccabe python-platformdirs python-psutil python-pylint python-pythondialog python-setuptools python-toml
