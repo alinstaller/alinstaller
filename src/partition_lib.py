@@ -378,7 +378,7 @@ class PartitionLib():
 
         for x in parts:
             start = 0
-            if 'start' in x:
+            if 'start' in x and x['start'] is not None:
                 start = int(x['start'])
 
             if start > last + 1:
@@ -502,7 +502,7 @@ class PartitionLib():
                     y['start'], y['end'], y['flags'] = part_map[name]
 
     def _sort_parts(self, parts):
-        parts.sort(key=lambda x: 0 if 'start' not in x else int(x['start']))
+        parts.sort(key=lambda x: 0 if ('start' not in x or x['start'] is None) else int(x['start']))
 
         for x in parts:
             if 'children' in x:
