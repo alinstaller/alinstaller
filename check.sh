@@ -14,5 +14,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 pylint --additional-builtins=_ \
-	--disable=arguments-differ,broad-except,consider-using-with,cyclic-import,duplicate-code,import-outside-toplevel,invalid-name,line-too-long,missing-docstring,no-self-use,too-few-public-methods,too-many-arguments,too-many-branches,too-many-instance-attributes,too-many-locals,too-many-return-statements,too-many-statements,unused-argument,wrong-import-position \
+	--disable=arguments-differ,broad-except,consider-using-with,cyclic-import,duplicate-code,import-outside-toplevel,invalid-name,line-too-long,missing-docstring,too-few-public-methods,too-many-arguments,too-many-branches,too-many-instance-attributes,too-many-locals,too-many-return-statements,too-many-statements,unused-argument,wrong-import-position \
 	src/*.py
