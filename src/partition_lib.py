@@ -511,7 +511,7 @@ class PartitionLib():
     def _scan_for_all_disks(self):
         ret, p = ai_call('lsblk -b -J -O -p')
         if ret != 0:
-            raise Exception('lsblk failed')
+            raise RuntimeError('lsblk failed')
         p = json.loads(p)['blockdevices']
         self._remove_toplevel_mounted(p)
         self._scan_for_details(p)

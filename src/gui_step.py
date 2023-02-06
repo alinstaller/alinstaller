@@ -16,7 +16,7 @@ from step import Step
 
 class GUIStep(Step):
     def run_once(self):
-        raise Exception('run_once() called on GUIStep')
+        raise RuntimeError('run_once() called on GUIStep')
 
     def update_text(self):
         pass
