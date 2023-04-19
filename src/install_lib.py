@@ -109,7 +109,7 @@ class InstallLib():
 
         # Generate preset and mkinitcpio
         cmd += ' && for module in /usr/lib/modules/*; do echo $module/vmlinuz' + \
-               ' | sudo /usr/share/libalpm/scripts/mkinitcpio-install; done'
+               ' | sudo /usr/share/libalpm/scripts/mkinitcpio install; done'
 
         grub_i386_target = ''
         if partition_lib.boot_target != '':
