@@ -19,6 +19,9 @@ mkdir -p build
 rm -rf build/airootfs
 cp -r /usr/share/archiso/configs/releng/* build
 
+# Disable copytoram through bootloader kernel param
+grep -r -l archisobasedir= build | xargs sed -i 's/archisobasedir=/copytoram=n archisobasedir=/'
+
 pushd build/airootfs/etc > /dev/null
 find . \
     ! -path '.' \
