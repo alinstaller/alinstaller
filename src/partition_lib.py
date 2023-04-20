@@ -450,6 +450,15 @@ class PartitionLib():
     def _to_gran_start(self, x):
         return (x + self.part_granularity - 1) // self.part_granularity
 
+    def _convert_start_end_to_str(self, p):
+        for x in p:
+            if 'children' in x:
+                self._convert_start_end_to_str(x['children'])
+            if 'start' in x and isinstance(x['start'], int):
+                x['start'] = str(x['start'])
+            if 'end' in x and isinstance(x['end'], int):
+                x['end'] = str(x['end'])
+
     def _remove_toplevel_mounted(self, p):
         rm = []
         for x in p:
@@ -513,6 +522,7 @@ class PartitionLib():
         if ret != 0:
             raise RuntimeError('lsblk failed')
         p = json.loads(p)['blockdevices']
+        self._convert_start_end_to_str(p)
         self._remove_toplevel_mounted(p)
         self._scan_for_details(p)
         self._sort_parts(p)
