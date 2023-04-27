@@ -49,6 +49,7 @@ class InstallLib():
         cmd += ' && rm -rf /mnt/etc/systemd/system/{pacman-init.service,etc-pacman.d-gnupg.mount,getty@tty1.service.d}'
         cmd += ' && rm -rf /mnt/etc/systemd/system/multi-user.target.wants/pacman-init.service'
         cmd += ' && rm /mnt/etc/mkinitcpio.d/*'
+        cmd += ' && rm -f /mnt/version'
 
         cmd += ' && echo \'\' >> /mnt/etc/sudoers'
         cmd += ' && echo \'%wheel ALL=(ALL) ALL\' >> /mnt/etc/sudoers'
