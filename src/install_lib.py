@@ -31,7 +31,7 @@ class InstallLib():
         return cmd
 
     def get_copy_files_cmd(self):
-        cmd = 'rsync --info=progress2 --no-inc-recursive -ax --exclude=/boot --exclude=\"/root/*\"' + \
+        cmd = 'rsync --info=progress2 --no-inc-recursive -ax -X -H --exclude=/boot --exclude=\"/root/*\"' + \
             ' --exclude=\"/usr/local/bin/*\" --exclude=\"/usr/local/lib/*\"' + \
             ' --exclude=/usr/local/share/applications --exclude=/usr/local/share/locale' + \
             ' --exclude=\"/tmp/*\" /run/archiso/airootfs/* /mnt'
