@@ -111,6 +111,7 @@ def main():
                     'sudo -u liveuser dbus-launch bash -c \'' +
                     'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing && ' +
                     'gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing && ' +
+                    'gsettings set org.gnome.shell welcome-dialog-last-shown-version 99999999 && ' +
                     'gsettings set org.gnome.software allow-updates false && ' +
                     'gsettings set org.gnome.software download-updates false' +
                     '\'')
