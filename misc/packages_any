@@ -29,8 +29,10 @@ ibus-m17n
 lsb-release
 mesa
 networkmanager
+noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+noto-fonts-extra
 os-prober
 pipewire-pulse
 python-babel
