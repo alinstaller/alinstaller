@@ -29,6 +29,8 @@ find . \
     ! -path './localtime' \
     ! -path './machine-id' \
     ! -path './mkinitcpio.conf' \
+    ! -path './mkinitcpio.conf.d' \
+    ! -path './mkinitcpio.conf.d/archiso.conf' \
     ! -path './mkinitcpio.d' \
     ! -path './mkinitcpio.d/linux.preset' \
     ! -path './modprobe.d' \

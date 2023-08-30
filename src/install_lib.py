@@ -106,7 +106,7 @@ class InstallLib():
         cmd += ' && sed -i \"s/^\\\\(HOOKS=\\\\).*/\\1(base systemd' + \
             ' keyboard autodetect sd-vconsole modconf block sd-encrypt' + \
             ' filesystems fsck)/\" /etc/mkinitcpio.conf'
-        cmd += ' && sed -i \"s/COMPRESSION=\\\"xz\\\"/#COMPRESSION=\\\"xz\\\"/\" /etc/mkinitcpio.conf'
+        cmd += ' && rm /etc/mkinitcpio.conf.d/archiso.conf'
 
         # Generate preset and mkinitcpio
         cmd += ' && for module in /usr/lib/modules/*; do echo $module/vmlinuz' + \
